@@ -26,7 +26,7 @@
   </div>
     <div class="tab-content" id="pills-tabContent">
       <div class="tab-pane fade show active" id="pills-expenses" role="tabpanel" aria-labelledby="pills-expenses-tab" tabindex="0">
-        EXPENSES COMPONENT
+        <ExpensesPage/>
       </div>
       <div class="tab-pane fade" id="pills-savings" role="tabpanel" aria-labelledby="pills-savings-tab" tabindex="0">
         SAVINGS COMPONENT
@@ -44,11 +44,11 @@
 </template>
 
 <script>
+import ExpensesPage from '@/pages/ExpensesPage.vue';
+
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
+    name: 'HelloWorld',
+    components: { ExpensesPage },
 }
 </script>
 
