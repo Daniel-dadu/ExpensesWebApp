@@ -1,13 +1,10 @@
 <template>
-    <!-- {{ id }} -->
     <div 
     class="modal fade" 
     v-bind:id="'Modal'+id" 
     tabindex="-1" 
     aria-hidden="true"
     >
-    <!-- :id="`Modal`"  -->
-    <!-- :aria-labelledby="`ModalLabel${id}`"  -->
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

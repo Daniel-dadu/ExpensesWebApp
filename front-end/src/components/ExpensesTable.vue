@@ -22,8 +22,6 @@
                     data-bs-toggle="modal" 
                     :data-bs-target="'#Modal'+expense._id" 
                     >
-                    <!-- :data-bs-target="`#Modal${id}`"  -->
-                    <!-- :data-bs-target="`#Modal`"  -->
                         More
                     </button>
                     <ExpenseModal 

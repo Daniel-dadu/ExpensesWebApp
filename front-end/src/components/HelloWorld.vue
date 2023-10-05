@@ -1,8 +1,3 @@
-<!-- 
-  Bootstrap resources used:
-  https://getbootstrap.com/docs/5.3/components/navs-tabs/#javascript-behavior
- -->
-
 <template>
 	<div id="main-nav-div">
 		<ul class="nav nav-pills nav-fill flex-column flex-sm-row" id="pills-tab" role="tablist">
@@ -54,10 +49,8 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #main-nav-div {
-	/* background-color: aqua; */
 	padding: 2em;
 }
 </style>
