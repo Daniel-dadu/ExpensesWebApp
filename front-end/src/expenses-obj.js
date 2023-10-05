@@ -10,16 +10,6 @@ export const expenses = [
     "updatedAt": "2023-03-15T08:30:00.000Z"
 },
 {
-    "_id": "5f93e3e2c4e187001cc92449",
-    "userId": "5f93e3e2c4e187001cc9244a",
-    "date": "2023-03-16",
-    "category": "Transportation",
-    "description": "Gasoline refill",
-    "amount": 45.25,
-    "createdAt": "2023-03-16T12:15:00.000Z",
-    "updatedAt": "2023-03-16T12:15:00.000Z"
-},
-{
     "_id": "5f93e3e2c4e187001cc9244b",
     "userId": "5f93e3e2c4e187001cc9244c",
     "date": "2023-03-17",
@@ -38,6 +28,16 @@ export const expenses = [
     "amount": 55.00,
     "createdAt": "2023-03-18T20:00:00.000Z",
     "updatedAt": "2023-03-18T20:00:00.000Z"
-}
+},
+{
+    "_id": "5f93e3e2c4e187001cc92449",
+    "userId": "5f93e3e2c4e187001cc9244a",
+    "date": "2023-03-16",
+    "category": "Transportation",
+    "description": "Gasoline refill",
+    "amount": 45.25,
+    "createdAt": "2023-03-16T12:15:00.000Z",
+    "updatedAt": "2023-03-16T12:15:00.000Z"
+},
 ]
   
