@@ -7,8 +7,8 @@
 export default {
     data() {
         return {
-        isEditing: false,
-        editedText: "",
+            isEditing: false,
+            editedText: "",
         };
     },
     props: {
@@ -16,17 +16,15 @@ export default {
     },
     methods: {
         startEditing() {
-        this.isEditing = true;
-        this.editedText = this.text;
-        this.$nextTick(() => {
+            this.isEditing = true;
+            this.editedText = this.text;
             // Focus the input field after rendering
-            this.$refs.textInput.focus();
-        });
+            this.$nextTick(() => { this.$refs.textInput.focus(); });
         },
         finishEditing() {
-        this.isEditing = false;
-        // Update the text with the edited value
-        this.$emit("update:text", this.editedText);
+            this.isEditing = false;
+            // Update the text with the edited value
+            this.$emit("update:text", this.editedText);
         },
     },
 };

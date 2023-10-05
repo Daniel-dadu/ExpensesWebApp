@@ -20,11 +20,21 @@
                     type="button" 
                     class="btn btn-primary" 
                     data-bs-toggle="modal" 
-                    data-bs-target="#exampleModal"
+                    :data-bs-target="'#Modal'+expense._id" 
                     >
-                        Launch demo modal
+                    <!-- :data-bs-target="`#Modal${id}`"  -->
+                    <!-- :data-bs-target="`#Modal`"  -->
+                        More
                     </button>
-                    <ExpenseModal />
+                    <ExpenseModal 
+                    :date="expense.date" 
+                    :category="expense.category"
+                    :description="expense.description"
+                    :amount="expense.amount"
+                    :id="expense._id"
+                    :created-at="expense.createdAt"
+                    :updated-at="expense.updatedAt"
+                    />
                 </td>
             </tr>
         </tbody>
@@ -41,7 +51,6 @@ export default {
     data() {
         return {
             expenses,
-            content: "Initial Text",
         }
     },
     components: {

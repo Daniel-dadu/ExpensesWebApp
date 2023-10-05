@@ -1,25 +1,36 @@
 <template>
+    <!-- {{ id }} -->
     <div 
     class="modal fade" 
-    id="exampleModal" 
+    v-bind:id="'Modal'+id" 
     tabindex="-1" 
-    aria-labelledby="exampleModalLabel" 
     aria-hidden="true"
     >
+    <!-- :id="`Modal`"  -->
+    <!-- :aria-labelledby="`ModalLabel${id}`"  -->
         <div class="modal-dialog">
             <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                    <p>Some text:</p>
-                    <EditableText :text="content" @update:text="content = $event" />
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                        <p>Date:</p>
+                        <p>{{ date }}</p>
+                        <p>Category:</p>
+                        <p>{{ category }}</p>
+                        <p>Description:</p>
+                        <EditableText :text="descriptionEdit" @update:text="descriptionEdit = $event" />
+                        <p>Amount:</p>
+                        <EditableText :text="amountEdit" @update:text="amountEdit = $event" />
+                        <p>Created at:</p>
+                        <p>{{ createdAt }}</p>
+                        <p>Updated at:</p>
+                        <p>{{ updatedAt }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
@@ -32,11 +43,18 @@ export default {
     name: "ExpenseModal",
     data() {
         return {
-            content: "Initial Text",
+            descriptionEdit: this.description,
+            amountEdit: this.amount,
         }
     },
     props: {
-        text: String, // The initial text
+        date: String,
+        category: String,
+        description: String,
+        amount: Number,
+        id: Number,
+        createdAt: String,
+        updatedAt: String,
     },
     components: {
         EditableText,

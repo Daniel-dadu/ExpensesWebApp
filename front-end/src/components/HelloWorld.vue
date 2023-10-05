@@ -48,7 +48,9 @@ import ExpensesPage from '@/pages/ExpensesPage.vue';
 
 export default {
     name: 'HelloWorld',
-    components: { ExpensesPage },
+    components: { 
+		ExpensesPage, 
+	},
 }
 </script>
 
