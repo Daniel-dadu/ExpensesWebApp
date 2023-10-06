@@ -17,9 +17,9 @@
                         <p>Category:</p>
                         <p>{{ category }}</p>
                         <p>Description:</p>
-                        <EditableText :text="descriptionEdit" @update:text="descriptionEdit = $event" />
+                        <EditableText :initialText="descriptionEdit" @update:initialText="descriptionEdit = $event" />
                         <p>Amount:</p>
-                        <EditableText :text="amountEdit" @update:text="amountEdit = $event" />
+                        <EditableText :initialText="amountEdit" @update:initialText="amountEdit = $event" />
                         <p>Created at:</p>
                         <p>{{ createdAt }}</p>
                         <p>Updated at:</p>
