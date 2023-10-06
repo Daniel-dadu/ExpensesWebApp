@@ -10,11 +10,11 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="expense in expenses" :key="expense._id">
+            <tr v-for="expense in expensesEdit" :key="expense._id">
                 <td>{{ expense.date }}</td>
                 <td>{{ expense.category }}</td>
                 <td>{{ expense.description }}</td>
-                <td>{{ expense.amount }}</td>
+                <td>${{ expense.amount }}</td>
                 <td>
                     <button 
                     type="button" 
@@ -33,6 +33,14 @@
                     :created-at="expense.createdAt"
                     :updated-at="expense.updatedAt"
                     />
+                    <button 
+                    type="button" 
+                    class="btn btn-outline-danger" 
+                    id="delete-expense-btn" 
+                    @click="removeExpense(expense._id)"
+                    >
+                        <img src="@/assets/trash-can.svg" alt="Trash can" />
+                    </button>
                 </td>
             </tr>
         </tbody>
@@ -41,14 +49,22 @@
 </template>
 
 <script>
-import { expenses } from '@/expenses-obj';
-import ExpenseModal from './ExpenseModal.vue';
+import { ref } from "vue"
+import { expenses } from '@/expenses-obj'
+import ExpenseModal from './ExpenseModal.vue'
 
 export default {
     name: "ExpensesTable",
-    data() {
+    setup() {
+        const expensesEdit = ref(expenses)
+
+        function removeExpense(id) {
+            expensesEdit.value = expensesEdit.value.filter(expense => expense._id != id)
+        }
+
         return {
-            expenses,
+            expensesEdit,
+            removeExpense,
         }
     },
     components: {
@@ -61,5 +77,13 @@ export default {
 #expenses-table tr td:last-child {
     width: 1%;
     white-space: nowrap;
+}
+
+#delete-expense-btn {
+    margin-left: 2em;
+    border: 0;
+}
+#delete-expense-btn img {
+    filter:invert(82%) sepia(3%) saturate(473%) hue-rotate(179deg) brightness(93%) contrast(88%);
 }
 </style>
