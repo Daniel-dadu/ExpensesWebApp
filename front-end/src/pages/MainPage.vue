@@ -42,7 +42,7 @@
 import ExpensesPage from '@/pages/ExpensesPage.vue';
 
 export default {
-    name: 'HelloWorld',
+    name: 'MainPage',
     components: { 
 		ExpensesPage, 
 	},
