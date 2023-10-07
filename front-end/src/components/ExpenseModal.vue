@@ -24,6 +24,8 @@
                         <p>{{ initialData.createdAt }}</p>
                         <p>Updated at:</p>
                         <p>{{ initialData.updatedAt }}</p>
+                        <p>Test:</p>
+                        <button @click="() => {editedData.amount = 89475}">Update amount</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -49,13 +51,21 @@ export default {
         const amountEdit = ref(props.initialData.amount)
 
         const saveData = () => {
-            emit("updateData", editedData.value);
+            emit("updateData", editedData.value)
         }
 
         watch(
             () => props.initialData,
             (newVal) => {
-                editedData.value = newVal;
+                editedData.value = newVal
+            }
+        )
+
+        watch(
+            () => amountEdit.value,
+            (newVal) => {
+                console.log(newVal)
+                editedData.value.amount = newVal
             }
         )
 
