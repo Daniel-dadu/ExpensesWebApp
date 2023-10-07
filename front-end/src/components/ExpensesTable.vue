@@ -10,7 +10,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="expense in expensesEdit" :key="expense._id">
+            <tr v-for="(expense, _id) in expensesEdit" :key="_id">
                 <td>{{ expense.date }}</td>
                 <td>{{ expense.category }}</td>
                 <td>{{ expense.description }}</td>
@@ -20,24 +20,20 @@
                     type="button" 
                     class="btn btn-primary" 
                     data-bs-toggle="modal" 
-                    :data-bs-target="'#Modal'+expense._id" 
+                    :data-bs-target="'#Modal'+_id" 
                     >
                         More
                     </button>
                     <ExpenseModal 
-                    :date="expense.date" 
-                    :category="expense.category"
-                    :description="expense.description"
-                    :amount="expense.amount"
-                    :id="expense._id"
-                    :created-at="expense.createdAt"
-                    :updated-at="expense.updatedAt"
+                    :id="_id"
+                    :initialData="expense"
+                    @updateContent="updateContent(_id, $event)"
                     />
                     <button 
                     type="button" 
                     class="btn btn-outline-danger" 
                     id="delete-expense-btn" 
-                    @click="removeExpense(expense._id)"
+                    @click="removeExpense(_id)"
                     >
                         <img src="@/assets/trash-can.svg" alt="Trash can" />
                     </button>
@@ -56,14 +52,23 @@ import ExpenseModal from './ExpenseModal.vue'
 export default {
     name: "ExpensesTable",
     setup() {
+        const lastKeyEdit = ref(expenses.lastKey)
+        // To only print the keys that are Expenses
+        delete expenses.lastKey
         const expensesEdit = ref(expenses)
 
-        function removeExpense(id) {
-            expensesEdit.value = expensesEdit.value.filter(expense => expense._id != id)
+        const updateContent = (id, newContent) => {
+            expensesEdit.value[id] = newContent
+        }
+    
+        const removeExpense = id => {
+            delete expensesEdit.value[id]
         }
 
         return {
+            lastKeyEdit,
             expensesEdit,
+            updateContent,
             removeExpense,
         }
     },
@@ -84,6 +89,7 @@ export default {
     border: 0;
 }
 #delete-expense-btn img {
+    /* To turn the svg to a lighter color */
     filter:invert(82%) sepia(3%) saturate(473%) hue-rotate(179deg) brightness(93%) contrast(88%);
 }
 </style>

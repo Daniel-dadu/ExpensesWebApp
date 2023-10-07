@@ -13,17 +13,17 @@
                 </div>
                 <div class="modal-body">
                         <p>Date:</p>
-                        <p>{{ date }}</p>
+                        <p>{{ initialData.date }}</p>
                         <p>Category:</p>
-                        <p>{{ category }}</p>
+                        <p>{{ initialData.category }}</p>
                         <p>Description:</p>
                         <EditableText :initialText="descriptionEdit" @update:initialText="descriptionEdit = $event" />
-                        <p>Amount:</p>
+                        <p>Amount:{{ amountEdit }}</p>
                         <EditableText :initialText="amountEdit" @update:initialText="amountEdit = $event" />
                         <p>Created at:</p>
-                        <p>{{ createdAt }}</p>
+                        <p>{{ initialData.createdAt }}</p>
                         <p>Updated at:</p>
-                        <p>{{ updatedAt }}</p>
+                        <p>{{ initialData.updatedAt }}</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -35,23 +35,36 @@
 
 <script>
 import EditableText from "./EditableText.vue";
+import { ref, watch } from "vue";
 
 export default {
     name: "ExpenseModal",
-    data() {
-        return {
-            descriptionEdit: this.description,
-            amountEdit: this.amount,
-        }
-    },
     props: {
-        date: String,
-        category: String,
-        description: String,
-        amount: Number,
-        id: Number,
-        createdAt: String,
-        updatedAt: String,
+        id: String,
+        initialData: Object,
+    },
+    setup(props, { emit }) {
+        const editedData = ref(props.initialData)
+        const descriptionEdit = ref(props.initialData.description)
+        const amountEdit = ref(props.initialData.amount)
+
+        const saveData = () => {
+            emit("updateData", editedData.value);
+        }
+
+        watch(
+            () => props.initialData,
+            (newVal) => {
+                editedData.value = newVal;
+            }
+        )
+
+        return {
+            editedData,
+            descriptionEdit,
+            amountEdit,
+            saveData,
+        }
     },
     components: {
         EditableText,
