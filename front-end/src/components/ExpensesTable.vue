@@ -14,7 +14,10 @@
                 <td>{{ expense.date }}</td>
                 <td>{{ expense.category }}</td>
                 <td>{{ expense.description }}</td>
-                <td>${{ expense.amount }}</td>
+                <td>
+                    <EditableText :initialText="expense.amount" @update:initialText="expense.amount = $event"/>
+                    ${{ expense.amount }}
+                </td>
                 <td>
                     <button 
                     type="button" 
@@ -48,6 +51,7 @@
 import { ref } from "vue"
 import { expenses } from '@/expenses-obj'
 import ExpenseModal from './ExpenseModal.vue'
+import EditableText from "./EditableText.vue"
 
 export default {
     name: "ExpensesTable",
@@ -74,6 +78,7 @@ export default {
     },
     components: {
         ExpenseModal,
+        EditableText,
     },
 }
 </script>

@@ -18,14 +18,12 @@
                         <p>{{ initialData.category }}</p>
                         <p>Description:</p>
                         <EditableText :initialText="descriptionEdit" @update:initialText="descriptionEdit = $event" />
-                        <p>Amount:{{ amountEdit }}</p>
+                        <p>Amount:</p>
                         <EditableText :initialText="amountEdit" @update:initialText="amountEdit = $event" />
                         <p>Created at:</p>
                         <p>{{ initialData.createdAt }}</p>
                         <p>Updated at:</p>
                         <p>{{ initialData.updatedAt }}</p>
-                        <p>Test:</p>
-                        <button @click="() => {editedData.amount = 89475}">Update amount</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -55,17 +53,11 @@ export default {
         }
 
         watch(
-            () => props.initialData,
-            (newVal) => {
-                editedData.value = newVal
-            }
-        )
-
-        watch(
-            () => amountEdit.value,
-            (newVal) => {
-                console.log(newVal)
-                editedData.value.amount = newVal
+            () => [props.initialData, descriptionEdit.value, amountEdit.value],
+            ([newData, newDescription, newAmount]) => { 
+                editedData.value = newData
+                editedData.value.description = newDescription
+                editedData.value.amount = newAmount
             }
         )
 
