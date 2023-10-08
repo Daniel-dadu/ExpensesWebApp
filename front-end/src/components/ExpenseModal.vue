@@ -38,7 +38,6 @@ import EditableText from "./EditableText.vue";
 import { ref, watch } from "vue";
 
 export default {
-    name: "ExpenseModal",
     props: {
         id: String,
         initialData: Object,

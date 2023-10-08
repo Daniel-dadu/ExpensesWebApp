@@ -43,7 +43,6 @@ import ExpensesPage from '@/pages/ExpensesPage.vue';
 import ParentComponent from '../testing/ParentComponent.vue'
 
 export default {
-    name: 'MainPage',
     components: { 
 		ExpensesPage, 
 		ParentComponent,

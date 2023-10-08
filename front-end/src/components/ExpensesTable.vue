@@ -54,7 +54,6 @@ import ExpenseModal from './ExpenseModal.vue'
 import EditableText from "./EditableText.vue"
 
 export default {
-    name: "ExpensesTable",
     setup() {
         const lastKeyEdit = ref(expenses.lastKey)
         // To only print the keys that are Expenses

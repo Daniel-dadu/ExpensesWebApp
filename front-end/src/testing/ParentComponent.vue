@@ -1,27 +1,28 @@
 <template>
     <div>
-      <h2>Parent Component</h2>
-      <input v-model="parentVariable" />
-      <p>Value in Parent: {{ parentVariable }}</p>
-      <ChildComponent v-model="parentVariable" />
+		<h2>Parent Component</h2>
+		<input v-model="parentVariable" />
+		<p>Value in Parent: {{ parentVariable }}</p>
+		<ChildComponent v-model="parentVariable" />
     </div>
-  </template>
+</template>
   
-  <script>
-  import { ref } from 'vue';
-  import ChildComponent from './ChildComponent.vue';
-  
-  export default {
-    components: {
-      ChildComponent,
-    },
-    setup() {
-      const parentVariable = ref(''); // Define the parent variable using ref
-  
-      return {
-        parentVariable,
-      };
-    },
-  };
-  </script>
+<script>
+import { ref } from 'vue'
+import { expenses } from './test.js'
+import ChildComponent from './ChildComponent.vue'
+
+export default {
+	components: {
+		ChildComponent,
+	},
+	setup() {
+		const parentVariable = ref(expenses) // Define the parent variable using ref
+
+		return {
+			parentVariable,
+		}
+	},
+}
+</script>
   
