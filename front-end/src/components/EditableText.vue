@@ -1,10 +1,10 @@
 <template>
-    <div v-if="!isEditing" @click="startEditing">{{ initialText }}</div>
-    <input v-else v-model="editedText" @keyup.enter="finishEditing" ref="textInput" />
+	<div v-if="!isEditing" @click="startEditing">{{ editedText }}</div>
+	<input v-else v-model="editedText" @keyup.enter="finishEditing" ref="textInput" />
 </template>
   
 <script>
-import { ref, watch, nextTick } from "vue";
+import { ref, watch, nextTick } from "vue"
 
 export default {
 	props: {
@@ -19,7 +19,7 @@ export default {
 			isEditing.value = true
 			editedText.value = props.initialText
 			
-			// wait for textInputRef to become available
+			// Wait for textInputRef to become available
 			watch(
 				() => textInputRef.value,
 				(newValue) => {
@@ -27,13 +27,17 @@ export default {
 					nextTick(() => { newValue.focus() })
 				}
 			)
-
 		}
 
 		const finishEditing = () => {
 			isEditing.value = false
 			emit("update:initialText", editedText.value)
 		}
+
+		// Watch for changes in props.initialText and update editedText
+		watch(() => props.initialText, (newText) => {
+			editedText.value = newText
+		})
 
 		return {
 			isEditing,
