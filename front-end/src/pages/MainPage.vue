@@ -33,19 +33,19 @@
 			BUDGET COMPONENT
 		</div>
 		<div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
-			<ParentComponent />
+			<ExpensesTable2 />
 		</div>
     </div>
 </template>
 
 <script>
 import ExpensesPage from '@/pages/ExpensesPage.vue';
-import ParentComponent from '../testing/ParentComponent.vue'
+import ExpensesTable2 from '../testing/ExpensesTable2.vue'
 
 export default {
     components: { 
 		ExpensesPage, 
-		ParentComponent,
+		ExpensesTable2,
 	},
 }
 </script>
