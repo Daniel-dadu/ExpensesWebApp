@@ -26,11 +26,11 @@
 		<div class="tab-pane fade" id="pills-savings" role="tabpanel" aria-labelledby="pills-savings-tab" tabindex="0">
 			SAVINGS COMPONENT
 		</div>
-		<div class="tab-pane fade" id="pills-summary" role="tabpanel" aria-labelledby="pills-summary-tab" tabindex="0">
-			SUMMARY COMPONENT
-		</div>
 		<div class="tab-pane fade" id="pills-budget" role="tabpanel" aria-labelledby="pills-budget-tab" tabindex="0">
 			BUDGET COMPONENT
+		</div>
+		<div class="tab-pane fade" id="pills-summary" role="tabpanel" aria-labelledby="pills-summary-tab" tabindex="0">
+			SUMMARY COMPONENT
 		</div>
 		<div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
 			<ExpensesTable2 />
@@ -41,6 +41,7 @@
 <script>
 import ExpensesPage from '@/pages/ExpensesPage.vue';
 import ExpensesTable2 from '../testing/ExpensesTable2.vue'
+import '@vuepic/vue-datepicker/dist/main.css';
 
 export default {
     components: { 
@@ -50,8 +51,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 #main-nav-div {
 	padding: 2em;
+}
+
+/* For the Datepicker in ExpensesTable */
+.dp__main {
+    width: fit-content;
+}
+.dp__input {
+    width: auto;
 }
 </style>

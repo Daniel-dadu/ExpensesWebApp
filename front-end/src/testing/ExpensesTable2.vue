@@ -37,6 +37,10 @@
 			</tbody>
 		</table>
     </div>
+	<div>
+		<Datepicker v-model="date" :enable-time-picker="false" />
+		<div>{{ date }}</div>
+	</div>
 </template>
   
 <script>
@@ -44,25 +48,29 @@ import { ref } from 'vue'
 import { expenses } from './test.js'
 import ExpenseModal2 from './ExpenseModal2.vue'
 import EditableText2 from './EditableText2.vue'
+import Datepicker from '@vuepic/vue-datepicker';
 
 export default {
-	components: {
-		ExpenseModal2,
-		EditableText2,
-	},
 	setup() {
 		const expensesEdit = ref(expenses) // Define the parent variable using ref
-
+		const date = ref()
+		
 		// Function called from the modal, executed when the data is changed
 		const changedData = (id) => {
 			console.log("Send a PUT here")
 			console.log(expensesEdit.value[id])
 		}
-
+		
 		return {
 			expensesEdit,
 			changedData,
+			date,
 		}
+	},
+	components: {
+		ExpenseModal2,
+		EditableText2,
+		Datepicker,
 	},
 }
 </script>

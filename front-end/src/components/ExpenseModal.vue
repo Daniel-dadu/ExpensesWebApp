@@ -13,7 +13,7 @@
                 </div>
                 <div class="modal-body">
                         <p>Date:</p>
-                        <p>{{ initialData.date }}</p>
+                        <Datepicker v-model="dateEdit" :enable-time-picker="false" class="dp__theme_dark" :dark="true" />                        
                         <p>Category:</p>
                         <p>{{ initialData.category }}</p>
                         <p>Description:</p>
@@ -34,8 +34,9 @@
 </template>
 
 <script>
-import EditableText from "./EditableText.vue";
-import { ref, computed, watch } from "vue";
+import EditableText from "./EditableText.vue"
+import { ref, computed, watch } from "vue"
+import Datepicker from "@vuepic/vue-datepicker"
 
 export default {
     props: {
@@ -46,6 +47,13 @@ export default {
     setup(props) {
         const editedData = ref(props.initialData)
         
+        const dateEdit = computed({
+            get: () => props.initialData.date,
+            set: (newValue) => {
+                editedData.value.date = newValue // To update data in the Table
+            },
+        })
+
         const descriptionEdit = computed({
             get: () => props.initialData.description,
             set: (newValue) => {
@@ -62,7 +70,11 @@ export default {
 
         // Watch for changes in data from this modal and the table
         watch(
-            () => [props.initialData.amount, props.initialData.description],
+            () => [
+                props.initialData.date,
+                props.initialData.description,
+                props.initialData.amount, 
+            ],
             () => {
                 props.changedData(props.id)
             }
@@ -72,10 +84,12 @@ export default {
             editedData,
             descriptionEdit,
             amountEdit,
+            dateEdit,
         }
     },
     components: {
         EditableText,
+        Datepicker,
     },
 }
 </script>

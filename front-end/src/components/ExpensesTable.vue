@@ -11,7 +11,9 @@
         </thead>
         <tbody>
             <tr v-for="(expense, _id) in expensesEdit" :key="_id">
-                <td>{{ expense.date }}</td>
+                <td>
+                    <Datepicker v-model="expense.date" :enable-time-picker="false" class="dp__theme_dark" :dark="true" style="margin-right: 1rem;" />
+                </td>
                 <td>{{ expense.category }}</td>
                 <td>
                     <EditableText :initialText="expense.description" @update:initialText="expense.description = $event"/>
@@ -53,6 +55,7 @@ import { ref } from "vue"
 import { expenses } from '@/expenses-obj'
 import ExpenseModal from './ExpenseModal.vue'
 import EditableText from "./EditableText.vue"
+import Datepicker from '@vuepic/vue-datepicker'
 
 export default {
     setup() {
@@ -80,6 +83,7 @@ export default {
     components: {
         ExpenseModal,
         EditableText,
+        Datepicker,
     },
 }
 </script>
@@ -89,9 +93,13 @@ export default {
     width: 1%;
     white-space: nowrap;
 }
+#expenses-table tr td:first-child {
+    width: 1%;
+    white-space: nowrap;
+}
 
 #delete-expense-btn {
-    margin-left: 2em;
+    margin-left: 1em;
     border: 0;
 }
 #delete-expense-btn img {
