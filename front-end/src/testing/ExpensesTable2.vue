@@ -41,6 +41,13 @@
 		<Datepicker v-model="date" :enable-time-picker="false" />
 		<div>{{ date }}</div>
 	</div>
+	<br>
+	<br>
+	<br>
+	<br>
+	<div>
+		<DropdownSelector :elements="testCategories" :selected="testCategories[1]" />
+	</div>
 </template>
   
 <script>
@@ -48,12 +55,19 @@ import { ref } from 'vue'
 import { expenses } from './test.js'
 import ExpenseModal2 from './ExpenseModal2.vue'
 import EditableText2 from './EditableText2.vue'
-import Datepicker from '@vuepic/vue-datepicker';
+import Datepicker from '@vuepic/vue-datepicker'
+import DropdownSelector from '@/components/DropdownSelector.vue'
 
 export default {
 	setup() {
 		const expensesEdit = ref(expenses) // Define the parent variable using ref
 		const date = ref()
+
+		let testCategories = [
+			"Category",
+			"Category2",
+			"Category3",
+		]
 		
 		// Function called from the modal, executed when the data is changed
 		const changedData = (id) => {
@@ -65,12 +79,14 @@ export default {
 			expensesEdit,
 			changedData,
 			date,
+			testCategories,
 		}
 	},
 	components: {
 		ExpenseModal2,
 		EditableText2,
 		Datepicker,
+		DropdownSelector,
 	},
 }
 </script>
