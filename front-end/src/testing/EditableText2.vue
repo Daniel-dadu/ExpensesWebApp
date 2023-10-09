@@ -8,7 +8,10 @@ import { ref, watch, nextTick } from "vue"
 
 export default {
 	props: {
-		initialText: String,
+		initialText: {
+			type: [String, Number],
+			required: true,
+		},
 	},
 	setup(props, { emit }) {
 		const isEditing = ref(false)

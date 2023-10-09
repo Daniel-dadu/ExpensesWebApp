@@ -66,7 +66,7 @@ export default {
 			console.log(expensesEdit.value[id])
 		}
     
-        const removeExpense = id => {
+        const removeExpense = (id) => {
             delete expensesEdit.value[id]
         }
 
