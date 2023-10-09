@@ -13,10 +13,11 @@
             <tr v-for="(expense, _id) in expensesEdit" :key="_id">
                 <td>{{ expense.date }}</td>
                 <td>{{ expense.category }}</td>
-                <td>{{ expense.description }}</td>
+                <td>
+                    <EditableText :initialText="expense.description" @update:initialText="expense.description = $event"/>
+                </td>
                 <td>
                     <EditableText :initialText="expense.amount" @update:initialText="expense.amount = $event"/>
-                    ${{ expense.amount }}
                 </td>
                 <td>
                     <button 
@@ -30,7 +31,7 @@
                     <ExpenseModal 
                     :id="_id"
                     :initialData="expense"
-                    @updateContent="updateContent(_id, $event)"
+                    :changedData="changedData"
                     />
                     <button 
                     type="button" 
@@ -56,13 +57,14 @@ import EditableText from "./EditableText.vue"
 export default {
     setup() {
         const lastKeyEdit = ref(expenses.lastKey)
-        // To only print the keys that are Expenses
-        delete expenses.lastKey
+        delete expenses.lastKey // To only print the keys that are Expenses
         const expensesEdit = ref(expenses)
 
-        const updateContent = (id, newContent) => {
-            expensesEdit.value[id] = newContent
-        }
+        // Function called from the modal, executed when the data is changed
+		const changedData = (id) => {
+			console.log("Send a PUT here")
+			console.log(expensesEdit.value[id])
+		}
     
         const removeExpense = id => {
             delete expensesEdit.value[id]
@@ -71,7 +73,7 @@ export default {
         return {
             lastKeyEdit,
             expensesEdit,
-            updateContent,
+            changedData,
             removeExpense,
         }
     },

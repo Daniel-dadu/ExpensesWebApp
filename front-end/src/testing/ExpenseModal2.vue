@@ -34,17 +34,24 @@ export default {
     },
     setup(props) {
         const editedData = ref(props.initialData)
-        const descriptionEdit = ref(props.initialData.description)
+
+        const descriptionEdit = computed({
+            get: () => props.initialData.description,
+            set: (newValue) => {
+                editedData.value.description = newValue // To update data in the Table
+            },
+        })
 
         const amountEdit = computed({
             get: () => props.initialData.amount,
             set: (newValue) => {
-                editedData.value.amount = newValue
+                editedData.value.amount = newValue // To update data in the Table
             },
         })
         
+        // Watch for changes in data from this modal and the table
         watch(
-            () => props.initialData.amount,
+            () => [props.initialData.amount, props.initialData.description],
             () => {
                 props.changedData(props.id)
             }

@@ -35,28 +35,36 @@
 
 <script>
 import EditableText from "./EditableText.vue";
-import { ref, watch } from "vue";
+import { ref, computed, watch } from "vue";
 
 export default {
     props: {
         id: String,
         initialData: Object,
+        changedData: Function,
     },
-    setup(props, { emit }) {
+    setup(props) {
         const editedData = ref(props.initialData)
-        const descriptionEdit = ref(props.initialData.description)
-        const amountEdit = ref(props.initialData.amount)
+        
+        const descriptionEdit = computed({
+            get: () => props.initialData.description,
+            set: (newValue) => {
+                editedData.value.description = newValue // To update data in the Table
+            },
+        })
 
-        const saveData = () => {
-            emit("updateData", editedData.value)
-        }
+        const amountEdit = computed({
+            get: () => props.initialData.amount,
+            set: (newValue) => {
+                editedData.value.amount = newValue // To update data in the Table
+            },
+        })
 
+        // Watch for changes in data from this modal and the table
         watch(
-            () => [props.initialData, descriptionEdit.value, amountEdit.value],
-            ([newData, newDescription, newAmount]) => { 
-                editedData.value = newData
-                editedData.value.description = newDescription
-                editedData.value.amount = newAmount
+            () => [props.initialData.amount, props.initialData.description],
+            () => {
+                props.changedData(props.id)
             }
         )
 
@@ -64,7 +72,6 @@ export default {
             editedData,
             descriptionEdit,
             amountEdit,
-            saveData,
         }
     },
     components: {
