@@ -12,9 +12,12 @@
         <tbody>
             <tr v-for="(expense, _id) in expensesEdit" :key="_id">
                 <td>
-                    <Datepicker v-model="expense.date" :enable-time-picker="false" class="dp__theme_dark" :dark="true" style="margin-right: 1rem;" />
+                    <Datepicker v-model="expense.date" :enable-time-picker="false" class="dp__theme_dark" :dark="true" />
                 </td>
-                <td>{{ expense.category }}</td>
+                <td>
+                    <DropdownSelector :elements="categoriesEdit" :selected="expense.category" />
+                    Selected: {{ expense.category }}
+                </td>
                 <td>
                     <EditableText :initialText="expense.description" @update:initialText="expense.description = $event"/>
                 </td>
@@ -56,11 +59,14 @@ import { expenses } from '@/expenses-obj'
 import ExpenseModal from './ExpenseModal.vue'
 import EditableText from "./EditableText.vue"
 import Datepicker from '@vuepic/vue-datepicker'
+import DropdownSelector from "./DropdownSelector.vue"
 
 export default {
     setup() {
         const lastKeyEdit = ref(expenses.lastKey)
+        const categoriesEdit = ref(expenses.categories)
         delete expenses.lastKey // To only print the keys that are Expenses
+        delete expenses.categories // To only print the keys that are Expenses
         const expensesEdit = ref(expenses)
 
         // Function called from the modal, executed when the data is changed
@@ -75,6 +81,7 @@ export default {
 
         return {
             lastKeyEdit,
+            categoriesEdit,
             expensesEdit,
             changedData,
             removeExpense,
@@ -84,6 +91,7 @@ export default {
         ExpenseModal,
         EditableText,
         Datepicker,
+        DropdownSelector,
     },
 }
 </script>

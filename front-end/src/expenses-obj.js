@@ -36,4 +36,10 @@ export const expenses = {
         "updatedAt": "2023-03-16T12:15:00.000Z"
     },
     "lastKey": 4,
+    "categories": [
+        "Groceries", 
+        "Entertainment",
+        "Dining Out",
+        "Transportation",
+    ]
 }
