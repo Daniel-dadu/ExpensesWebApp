@@ -15,9 +15,7 @@
                     <Datepicker v-model="expense.date" :enable-time-picker="false" class="dp__theme_dark" :dark="true" />
                 </td>
                 <td>
-                    <!-- <DropdownSelector :elements="categoriesEdit" :selected="expense.category" /> -->
-                    <DropdownSelector :elements="categoriesEdit" v-model="expense.category" />
-                    Selected: {{ expense.category }}
+                    <DropdownSelector :elements="categoriesEdit" v-model="expense.category" :id="_id" :changedData="changedData" />
                 </td>
                 <td>
                     <EditableText :initialText="expense.description" @update:initialText="expense.description = $event"/>
@@ -38,6 +36,7 @@
                     :id="_id"
                     :initialData="expense"
                     :changedData="changedData"
+                    :categoriesData="categoriesEdit"
                     />
                     <button 
                     type="button" 

@@ -15,7 +15,7 @@
                         <p>Date:</p>
                         <Datepicker v-model="dateEdit" :enable-time-picker="false" class="dp__theme_dark" :dark="true" />                        
                         <p>Category:</p>
-                        <p>{{ initialData.category }}</p>
+                        <DropdownSelector :elements="categoriesData" v-model="categoryEdit" :id="id" :changedData="changedData" />
                         <p>Description:</p>
                         <EditableText :initialText="descriptionEdit" @update:initialText="descriptionEdit = $event" />
                         <p>Amount:</p>
@@ -37,12 +37,14 @@
 import EditableText from "./EditableText.vue"
 import { ref, computed, watch } from "vue"
 import Datepicker from "@vuepic/vue-datepicker"
+import DropdownSelector from "./DropdownSelector.vue"
 
 export default {
     props: {
         id: String,
         initialData: Object,
         changedData: Function,
+        categoriesData: Array,
     },
     setup(props) {
         const editedData = ref(props.initialData)
@@ -52,6 +54,13 @@ export default {
             set: (newValue) => {
                 editedData.value.date = newValue // To update data in the Table
             },
+        })
+
+        const categoryEdit = computed({
+            get: () => props.initialData.category,
+            set: (newValue) => {
+                editedData.value.category = newValue
+            }
         })
 
         const descriptionEdit = computed({
@@ -73,15 +82,23 @@ export default {
             () => [
                 props.initialData.date,
                 props.initialData.description,
-                props.initialData.amount, 
+                props.initialData.amount,
             ],
             () => {
                 props.changedData(props.id)
             }
         )
 
+        watch(
+            () => props.categoriesData,
+            () => {
+                console.log("Changed Categories Array")
+            }
+        )
+
         return {
             editedData,
+            categoryEdit,
             descriptionEdit,
             amountEdit,
             dateEdit,
@@ -90,6 +107,7 @@ export default {
     components: {
         EditableText,
         Datepicker,
+        DropdownSelector,
     },
 }
 </script>

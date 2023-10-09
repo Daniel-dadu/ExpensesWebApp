@@ -26,6 +26,10 @@ export default {
     props: {
         elements: Array,
         modelValue: String,
+        
+        // For the ExpensesTable:
+        id: String,
+        changedData: Function,
     },
     setup(props, { emit }) {
         const elementsEdit = ref(props.elements)
@@ -49,12 +53,18 @@ export default {
             if(!isInElements) {
                 elementsEdit.value.push(selectedEdit.value)
             }
+
+            // Call changedData from ExpensesTable
+            props.changedData(props.id)
             
             textInput.value.blur() // To unfocus the input text
         }
 
         const selectOtherElem = (newElem) => {
             selectedEdit.value = newElem
+            emit("update:modelValue", newElem)
+            // Call changedData from ExpensesTable
+            props.changedData(props.id)
         }
 
         return {
