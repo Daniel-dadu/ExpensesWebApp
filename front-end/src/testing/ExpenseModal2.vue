@@ -24,50 +24,36 @@
   
 <script>
 import EditableText2 from "./EditableText2.vue";
-import { ref, computed } from 'vue';
-// import { ref, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
   
 export default {
     props: {
         id: String,
         initialData: Object,
+        changedData: Function,
     },
-    setup(props, { emit }) {
-    // setup(props) {
+    setup(props) {
         const editedData = ref(props.initialData)
         const descriptionEdit = ref(props.initialData.description)
 
         const amountEdit = computed({
             get: () => props.initialData.amount,
             set: (newValue) => {
-                emit("update:initialData", { ...props.initialData, amount: newValue })
                 editedData.value.amount = newValue
             },
         })
-
-        // const amountEdit = ref(props.initialData.amount)
-
-        // watch(
-        //     () => [descriptionEdit.value, amountEdit.value],
-        //     ([newDescription, newAmount]) => { 
-        //         editedData.value.description = newDescription
-        //         editedData.value.amount = newAmount
-        //     }
-        // )
-
-        // const saveData = () => {
-        //     emit("updateData", props.id, editedData.value)
-        // }
-
-        // watch(() => props.initialData, (newData) => {
-        //     amountEdit.value = newData.amount;
-        // })
+        
+        watch(
+            () => props.initialData.amount,
+            () => {
+                props.changedData(props.id)
+            }
+        )
 
         return {
             editedData,
             descriptionEdit,
             amountEdit,
-            // saveData,
         }
     },
     components: {

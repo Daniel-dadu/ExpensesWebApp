@@ -30,7 +30,7 @@
 						<ExpenseModal2 
 						:id="_id"
 						:initialData="expense"
-						@updateContent="updateData(_id, $event)"
+						:changedData="changedData"
 						/>
 					</td>
 				</tr>
@@ -53,20 +53,15 @@ export default {
 	setup() {
 		const expensesEdit = ref(expenses) // Define the parent variable using ref
 
-		const updateContent = (id, newContent) => {
-            expensesEdit.value[id] = newContent
-        }
-
-		// watch(
-		// 	() => expenses.value,
-		// 	(newValue) => {
-		// 		expenses.value = newValue
-		// 	}
-		// )
+		// Function called from the modal, executed when the data is changed
+		const changedData = (id) => {
+			console.log("Send a PUT here")
+			console.log(expensesEdit.value[id])
+		}
 
 		return {
 			expensesEdit,
-            updateContent,
+			changedData,
 		}
 	},
 }
