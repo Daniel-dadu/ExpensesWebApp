@@ -15,7 +15,8 @@
                     <Datepicker v-model="expense.date" :enable-time-picker="false" class="dp__theme_dark" :dark="true" />
                 </td>
                 <td>
-                    <DropdownSelector :elements="categoriesEdit" :selected="expense.category" />
+                    <!-- <DropdownSelector :elements="categoriesEdit" :selected="expense.category" /> -->
+                    <DropdownSelector :elements="categoriesEdit" v-model="expense.category" />
                     Selected: {{ expense.category }}
                 </td>
                 <td>

@@ -20,19 +20,23 @@
 </template>
 
 <script>
-import { ref, } from 'vue'
+import { ref, computed, } from 'vue'
 
 export default {
     props: {
         elements: Array,
-        selected: String,
+        modelValue: String,
     },
-    setup(props) {
+    setup(props, { emit }) {
         const elementsEdit = ref(props.elements)
-
-        const selectedEdit = ref(props.selected)
-		
         const textInput = ref(null)
+
+        const selectedEdit = computed({
+            get: () => props.modelValue,
+            set: (newVal) => {
+                emit("update:modelValue", newVal)
+            }
+        })
 
         const finishEditing = () => {
             let isInElements = false
