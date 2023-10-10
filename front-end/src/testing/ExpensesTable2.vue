@@ -46,7 +46,7 @@
 	<br>
 	<br>
 	<div>
-		<DropdownSelector :elements="testCategories" :selected="testCategories[1]" />
+		<DropdownSelector :elements="testCategories" :selected="testCategories[1]" id="1" />
 	</div>
 </template>
   

@@ -28,7 +28,10 @@ export default {
         modelValue: String,
         
         // For the ExpensesTable:
-        id: String,
+        id: {
+			type: [String, Number],
+			required: true,
+		},
         changedData: Function,
     },
     setup(props, { emit }) {

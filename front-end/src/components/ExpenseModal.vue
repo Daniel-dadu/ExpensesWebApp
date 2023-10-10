@@ -13,7 +13,18 @@
                 </div>
                 <div class="modal-body">
                         <p>Date:</p>
-                        <Datepicker v-model="dateEdit" :enable-time-picker="false" class="dp__theme_dark" :dark="true" />                        
+                        {{ dateEdit }}
+                        <!--                         
+                        
+                        <Datepicker 
+                        v-model="dateEdit" 
+                        :enable-time-picker="false" 
+                        class="dp__theme_dark" 
+                        :dark="true"
+                        :format="(date) => `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`" 
+                        />
+
+                        -->
                         <p>Category:</p>
                         <DropdownSelector :elements="categoriesData" v-model="categoryEdit" :id="id" :changedData="changedData" />
                         <p>Description:</p>
@@ -36,15 +47,19 @@
 <script>
 import EditableText from "./EditableText.vue"
 import { ref, computed, watch } from "vue"
-import Datepicker from "@vuepic/vue-datepicker"
+// import Datepicker from "@vuepic/vue-datepicker"
 import DropdownSelector from "./DropdownSelector.vue"
 
 export default {
     props: {
-        id: String,
+        id: {
+			type: [String, Number],
+			required: true,
+		},
         initialData: Object,
         changedData: Function,
         categoriesData: Array,
+        onChangedDate: Function,
     },
     setup(props) {
         const editedData = ref(props.initialData)
@@ -96,6 +111,14 @@ export default {
             }
         )
 
+        // Watch for changes in Date
+        watch(
+            () => props.initialData.date,
+            () => {
+                props.onChangedDate()
+            }
+        )
+
         return {
             editedData,
             categoryEdit,
@@ -106,7 +129,7 @@ export default {
     },
     components: {
         EditableText,
-        Datepicker,
+        // Datepicker,
         DropdownSelector,
     },
 }

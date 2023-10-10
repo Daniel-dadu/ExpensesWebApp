@@ -1,4 +1,12 @@
 <template>
+    <div id="add-expense-div">
+        <button 
+        type="button" 
+        class="btn btn-outline-success" 
+        @click="addExpense">
+            Add Expense
+        </button>
+    </div>
     <table class="table table-hover align-middle" id="expenses-table">
         <thead>
             <tr>
@@ -10,7 +18,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(expense, _id) in expensesEdit" :key="_id">
+            <tr v-for="(expense, index) in expensesEdit" :key="index">
                 <td>
                     <Datepicker 
                     v-model="expense.date" 
@@ -20,7 +28,7 @@
                     />
                 </td>
                 <td>
-                    <DropdownSelector :elements="categoriesEdit" v-model="expense.category" :id="_id" :changedData="changedData" />
+                    <DropdownSelector :elements="categoriesEdit" v-model="expense.category" :id="index" :changedData="changedData" />
                 </td>
                 <td>
                     <EditableText :initialText="expense.description" @update:initialText="expense.description = $event"/>
@@ -35,21 +43,22 @@
                     type="button" 
                     class="btn btn-outline-secondary" 
                     data-bs-toggle="modal" 
-                    :data-bs-target="'#Modal'+_id" 
+                    :data-bs-target="'#Modal'+index" 
                     >
                         More
                     </button>
                     <ExpenseModal 
-                    :id="_id"
+                    :id="index"
                     :initialData="expense"
                     :changedData="changedData"
                     :categoriesData="categoriesEdit"
+                    :onChangedDate="onChangedDate"
                     />
                     <button 
                     type="button" 
                     class="btn btn-outline-danger" 
                     id="delete-expense-btn" 
-                    @click="removeExpense(_id)"
+                    @click="removeExpense(index)"
                     >
                         <img src="@/assets/trash-can.svg" alt="Trash can" />
                     </button>
@@ -57,14 +66,6 @@
             </tr>
         </tbody>
     </table>
-    <div id="add-expense-div">
-        <button 
-        type="button" 
-        class="btn btn-outline-success" 
-        @click="addExpense">
-            Add Expense
-        </button>
-    </div>
 
 </template>
 
@@ -78,24 +79,22 @@ import DropdownSelector from "./DropdownSelector.vue"
 
 export default {
     setup() {
-        const lastKeyEdit = ref(expenses.lastKey)
         const categoriesEdit = ref(expenses.categories)
-        delete expenses.lastKey // To only print the keys that are Expenses
-        delete expenses.categories // To only print the keys that are Expenses
-        const expensesEdit = ref(expenses)
+        const expensesEdit = ref(expenses.list)
 
         // Function called from the modal, executed when the data is changed
-		const changedData = (id) => {
+		const changedData = (idx) => {
 			console.log("Send a PUT here")
-			console.log(expensesEdit.value[id])
+			console.log(expensesEdit.value[idx])
 		}
     
-        const removeExpense = (id) => {
-            delete expensesEdit.value[id]
+        const removeExpense = (idx) => {
+            expensesEdit.value.splice(idx, 1)
         }
 
         const addExpense = () => {
-            expensesEdit.value[++lastKeyEdit.value] = {
+            // Adding it at the begging of the array
+            expensesEdit.value.unshift({
                 "userId": "5f93e3e2c4e187001cc9244a",
                 "date": new Date(),
                 "category": null,
@@ -103,16 +102,24 @@ export default {
                 "amount": 0,
                 "createdAt": new Date(),
                 "updatedAt": new Date()
-            }
+            })
         }
 
+        const onChangedDate = () => {
+            // Sort the table by the date
+            expensesEdit.value.sort((a, b) => a.date < b.date ? 1 : -1)
+        }
+
+        // To sort the table when the component is loaded:
+        onChangedDate()
+
         return {
-            lastKeyEdit,
             categoriesEdit,
             expensesEdit,
             changedData,
             removeExpense,
             addExpense,
+            onChangedDate,
         }
     },
     components: {
