@@ -55,12 +55,4 @@ export default {
 #main-nav-div {
 	padding: 2em;
 }
-
-/* For the Datepicker in ExpensesTable */
-.dp__main {
-    width: fit-content;
-}
-.dp__input {
-    width: auto;
-}
 </style>

@@ -1,6 +1,6 @@
 <template>
-	<div v-if="!isEditing" @click="startEditing">{{ editedText }}</div>
-	<div v-else class="input-group flex-nowrap">
+	<div v-if="!isEditing" @click="startEditing" class="editabletext-div">{{ editedText }}</div>
+	<div v-else class="input-group editabletext-div">
 		<input 
 		type="text" 
 		class="form-control" 
@@ -60,3 +60,8 @@ export default {
 }
 </script>
   
+<style>
+.editabletext-div {
+	display: inline-flex;
+}
+</style>

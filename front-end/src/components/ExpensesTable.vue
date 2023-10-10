@@ -2,10 +2,10 @@
     <table class="table table-hover align-middle" id="expenses-table">
         <thead>
             <tr>
-                <th>Date</th>
-                <th>Category</th>
-                <th>Description</th>
-                <th>Amount</th>
+                <th style="width: 15%;">Date</th>
+                <th style="width: 20%;">Category</th>
+                <th style="width: 40%;">Description</th>
+                <th style="width: 10%;">Amount</th>
                 <th></th>
             </tr>
         </thead>
@@ -26,7 +26,9 @@
                     <EditableText :initialText="expense.description" @update:initialText="expense.description = $event"/>
                 </td>
                 <td>
-                    <EditableText :initialText="expense.amount" @update:initialText="expense.amount = $event"/>
+                    <div id="expenses-amount-text">
+                        <span>$</span><EditableText :initialText="expense.amount" @update:initialText="expense.amount = $event"/>
+                    </div>
                 </td>
                 <td>
                     <button 
@@ -145,5 +147,13 @@ export default {
     margin-top: 1rem;
     display: flex; 
     justify-content: flex-end;
+}
+
+#expenses-amount-text {
+    display: flex;
+    align-items: center;
+}
+#expenses-amount-text span {
+    margin-right: .2rem;
 }
 </style>
