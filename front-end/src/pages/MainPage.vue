@@ -39,9 +39,9 @@
 </template>
 
 <script>
-import ExpensesPage from '@/pages/ExpensesPage.vue';
-import ExpensesTable2 from '../testing/ExpensesTable2.vue'
-import '@vuepic/vue-datepicker/dist/main.css';
+import ExpensesPage from "@/pages/ExpensesPage.vue"
+import ExpensesTable2 from "../testing/ExpensesTable2.vue"
+import "@vuepic/vue-datepicker/dist/main.css"
 
 export default {
     components: { 

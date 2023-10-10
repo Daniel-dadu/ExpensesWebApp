@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import ExpensesTable from "../components/ExpensesTable.vue";
+import ExpensesTable from "../components/ExpensesTable.vue"
 
 export default {
     components: { ExpensesTable },

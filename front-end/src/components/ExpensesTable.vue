@@ -28,14 +28,26 @@
                     />
                 </td>
                 <td>
-                    <DropdownSelector :elements="categoriesEdit" v-model="expense.category" :id="index" :changedData="changedData" />
+                    <DropdownSelector 
+                    :elements="categoriesEdit" 
+                    v-model="expense.category" 
+                    :id="index" 
+                    :changedData="changedData" 
+                    />
                 </td>
                 <td>
-                    <EditableText :initialText="expense.description" @update:initialText="expense.description = $event"/>
+                    <EditableText 
+                    :initialText="expense.description" 
+                    @update:initialText="expense.description = $event"
+                    />
                 </td>
                 <td>
                     <div class="expenses-amount-text">
-                        <span>$</span><EditableText :initialText="expense.amount" @update:initialText="expense.amount = $event"/>
+                        <span>$</span>
+                        <EditableText 
+                        :initialText="expense.amount" 
+                        @update:initialText="expense.amount = $event"
+                        />
                     </div>
                 </td>
                 <td>
@@ -71,10 +83,10 @@
 
 <script>
 import { ref } from "vue"
-import { expenses } from '@/expenses-obj'
-import ExpenseModal from './ExpenseModal.vue'
+import { expenses } from "@/expenses-obj"
+import ExpenseModal from "./ExpenseModal.vue"
 import EditableText from "./EditableText.vue"
-import Datepicker from '@vuepic/vue-datepicker'
+import Datepicker from "@vuepic/vue-datepicker"
 import DropdownSelector from "./DropdownSelector.vue"
 
 export default {
