@@ -5,7 +5,7 @@
     tabindex="-1" 
     aria-hidden="true"
     >
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Modal title</h5>
@@ -13,28 +13,58 @@
                 </div>
                 <div class="modal-body">
                         <p>Date:</p>
-                        {{ dateEdit }}
-                        <!--                         
-                        
-                        <Datepicker 
-                        v-model="dateEdit" 
-                        :enable-time-picker="false" 
-                        class="dp__theme_dark" 
-                        :dark="true"
-                        :format="(date) => `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`" 
-                        />
+                        <div class="modal-editable-elem">
+                            {{ dateEdit }}
+                            <!-- See issue: Make Datepicker from ExpensesModal update the sorting correctly #12 -->
+                            <!--                         
+                            
+                            <Datepicker 
+                            v-model="dateEdit" 
+                            :enable-time-picker="false" 
+                            class="dp__theme_dark" 
+                            :dark="true"
+                            :format="(date) => `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`" 
+                            />
+    
+                            -->
+                        </div>
 
-                        -->
                         <p>Category:</p>
-                        <DropdownSelector :elements="categoriesData" v-model="categoryEdit" :id="id" :changedData="changedData" />
+                        <div class="modal-editable-elem">
+                            <DropdownSelector 
+                            :elements="categoriesData" 
+                            v-model="categoryEdit" 
+                            :id="id" 
+                            :changedData="changedData" 
+                            />
+                        </div>
+
                         <p>Description:</p>
-                        <EditableText :initialText="descriptionEdit" @update:initialText="descriptionEdit = $event" />
+                        <div class="modal-editable-elem">
+                            <EditableText 
+                            :initialText="descriptionEdit" 
+                            @update:initialText="descriptionEdit = $event"  
+                            />
+                        </div>
+                        
                         <p>Amount:</p>
-                        <EditableText :initialText="amountEdit" @update:initialText="amountEdit = $event" />
+                        <div class="modal-editable-elem">
+                            <EditableText 
+                            :initialText="amountEdit" 
+                            @update:initialText="amountEdit = $event" 
+                            />
+                        </div>
+
                         <p>Created at:</p>
-                        <p>{{ initialData.createdAt }}</p>
+                        <div class="modal-editable-elem">
+                            {{ initialData.createdAt }}
+                        </div>
+
                         <p>Updated at:</p>
-                        <p>{{ initialData.updatedAt }}</p>
+                        <div class="modal-editable-elem">
+                            {{ initialData.updatedAt }}
+                        </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -134,3 +164,13 @@ export default {
     },
 }
 </script>
+
+<style>
+.modal-body p {
+    font-weight: bold;
+    margin-bottom: .5em;
+}
+.modal-editable-elem {
+    margin-bottom: 1.5em;
+}
+</style>
