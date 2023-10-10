@@ -49,10 +49,13 @@
                         
                         <p>Amount:</p>
                         <div class="modal-editable-elem">
-                            <EditableText 
-                            :initialText="amountEdit" 
-                            @update:initialText="amountEdit = $event" 
-                            />
+                            <div class="expenses-amount-text">
+                                <span>$</span>
+                                <EditableText 
+                                :initialText="amountEdit" 
+                                @update:initialText="amountEdit = $event" 
+                                />
+                            </div>
                         </div>
 
                         <p>Created at:</p>
@@ -67,7 +70,13 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button 
+                    type="button" 
+                    class="btn btn-outline-danger delete-expense-btn"
+                    data-bs-dismiss="modal" 
+                    @click="removeExpense(id)">
+                        <img src="@/assets/trash-can.svg" alt="Trash can" />
+                    </button>
                 </div>
             </div>
         </div>
@@ -90,6 +99,7 @@ export default {
         changedData: Function,
         categoriesData: Array,
         onChangedDate: Function,
+        removeExpense: Function,
     },
     setup(props) {
         const editedData = ref(props.initialData)

@@ -34,7 +34,7 @@
                     <EditableText :initialText="expense.description" @update:initialText="expense.description = $event"/>
                 </td>
                 <td>
-                    <div id="expenses-amount-text">
+                    <div class="expenses-amount-text">
                         <span>$</span><EditableText :initialText="expense.amount" @update:initialText="expense.amount = $event"/>
                     </div>
                 </td>
@@ -53,11 +53,11 @@
                     :changedData="changedData"
                     :categoriesData="categoriesEdit"
                     :onChangedDate="onChangedDate"
+                    :removeExpense="removeExpense"
                     />
                     <button 
                     type="button" 
-                    class="btn btn-outline-danger" 
-                    id="delete-expense-btn" 
+                    class="btn btn-outline-danger delete-expense-btn"  
                     @click="removeExpense(index)"
                     >
                         <img src="@/assets/trash-can.svg" alt="Trash can" />
@@ -141,11 +141,11 @@ export default {
     white-space: nowrap;
 }
 
-#delete-expense-btn {
+.delete-expense-btn {
     margin-left: 1em;
     border: 0;
 }
-#delete-expense-btn img {
+.delete-expense-btn img {
     /* To turn the svg to a lighter color */
     filter:invert(82%) sepia(3%) saturate(473%) hue-rotate(179deg) brightness(93%) contrast(88%);
 }
@@ -156,11 +156,11 @@ export default {
     justify-content: flex-end;
 }
 
-#expenses-amount-text {
+.expenses-amount-text {
     display: flex;
     align-items: center;
 }
-#expenses-amount-text span {
+.expenses-amount-text span {
     margin-right: .2rem;
 }
 </style>
