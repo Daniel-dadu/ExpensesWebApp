@@ -12,7 +12,12 @@
         <tbody>
             <tr v-for="(expense, _id) in expensesEdit" :key="_id">
                 <td>
-                    <Datepicker v-model="expense.date" :enable-time-picker="false" class="dp__theme_dark" :dark="true" />
+                    <Datepicker 
+                    v-model="expense.date" 
+                    :enable-time-picker="false" 
+                    class="dp__theme_dark" 
+                    :dark="true" 
+                    />
                 </td>
                 <td>
                     <DropdownSelector :elements="categoriesEdit" v-model="expense.category" :id="_id" :changedData="changedData" />
@@ -26,7 +31,7 @@
                 <td>
                     <button 
                     type="button" 
-                    class="btn btn-primary" 
+                    class="btn btn-outline-secondary" 
                     data-bs-toggle="modal" 
                     :data-bs-target="'#Modal'+_id" 
                     >
@@ -50,6 +55,14 @@
             </tr>
         </tbody>
     </table>
+    <div id="add-expense-div">
+        <button 
+        type="button" 
+        class="btn btn-outline-success" 
+        @click="addExpense">
+            Add Expense
+        </button>
+    </div>
 
 </template>
 
@@ -79,12 +92,25 @@ export default {
             delete expensesEdit.value[id]
         }
 
+        const addExpense = () => {
+            expensesEdit.value[++lastKeyEdit.value] = {
+                "userId": "5f93e3e2c4e187001cc9244a",
+                "date": new Date(),
+                "category": null,
+                "description": "Add description",
+                "amount": 0,
+                "createdAt": new Date(),
+                "updatedAt": new Date()
+            }
+        }
+
         return {
             lastKeyEdit,
             categoriesEdit,
             expensesEdit,
             changedData,
             removeExpense,
+            addExpense,
         }
     },
     components: {
@@ -113,5 +139,11 @@ export default {
 #delete-expense-btn img {
     /* To turn the svg to a lighter color */
     filter:invert(82%) sepia(3%) saturate(473%) hue-rotate(179deg) brightness(93%) contrast(88%);
+}
+
+#add-expense-div {
+    margin-top: 1rem;
+    display: flex; 
+    justify-content: flex-end;
 }
 </style>
