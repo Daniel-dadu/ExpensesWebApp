@@ -1,10 +1,17 @@
 <template>
 	<div v-if="!isEditing" @click="startEditing">{{ editedText }}</div>
-	<input v-else v-model="editedText" @keyup.enter="finishEditing" ref="textInput" />
+	<div v-else class="input-group flex-nowrap">
+		<input 
+		type="text" 
+		class="form-control" 
+		v-model="editedText" 
+		@keyup.enter="finishEditing" 
+		ref="textInput">
+	</div>
 </template>
   
 <script>
-import { ref, watch, nextTick } from "vue"
+import { ref, watch, } from "vue"
 
 export default {
 	props: {
@@ -16,7 +23,7 @@ export default {
 	setup(props, { emit }) {
 		const isEditing = ref(false)
 		const editedText = ref(props.initialText)
-		const textInputRef = ref(null)
+		const textInput = ref(null)
 
 		const startEditing = () => {
 			isEditing.value = true
@@ -24,10 +31,10 @@ export default {
 			
 			// Wait for textInputRef to become available
 			watch(
-				() => textInputRef.value,
+				() => textInput.value,
 				(newValue) => {
-					// Focus the input field
-					nextTick(() => { newValue.focus() })
+					try { newValue.focus() } // Focus the input field
+					catch (error) { error } // Just ignoring the error
 				}
 			)
 		}
@@ -45,7 +52,7 @@ export default {
 		return {
 			isEditing,
 			editedText,
-			textInputRef,
+			textInput,
 			startEditing,
 			finishEditing,
 		}
