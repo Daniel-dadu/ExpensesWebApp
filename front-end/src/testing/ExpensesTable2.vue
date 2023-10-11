@@ -4,7 +4,8 @@
 		<table class="table table-hover align-middle">
 			<thead>
 				<tr>
-					<th>Description</th>
+					<th>Date</th>
+					<th>Category</th>
 					<th>Amount</th>
 					<th></th>
 				</tr>
@@ -12,11 +13,14 @@
 			<tbody>
 				<tr v-for="(expense, _id) in expensesEdit" :key="_id">
 					<td>
-						<EditableText2 :initialText="expense.description" @update:initialText="expense.description = $event" />
+						<Datepicker />
 					</td>
 					<td>
+						<DropdownSelector />
+					</td>
+
+					<td>
 						<EditableText2 :initialText="expense.amount" @update:initialText="expense.amount = $event" />
-						${{ expense.amount }}
 					</td>
 					<td>
 						<button 
@@ -37,17 +41,6 @@
 			</tbody>
 		</table>
     </div>
-	<div>
-		<Datepicker v-model="date" :enable-time-picker="false" />
-		<div>{{ date }}</div>
-	</div>
-	<br>
-	<br>
-	<br>
-	<br>
-	<div>
-		<DropdownSelector :elements="testCategories" :selected="testCategories[1]" id="1" />
-	</div>
 </template>
   
 <script>
