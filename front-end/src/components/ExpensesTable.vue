@@ -81,7 +81,7 @@
 
 </template>
 
-<script>
+<script setup>
 import { ref } from "vue"
 import axios from "axios"
 import ExpenseModal from "./ExpenseModal.vue"
@@ -89,80 +89,60 @@ import EditableText from "./EditableText.vue"
 import Datepicker from "@vuepic/vue-datepicker"
 import DropdownSelector from "./DropdownSelector.vue"
 
-export default {
-    setup() {
-        const expensesEdit = ref([])
-        const getAPIExpenses = async () => {
-            try {
-                const response = await axios.get("/api/expenses")
-                expensesEdit.value = response.data
-            } catch (error) {
-                console.log(error)
-            }
-        } 
-        getAPIExpenses() // Get expenses when loading component
+const expensesEdit = ref([])
+const getAPIExpenses = async () => {
+    try {
+        const response = await axios.get("/api/expenses")
+        expensesEdit.value = response.data
+    } catch (error) {
+        console.log(error)
+    }
+} 
+getAPIExpenses() // Get expenses when loading component
 
-        const categoriesEdit = ref([])
-        const getAPICategories = async () => {
-            try {
-                const response = await axios.get("/api/categories")
-                categoriesEdit.value = response.data
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        getAPICategories() // Get categories when loading component
-
-        // Function called from the modal, executed when the data is changed
-		const changedData = (idx) => {
-			console.log("Send a PUT here")
-			console.log(expensesEdit.value[idx])
-		}
-    
-        const removeExpense = (idx) => {
-            expensesEdit.value.splice(idx, 1)
-        }
-
-        const addExpense = () => {
-            // Adding it at the begging of the array
-            expensesEdit.value.unshift({
-                "userId": "5f93e3e2c4e187001cc9244a",
-                "date": new Date(),
-                "category": null,
-                "description": "Add description",
-                "amount": 0,
-                "createdAt": new Date(),
-                "updatedAt": new Date()
-            })
-        }
-
-        const onChangedDate = () => {
-            // Sort the table by the date
-            expensesEdit.value.sort((a, b) => a.date < b.date ? 1 : -1)
-        }
-
-        // To sort the table when the component is loaded:
-        onChangedDate()
-
-        return {
-            categoriesEdit,
-            expensesEdit,
-            getAPIExpenses,
-            getAPICategories,
-            changedData,
-            removeExpense,
-            addExpense,
-            onChangedDate,
-        }
-    },
-    components: {
-        ExpenseModal,
-        EditableText,
-        Datepicker,
-        DropdownSelector,
-    },
+const categoriesEdit = ref([])
+const getAPICategories = async () => {
+    try {
+        const response = await axios.get("/api/categories")
+        categoriesEdit.value = response.data
+    } catch (error) {
+        console.log(error)
+    }
 }
+getAPICategories() // Get categories when loading component
+
+// Function called from the modal, executed when the data is changed
+const changedData = (idx) => {
+    console.log("Send a PUT here")
+    console.log(expensesEdit.value[idx])
+}
+
+const removeExpense = (idx) => {
+    expensesEdit.value.splice(idx, 1)
+}
+
+const addExpense = () => {
+    // Adding it at the beginning of the array
+    expensesEdit.value.unshift({
+        "userId": "5f93e3e2c4e187001cc9244a", // CHANGE THIS
+        "date": new Date(),
+        "category": null,
+        "description": "Add description",
+        "amount": 0,
+        "createdAt": new Date(),
+        "updatedAt": new Date()
+    })
+}
+
+const onChangedDate = () => {
+    // Sort the table by the date
+    expensesEdit.value.sort((a, b) => a.date < b.date ? 1 : -1)
+}
+
+// To sort the table when the component is loaded:
+onChangedDate()
 </script>
+
 
 <style>
 #expenses-table tr td:last-child {

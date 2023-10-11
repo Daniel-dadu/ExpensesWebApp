@@ -83,97 +83,82 @@
     </div>
 </template>
 
-<script>
-import EditableText from "./EditableText.vue"
-import { ref, computed, watch } from "vue"
+<script setup>
+import { ref, computed, watch, defineProps, } from "vue"
 // import Datepicker from "@vuepic/vue-datepicker"
+import EditableText from "./EditableText.vue"
 import DropdownSelector from "./DropdownSelector.vue"
 
-export default {
-    props: {
-        id: {
-			type: [String, Number],
-			required: true,
-		},
-        initialData: Object,
-        changedData: Function,
-        categoriesData: Array,
-        onChangedDate: Function,
-        removeExpense: Function,
+const props = defineProps({
+    id: {
+        type: [String, Number],
+        required: true,
     },
-    setup(props) {
-        const editedData = ref(props.initialData)
-        
-        const dateEdit = computed({
-            get: () => props.initialData.date,
-            set: (newValue) => {
-                editedData.value.date = newValue // To update data in the Table
-            },
-        })
+    initialData: Object,
+    changedData: Function,
+    categoriesData: Array,
+    onChangedDate: Function,
+    removeExpense: Function,
+})
 
-        const categoryEdit = computed({
-            get: () => props.initialData.category,
-            set: (newValue) => {
-                editedData.value.category = newValue
-            }
-        })
+const editedData = ref(props.initialData)
 
-        const descriptionEdit = computed({
-            get: () => props.initialData.description,
-            set: (newValue) => {
-                editedData.value.description = newValue // To update data in the Table
-            },
-        })
+const dateEdit = computed({
+    get: () => props.initialData.date,
+    set: (newValue) => {
+        editedData.value.date = newValue // To update data in the Table
+    }
+})
 
-        const amountEdit = computed({
-            get: () => props.initialData.amount,
-            set: (newValue) => {
-                editedData.value.amount = newValue // To update data in the Table
-            },
-        })
+const categoryEdit = computed({
+    get: () => props.initialData.category,
+    set: (newValue) => {
+        editedData.value.category = newValue
+    }
+})
 
-        // Watch for changes in data from this modal and the table
-        watch(
-            () => [
-                props.initialData.date,
-                props.initialData.description,
-                props.initialData.amount,
-            ],
-            () => {
-                props.changedData(props.id)
-            }
-        )
+const descriptionEdit = computed({
+    get: () => props.initialData.description,
+    set: (newValue) => {
+        editedData.value.description = newValue // To update data in the Table
+    }
+})
 
-        watch(
-            () => props.categoriesData,
-            () => {
-                console.log("Changed Categories Array")
-            }
-        )
+const amountEdit = computed({
+    get: () => props.initialData.amount,
+    set: (newValue) => {
+        editedData.value.amount = newValue // To update data in the Table
+    }
+})
 
-        // Watch for changes in Date
-        watch(
-            () => props.initialData.date,
-            () => {
-                props.onChangedDate()
-            }
-        )
+// Watch for changes in data from this modal and the table
+watch(
+    () => [
+        props.initialData.date,
+        props.initialData.description,
+        props.initialData.amount,
+    ],
+    () => {
+        props.changedData(props.id)
+    }
+)
 
-        return {
-            editedData,
-            categoryEdit,
-            descriptionEdit,
-            amountEdit,
-            dateEdit,
-        }
-    },
-    components: {
-        EditableText,
-        // Datepicker,
-        DropdownSelector,
-    },
-}
+watch(
+    () => props.categoriesData,
+    () => {
+        console.log("Changed Categories Array")
+    }
+)
+
+// Watch for changes in Date
+watch(
+    () => props.initialData.date,
+    () => {
+        props.onChangedDate()
+    }
+)
 </script>
+
 
 <style>
 .modal-body p {

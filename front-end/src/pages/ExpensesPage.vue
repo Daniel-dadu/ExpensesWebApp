@@ -5,12 +5,8 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import ExpensesTable from "../components/ExpensesTable.vue"
-
-export default {
-    components: { ExpensesTable },
-}
 </script>
 
 <style>

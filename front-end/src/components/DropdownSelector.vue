@@ -19,74 +19,63 @@
     </div>
 </template>
 
-<script>
-import { ref, computed, watch, } from "vue"
+<script setup>
+import { ref, computed, watch, defineProps, defineEmits } from "vue"
 
-export default {
-    props: {
-        elements: Array,
-        modelValue: String,
-        
-        // For the ExpensesTable:
-        id: {
-			type: [String, Number],
-			required: true,
-		},
-        changedData: Function,
+const props = defineProps({
+    elements: Array,
+    modelValue: String,
+    
+    // For the ExpensesTable: //
+    id: {
+        type: [String, Number],
+        required: true,
     },
-    setup(props, { emit }) {
-        const elementsEdit = ref(props.elements)
-        const textInput = ref(null)
+    changedData: Function,
+    // ---------------------- //
+})
+const emit = defineEmits(["update:modelValue"])
 
-        // To update categories when got a response from the backend
-        watch(
-            () => props.elements,
-            (newVal) => {
-                elementsEdit.value = newVal
-            }
-        )
+const elementsEdit = ref(props.elements)
+const textInput = ref(null)
 
-        const selectedEdit = computed({
-            get: () => props.modelValue,
-            set: (newVal) => {
-                emit("update:modelValue", newVal)
-            }
-        })
+// To update categories when got a response from the backend
+watch(
+    () => props.elements, 
+    (newVal) => {
+        elementsEdit.value = newVal
+    }
+)
 
-        const finishEditing = () => {
-            let isInElements = false
-            for (const elem of props.elements) {
-                if(elem === selectedEdit.value) {
-                    isInElements = true
-                    break
-                }
-            }
-            if(!isInElements) {
-                elementsEdit.value.push(selectedEdit.value)
-            }
+const selectedEdit = computed({
+    get: () => props.modelValue,
+    set: (newVal) => {
+        emit("update:modelValue", newVal)
+    }
+})
 
-            // Call changedData from ExpensesTable
-            props.changedData(props.id)
-            
-            textInput.value.blur() // To unfocus the input text
+const finishEditing = () => {
+    let isInElements = false
+    for (const elem of props.elements) {
+        if (elem === selectedEdit.value) {
+            isInElements = true
+            break
         }
+    }
+    if (!isInElements) {
+        elementsEdit.value.push(selectedEdit.value)
+    }
 
-        const selectOtherElem = (newElem) => {
-            selectedEdit.value = newElem
-            emit("update:modelValue", newElem)
-            // Call changedData from ExpensesTable
-            props.changedData(props.id)
-        }
+    // Call changedData from ExpensesTable
+    props.changedData(props.id)
 
-        return {
-            elementsEdit,
-            selectedEdit,
-            textInput,
-            finishEditing,
-            selectOtherElem,
-        }
-    },
-
+    textInput.value.blur() // To unfocus the input text
 }
 
+const selectOtherElem = (newElem) => {
+    selectedEdit.value = newElem
+    emit("update:modelValue", newElem)
+    // Call changedData from ExpensesTable
+    props.changedData(props.id)
+}
 </script>
