@@ -18,6 +18,17 @@ const props = defineProps({
 		type: [String, Number],
 		required: true,
 	},
+
+	// For ExpensesTable //
+	index: {
+		type: [String, Number],
+		required: false,
+	},
+	inputVar: { // This helps to identify the expense property edited
+		type: String,
+		required: false,
+	},
+	// ----------------- //
 })
 const emit = defineEmits(["update:initialText"])
 
@@ -41,7 +52,7 @@ const startEditing = () => {
 
 const finishEditing = () => {
 	isEditing.value = false
-	emit("update:initialText", editedText.value)
+	emit("update:initialText", editedText.value, props.index, props.inputVar)
 }
 
 // Watch for changes in props.initialText and update editedText

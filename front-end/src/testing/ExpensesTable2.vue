@@ -37,16 +37,20 @@
                 </td>
                 <td>
                     <EditableText 
-                    :initialText="expense.description" 
-                    @update:initialText="expense.description = $event"
+						:initialText="expense.description" 
+						:index="index"
+						:input-var="'description'" 
+						@update:initialText="updateEditableText"
                     />
                 </td>
                 <td>
                     <div class="expenses-amount-text">
                         <span>$</span>
                         <EditableText 
-                        :initialText="expense.amount" 
-                        @update:initialText="expense.amount = $event"
+							:initial-text="expense.amount" 
+							:index="index"
+							:input-var="'amount'" 
+							@update:initialText="updateEditableText"
                         />
                     </div>
                 </td>
@@ -60,12 +64,13 @@
                         More
                     </button>
                     <ExpenseModal 
-                    :id="index"
-                    :initialData="expense"
-                    :changedData="changedData"
-                    :categoriesData="categoriesEdit"
-                    :onChangedDate="onChangedDate"
-                    :removeExpense="removeExpense"
+                    :index="index"
+                    :initial-data="expense"
+					:update-editable-text="updateEditableText"
+                    :changed-data="changedData"
+                    :categories-data="categoriesEdit"
+                    :on-changed-date="onChangedDate"
+                    :remove-expense="removeExpense"
                     />
                     <button 
                     type="button" 
@@ -110,6 +115,11 @@ const getAPICategories = async () => {
     }
 }
 getAPICategories() // Get categories when loading component
+
+// Called when any EditableText is updated inside the table and modal
+const updateEditableText = (newVal, idx, inputVar) => {
+	expensesEdit.value[idx][inputVar] = newVal
+}
 
 // Function called from the modal, executed when the data is changed
 const changedData = (idx) => {
