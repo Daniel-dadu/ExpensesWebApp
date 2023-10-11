@@ -30,7 +30,7 @@ const props = defineProps({
 	},
 	// ----------------- //
 })
-const emit = defineEmits(["update:initialText"])
+const emit = defineEmits(["update:initial-text"])
 
 const isEditing = ref(false)
 const editedText = ref(props.initialText)
@@ -52,7 +52,7 @@ const startEditing = () => {
 
 const finishEditing = () => {
 	isEditing.value = false
-	emit("update:initialText", editedText.value, props.index, props.inputVar)
+	emit("update:initial-text", editedText.value, props.index, props.inputVar)
 }
 
 // Watch for changes in props.initialText and update editedText

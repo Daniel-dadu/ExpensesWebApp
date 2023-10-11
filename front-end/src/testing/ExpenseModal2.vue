@@ -32,9 +32,11 @@
                         <p>Category:</p>
                         <div class="modal-editable-elem">
                             <DropdownSelector 
-                            :elements="categoriesData" 
-                            v-model="_" 
-                            :id="props.index" 
+                            :elements="props.categoriesData" 
+                            @update:elements="props.updateCategories"
+                            :initial-elem="props.initialData.category"
+                            @update:initial-elem="props.updateCategorySelected"
+                            :index="props.index" 
                             :changedData="changedData" 
                             />
                         </div>
@@ -102,6 +104,8 @@ const props = defineProps({
     updateEditableText: Function,
     changedData: Function,
     categoriesData: Array,
+    updateCategories: Function,
+    updateCategorySelected: Function,
     onChangedDate: Function,
     removeExpense: Function,
 })

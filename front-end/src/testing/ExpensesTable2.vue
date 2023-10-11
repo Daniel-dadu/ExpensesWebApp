@@ -30,8 +30,10 @@
                 <td>
                     <DropdownSelector 
                     :elements="categoriesEdit" 
-                    v-model="expense.category" 
-                    :id="index" 
+					@update:elements="updateCategories"
+                    :initial-elem="expense.category"
+					@update:initial-elem="updateCategorySelected"
+                    :index="index" 
                     :changedData="changedData" 
                     />
                 </td>
@@ -40,7 +42,7 @@
 						:initialText="expense.description" 
 						:index="index"
 						:input-var="'description'" 
-						@update:initialText="updateEditableText"
+						@update:initial-text="updateEditableText"
                     />
                 </td>
                 <td>
@@ -50,7 +52,7 @@
 							:initial-text="expense.amount" 
 							:index="index"
 							:input-var="'amount'" 
-							@update:initialText="updateEditableText"
+							@update:initial-text="updateEditableText"
                         />
                     </div>
                 </td>
@@ -69,6 +71,8 @@
 					:update-editable-text="updateEditableText"
                     :changed-data="changedData"
                     :categories-data="categoriesEdit"
+					:update-categories="updateCategories"
+					:update-category-selected="updateCategorySelected"
                     :on-changed-date="onChangedDate"
                     :remove-expense="removeExpense"
                     />
@@ -115,6 +119,15 @@ const getAPICategories = async () => {
     }
 }
 getAPICategories() // Get categories when loading component
+
+// Called when any DropdownSelector is updated inside the table and modal
+const updateCategorySelected = (newCat, idx) => {
+	expensesEdit.value[idx]["category"] = newCat
+}
+
+const updateCategories = (newCategory) => {
+	categoriesEdit.value.push(newCategory)
+}
 
 // Called when any EditableText is updated inside the table and modal
 const updateEditableText = (newVal, idx, inputVar) => {
