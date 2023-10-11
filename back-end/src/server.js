@@ -1,9 +1,14 @@
 import express from "express"
+import { expenses } from "./expenses-obj"
 
 const app = express()
 
-app.get("/hello", (req, res) => {
-    res.send("Hello!")
+app.get("/expenses", (req, res) => {
+    res.json(expenses.list)
+})
+
+app.get("/categories", (req, res) => {
+    res.json(expenses.categories)
 })
 
 app.listen(8000, () => {
