@@ -13,7 +13,7 @@ export const expenses = {
             "userId": "5f93e3e2c4e187001cc9244c",
             "date": new Date(2023, 9, 5),
             "category": "Entertainment",
-            "description": "Movie night with friends",
+            "description": "Peliculita porfaaa",
             "amount": 20.50,
             "createdAt": "2023-03-17T19:45:00.000Z",
             "updatedAt": "2023-03-17T19:45:00.000Z"
@@ -42,5 +42,6 @@ export const expenses = {
         "Entertainment",
         "Dining Out",
         "Transportation",
+        "Games",
     ]
 }

@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { ref, computed, } from "vue"
+import { ref, computed, watch, } from "vue"
 
 export default {
     props: {
@@ -37,6 +37,14 @@ export default {
     setup(props, { emit }) {
         const elementsEdit = ref(props.elements)
         const textInput = ref(null)
+
+        // To update categories when got a response from the backend
+        watch(
+            () => props.elements,
+            (newVal) => {
+                elementsEdit.value = newVal
+            }
+        )
 
         const selectedEdit = computed({
             get: () => props.modelValue,

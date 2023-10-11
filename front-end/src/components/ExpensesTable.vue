@@ -83,7 +83,7 @@
 
 <script>
 import { ref } from "vue"
-import { expenses } from "@/expenses-obj"
+import axios from "axios"
 import ExpenseModal from "./ExpenseModal.vue"
 import EditableText from "./EditableText.vue"
 import Datepicker from "@vuepic/vue-datepicker"
@@ -91,8 +91,27 @@ import DropdownSelector from "./DropdownSelector.vue"
 
 export default {
     setup() {
-        const categoriesEdit = ref(expenses.categories)
-        const expensesEdit = ref(expenses.list)
+        const expensesEdit = ref([])
+        const getAPIExpenses = async () => {
+            try {
+                const response = await axios.get("/api/expenses")
+                expensesEdit.value = response.data
+            } catch (error) {
+                console.log(error)
+            }
+        } 
+        getAPIExpenses() // Get expenses when loading component
+
+        const categoriesEdit = ref([])
+        const getAPICategories = async () => {
+            try {
+                const response = await axios.get("/api/categories")
+                categoriesEdit.value = response.data
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getAPICategories() // Get categories when loading component
 
         // Function called from the modal, executed when the data is changed
 		const changedData = (idx) => {
@@ -128,6 +147,8 @@ export default {
         return {
             categoriesEdit,
             expensesEdit,
+            getAPIExpenses,
+            getAPICategories,
             changedData,
             removeExpense,
             addExpense,

@@ -3,11 +3,11 @@ import { expenses } from "./expenses-obj"
 
 const app = express()
 
-app.get("/expenses", (req, res) => {
+app.get("/api/expenses", (req, res) => {
     res.json(expenses.list)
 })
 
-app.get("/categories", (req, res) => {
+app.get("/api/categories", (req, res) => {
     res.json(expenses.categories)
 })
 
