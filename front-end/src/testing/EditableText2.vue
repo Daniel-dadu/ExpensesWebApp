@@ -1,12 +1,20 @@
 <template>
-	<div v-if="!isEditing" @click="startEditing" class="editabletext-div">{{ editedText }}</div>
+	<button 
+		v-if="!isEditing" 
+		type="button" 
+		@click="startEditing" 
+		class="btn btn-dark editabletext-div"
+	>
+		{{ editedText }}
+	</button>
 	<div v-else class="input-group editabletext-div">
 		<input 
-		type="text" 
-		class="form-control" 
-		v-model="editedText" 
-		@keyup.enter="finishEditing" 
-		ref="textInput">
+			type="text" 
+			class="form-control" 
+			v-model="editedText" 
+			@keyup.enter="finishEditing" 
+			ref="textInput"
+		>
 	</div>
 </template>
   

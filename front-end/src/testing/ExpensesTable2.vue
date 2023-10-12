@@ -27,7 +27,9 @@
 						:dark="true"
                     >
 						<template #trigger>
-							<button type="button" class="btn btn-dark">{{formatDateForView(expense.date)}}</button>
+							<button type="button" class="btn btn-dark">
+								{{formatDateForView(expense.date)}}
+							</button>
 						</template>
 					</Datepicker>
                 </td>
@@ -63,7 +65,7 @@
                 <td>
                     <button 
 						type="button" 
-						class="btn btn-outline-secondary" 
+						class="btn btn-outline-light" 
 						data-bs-toggle="modal" 
 						:data-bs-target="'#TModal'+index" 
                     >
@@ -198,10 +200,11 @@ const onChangedDate = () => {
 }
 
 .expenses-amount-text {
-    display: flex;
+	display: flex;
     align-items: center;
 }
-.expenses-amount-text span {
-    margin-right: .2rem;
+.expenses-amount-text button, .expenses-amount-text input {
+	padding-left: 0.2rem;
+	padding-right: 0.2rem;
 }
 </style>
