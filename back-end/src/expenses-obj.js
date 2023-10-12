@@ -2,7 +2,7 @@ export const expenses = {
     "list": [
         {
             "userId": "5f93e3e2c4e187001cc92448",
-            "date": new Date(2023, 9, 4),
+            "date": new Date(2023, 9, 7),
             "category": "Groceries",
             "description": "Weekly grocery shopping",
             "amount": 85.75,
@@ -20,7 +20,7 @@ export const expenses = {
         },
         {
             "userId": "5f93e3e2c4e187001cc9244e",
-            "date": new Date(2023, 9, 1),
+            "date": new Date(2023, 9, 3),
             "category": "Dining Out",
             "description": "Dinner at a local restaurant",
             "amount": 55.00,
@@ -29,7 +29,7 @@ export const expenses = {
         },
         {
             "userId": "5f93e3e2c4e187001cc9244a",
-            "date": new Date(2023, 9, 8),
+            "date": new Date(2023, 9, 1),
             "category": "Transportation",
             "description": "Gasoline refill",
             "amount": 45.25,

@@ -21,20 +21,24 @@
             <tr v-for="(expense, index) in expensesEdit" :key="index">
                 <td>
                     <Datepicker 
-                    v-model="expense.date" 
-                    :enable-time-picker="false" 
-                    class="dp__theme_dark" 
-                    :dark="true" 
-                    />
+						v-model="expense.date" 
+						:enable-time-picker="false" 
+						class="dp__theme_dark" 
+						:dark="true"
+                    >
+						<template #trigger>
+							<button type="button" class="btn btn-dark">{{formatDateForView(expense.date)}}</button>
+						</template>
+					</Datepicker>
                 </td>
                 <td>
                     <DropdownSelector 
-                    :elements="categoriesEdit" 
-					@update:elements="updateCategories"
-                    :initial-elem="expense.category"
-					@update:initial-elem="updateCategorySelected"
-                    :index="index" 
-                    :changedData="changedData" 
+						:elements="categoriesEdit" 
+						@update:elements="updateCategories"
+						:initial-elem="expense.category"
+						@update:initial-elem="updateCategorySelected"
+						:index="index" 
+						:changedData="changedData" 
                     />
                 </td>
                 <td>
@@ -58,28 +62,28 @@
                 </td>
                 <td>
                     <button 
-                    type="button" 
-                    class="btn btn-outline-secondary" 
-                    data-bs-toggle="modal" 
-                    :data-bs-target="'#TModal'+index" 
+						type="button" 
+						class="btn btn-outline-secondary" 
+						data-bs-toggle="modal" 
+						:data-bs-target="'#TModal'+index" 
                     >
                         More
                     </button>
                     <ExpenseModal 
-                    :index="index"
-                    :initial-data="expense"
-					:update-editable-text="updateEditableText"
-                    :changed-data="changedData"
-                    :categories-data="categoriesEdit"
-					:update-categories="updateCategories"
-					:update-category-selected="updateCategorySelected"
-                    :on-changed-date="onChangedDate"
-                    :remove-expense="removeExpense"
+						:index="index"
+						:initial-data="expense"
+						:update-editable-text="updateEditableText"
+						:changed-data="changedData"
+						:categories-data="categoriesEdit"
+						:update-categories="updateCategories"
+						:update-category-selected="updateCategorySelected"
+						:on-changed-date="onChangedDate"
+						:remove-expense="removeExpense"
                     />
                     <button 
-                    type="button" 
-                    class="btn btn-outline-danger delete-expense-btn"  
-                    @click="removeExpense(index)"
+						type="button" 
+						class="btn btn-outline-danger delete-expense-btn"  
+						@click="removeExpense(index)"
                     >
                         <img src="@/assets/trash-can.svg" alt="Trash can" />
                     </button>
@@ -91,18 +95,22 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, } from "vue"
 import axios from "axios"
 import ExpenseModal from "./ExpenseModal2.vue"
 import EditableText from "./EditableText2.vue"
 import Datepicker from "@vuepic/vue-datepicker"
 import DropdownSelector from "./DropdownSelector2.vue"
+import { formatDateForView } from "../functions/dateFormatting.js"
 
 const expensesEdit = ref([])
 const getAPIExpenses = async () => {
     try {
         const response = await axios.get("/api/expenses")
-        expensesEdit.value = response.data
+		// Turning all the date strings into Date
+        expensesEdit.value = response.data.map((expense) => { 
+			return {...expense, "date": new Date(expense.date)} 
+		})
     } catch (error) {
         console.log(error)
     }
@@ -161,9 +169,6 @@ const onChangedDate = () => {
     // Sort the table by the date
     expensesEdit.value.sort((a, b) => a.date < b.date ? 1 : -1)
 }
-
-// To sort the table when the component is loaded:
-onChangedDate()
 </script>
 
 

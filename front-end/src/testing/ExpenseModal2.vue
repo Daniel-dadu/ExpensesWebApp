@@ -14,19 +14,16 @@
                 <div class="modal-body">
                         <p>Date:</p>
                         <div class="modal-editable-elem">
-                            {{ dateEdit }}
+                            {{ formatDateForView(initialData.date) }}
                             <!-- See issue: Make Datepicker from ExpensesModal update the sorting correctly #12 -->
-                            <!--                         
                             
-                            <Datepicker 
-                            v-model="dateEdit" 
-                            :enable-time-picker="false" 
-                            class="dp__theme_dark" 
-                            :dark="true"
-                            :format="(date) => `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`" 
-                            />
+                            <!-- <Datepicker 
+                                v-model="dateEdit" 
+                                :enable-time-picker="false" 
+                                class="dp__theme_dark" 
+                                :dark="true"
+                            /> -->
     
-                            -->
                         </div>
 
                         <p>Category:</p>
@@ -66,12 +63,12 @@
 
                         <p>Created at:</p>
                         <div class="modal-editable-elem">
-                            {{ initialData.createdAt }}
+                            {{ formatDateWithHourForView(initialData.createdAt) }}
                         </div>
 
                         <p>Updated at:</p>
                         <div class="modal-editable-elem">
-                            {{ initialData.updatedAt }}
+                            {{ formatDateWithHourForView(initialData.updatedAt) }}
                         </div>
 
                 </div>
@@ -94,6 +91,8 @@ import { watch, defineProps, } from "vue"
 // import Datepicker from "@vuepic/vue-datepicker"
 import EditableText from "./EditableText2.vue"
 import DropdownSelector from "./DropdownSelector2.vue"
+import { formatDateForView, formatDateWithHourForView } from "../functions/dateFormatting.js"
+
 
 const props = defineProps({
     index: {
