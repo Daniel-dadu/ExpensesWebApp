@@ -21,8 +21,8 @@
 	</div>
     <div class="tab-content" id="pills-tabContent">
 		<div class="tab-pane fade show active" id="pills-expenses" role="tabpanel" aria-labelledby="pills-expenses-tab" tabindex="0">
-			<ExpensesTable2 />
-			<!-- <ExpensesPage/> -->
+			<!-- <ExpensesTable2 /> -->
+			<ExpensesPage/>
 		</div>
 		<div class="tab-pane fade" id="pills-savings" role="tabpanel" aria-labelledby="pills-savings-tab" tabindex="0">
 			SAVINGS COMPONENT
@@ -40,8 +40,8 @@
 </template>
 
 <script setup>
-// import ExpensesPage from "@/pages/ExpensesPage.vue"
-import ExpensesTable2 from "../testing/ExpensesTable2.vue"
+import ExpensesPage from "@/pages/ExpensesPage.vue"
+// import ExpensesTable2 from "../testing/ExpensesTable2.vue"
 import "@vuepic/vue-datepicker/dist/main.css"
 </script>
 

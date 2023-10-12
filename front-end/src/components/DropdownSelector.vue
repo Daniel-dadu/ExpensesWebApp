@@ -1,12 +1,12 @@
 <template>
     <div class="input-group">
         <input 
-        type="text" 
-        class="form-control" 
-        aria-label="Text input with dropdown button"
-        v-model="selectedEdit"
-        @keyup.enter="finishEditing"
-        ref="textInput"
+            type="text" 
+            class="form-control" 
+            aria-label="Text input with dropdown button"
+            v-model="selectedEdit"
+            @keyup.enter="finishEditing"
+            ref="textInput"
         >
         <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"></button>
         <ul class="dropdown-menu dropdown-menu-end">
@@ -20,23 +20,27 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, defineProps, defineEmits } from "vue"
+import { ref, watch, defineProps, defineEmits, } from "vue"
 
 const props = defineProps({
     elements: Array,
-    modelValue: String,
+    initialElem: String,
     
     // For the ExpensesTable: //
-    id: {
+    index: {
         type: [String, Number],
-        required: true,
+        required: false,
     },
-    changedData: Function,
+    changedData: {
+        type: Function,
+        required: false
+    },
     // ---------------------- //
 })
-const emit = defineEmits(["update:modelValue"])
+const emit = defineEmits(["update:initial-elem", "update:elements"])
 
 const elementsEdit = ref(props.elements)
+const selectedEdit = ref(props.initialElem)
 const textInput = ref(null)
 
 // To update categories when got a response from the backend
@@ -47,35 +51,41 @@ watch(
     }
 )
 
-const selectedEdit = computed({
-    get: () => props.modelValue,
-    set: (newVal) => {
-        emit("update:modelValue", newVal)
+// To keep selectedEdit updated
+watch(
+    () => props.initialElem, 
+    (newVal) => {
+        selectedEdit.value = newVal
     }
-})
+)
 
 const finishEditing = () => {
     let isInElements = false
-    for (const elem of props.elements) {
+    for (const elem of elementsEdit.value) {
         if (elem === selectedEdit.value) {
             isInElements = true
             break
         }
     }
-    if (!isInElements) {
-        elementsEdit.value.push(selectedEdit.value)
+
+    // Update the value in the Table
+    emit("update:initial-elem", selectedEdit.value, props.index)
+
+    if (!isInElements) {        
+        // Update the categories in general
+        emit("update:elements", selectedEdit.value)
     }
 
     // Call changedData from ExpensesTable
-    props.changedData(props.id)
+    props.changedData(props.index)
 
     textInput.value.blur() // To unfocus the input text
 }
 
 const selectOtherElem = (newElem) => {
-    selectedEdit.value = newElem
-    emit("update:modelValue", newElem)
+    // Update the value in the Table
+    emit("update:initial-elem", newElem, props.index)
     // Call changedData from ExpensesTable
-    props.changedData(props.id)
+    props.changedData(props.index)
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
     <div 
     class="modal fade" 
-    v-bind:id="'Modal'+id" 
+    v-bind:id="'Modal'+props.index" 
     tabindex="-1" 
     aria-hidden="true"
     >
@@ -14,27 +14,26 @@
                 <div class="modal-body">
                         <p>Date:</p>
                         <div class="modal-editable-elem">
-                            {{ dateEdit }}
+                            {{ initialData.date.toGMTString().substring(0, 16) }}
                             <!-- See issue: Make Datepicker from ExpensesModal update the sorting correctly #12 -->
-                            <!--                         
                             
-                            <Datepicker 
-                            v-model="dateEdit" 
-                            :enable-time-picker="false" 
-                            class="dp__theme_dark" 
-                            :dark="true"
-                            :format="(date) => `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`" 
-                            />
+                            <!-- <Datepicker 
+                                v-model="dateEdit" 
+                                :enable-time-picker="false" 
+                                class="dp__theme_dark" 
+                                :dark="true"
+                            /> -->
     
-                            -->
                         </div>
 
                         <p>Category:</p>
                         <div class="modal-editable-elem">
                             <DropdownSelector 
-                            :elements="categoriesData" 
-                            v-model="categoryEdit" 
-                            :id="id" 
+                            :elements="props.categoriesData" 
+                            @update:elements="props.updateCategories"
+                            :initial-elem="props.initialData.category"
+                            @update:initial-elem="props.updateCategorySelected"
+                            :index="props.index" 
                             :changedData="changedData" 
                             />
                         </div>
@@ -42,8 +41,10 @@
                         <p>Description:</p>
                         <div class="modal-editable-elem">
                             <EditableText 
-                            :initialText="descriptionEdit" 
-                            @update:initialText="descriptionEdit = $event"  
+                                :initialText="props.initialData.description"
+                                :index="props.index"
+                                :input-var="'description'" 
+                                @update:initialText="props.updateEditableText"  
                             />
                         </div>
                         
@@ -52,20 +53,22 @@
                             <div class="expenses-amount-text">
                                 <span>$</span>
                                 <EditableText 
-                                :initialText="amountEdit" 
-                                @update:initialText="amountEdit = $event" 
+                                    :initialText="props.initialData.amount"
+                                    :index="props.index"
+                                    :input-var="'amount'"
+                                    @update:initialText="props.updateEditableText" 
                                 />
                             </div>
                         </div>
 
                         <p>Created at:</p>
                         <div class="modal-editable-elem">
-                            {{ initialData.createdAt }}
+                            {{ new Date(initialData.createdAt).toGMTString() }}
                         </div>
 
                         <p>Updated at:</p>
                         <div class="modal-editable-elem">
-                            {{ initialData.updatedAt }}
+                            {{ new Date(initialData.updatedAt).toGMTString() }}
                         </div>
 
                 </div>
@@ -74,7 +77,7 @@
                     type="button" 
                     class="btn btn-outline-danger delete-expense-btn"
                     data-bs-dismiss="modal" 
-                    @click="removeExpense(id)">
+                    @click="removeExpense(props.index)">
                         <img src="@/assets/trash-can.svg" alt="Trash can" />
                     </button>
                 </div>
@@ -84,51 +87,25 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, defineProps, } from "vue"
+import { watch, defineProps, } from "vue"
 // import Datepicker from "@vuepic/vue-datepicker"
 import EditableText from "./EditableText.vue"
 import DropdownSelector from "./DropdownSelector.vue"
 
+
 const props = defineProps({
-    id: {
+    index: {
         type: [String, Number],
         required: true,
     },
     initialData: Object,
+    updateEditableText: Function,
     changedData: Function,
     categoriesData: Array,
+    updateCategories: Function,
+    updateCategorySelected: Function,
     onChangedDate: Function,
     removeExpense: Function,
-})
-
-const editedData = ref(props.initialData)
-
-const dateEdit = computed({
-    get: () => props.initialData.date,
-    set: (newValue) => {
-        editedData.value.date = newValue // To update data in the Table
-    }
-})
-
-const categoryEdit = computed({
-    get: () => props.initialData.category,
-    set: (newValue) => {
-        editedData.value.category = newValue
-    }
-})
-
-const descriptionEdit = computed({
-    get: () => props.initialData.description,
-    set: (newValue) => {
-        editedData.value.description = newValue // To update data in the Table
-    }
-})
-
-const amountEdit = computed({
-    get: () => props.initialData.amount,
-    set: (newValue) => {
-        editedData.value.amount = newValue // To update data in the Table
-    }
 })
 
 // Watch for changes in data from this modal and the table
@@ -139,7 +116,7 @@ watch(
         props.initialData.amount,
     ],
     () => {
-        props.changedData(props.id)
+        props.changedData(props.index)
     }
 )
 

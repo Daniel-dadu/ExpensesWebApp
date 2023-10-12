@@ -21,56 +21,71 @@
             <tr v-for="(expense, index) in expensesEdit" :key="index">
                 <td>
                     <Datepicker 
-                    v-model="expense.date" 
-                    :enable-time-picker="false" 
-                    class="dp__theme_dark" 
-                    :dark="true" 
-                    />
+						v-model="expense.date" 
+						:enable-time-picker="false" 
+						class="dp__theme_dark" 
+						:dark="true"
+                    >
+						<template #trigger>
+							<button type="button" class="btn btn-dark">
+								{{expense.date.toGMTString().substring(0, 16)}}
+							</button>
+						</template>
+					</Datepicker>
                 </td>
                 <td>
                     <DropdownSelector 
-                    :elements="categoriesEdit" 
-                    v-model="expense.category" 
-                    :id="index" 
-                    :changedData="changedData" 
+						:elements="categoriesEdit" 
+						@update:elements="updateCategories"
+						:initial-elem="expense.category"
+						@update:initial-elem="updateCategorySelected"
+						:index="index" 
+						:changedData="changedData" 
                     />
                 </td>
                 <td>
                     <EditableText 
-                    :initialText="expense.description" 
-                    @update:initialText="expense.description = $event"
+						:initialText="expense.description" 
+						:index="index"
+						:input-var="'description'" 
+						@update:initial-text="updateEditableText"
                     />
                 </td>
                 <td>
                     <div class="expenses-amount-text">
                         <span>$</span>
                         <EditableText 
-                        :initialText="expense.amount" 
-                        @update:initialText="expense.amount = $event"
+							:initial-text="expense.amount" 
+							:index="index"
+							:input-var="'amount'" 
+							@update:initial-text="updateEditableText"
                         />
                     </div>
                 </td>
                 <td>
                     <button 
-                    type="button" 
-                    class="btn btn-outline-secondary" 
-                    data-bs-toggle="modal" 
-                    :data-bs-target="'#Modal'+index" 
+						type="button" 
+						class="btn btn-outline-light" 
+						data-bs-toggle="modal" 
+						:data-bs-target="'#Modal'+index" 
                     >
                         More
                     </button>
                     <ExpenseModal 
-                    :id="index"
-                    :initialData="expense"
-                    :changedData="changedData"
-                    :categoriesData="categoriesEdit"
-                    :onChangedDate="onChangedDate"
-                    :removeExpense="removeExpense"
+						:index="index"
+						:initial-data="expense"
+						:update-editable-text="updateEditableText"
+						:changed-data="changedData"
+						:categories-data="categoriesEdit"
+						:update-categories="updateCategories"
+						:update-category-selected="updateCategorySelected"
+						:on-changed-date="onChangedDate"
+						:remove-expense="removeExpense"
                     />
                     <button 
-                    type="button" 
-                    class="btn btn-outline-danger delete-expense-btn"  
-                    @click="removeExpense(index)"
+						type="button" 
+						class="btn btn-outline-danger delete-expense-btn"  
+						@click="removeExpense(index)"
                     >
                         <img src="@/assets/trash-can.svg" alt="Trash can" />
                     </button>
@@ -82,7 +97,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, } from "vue"
 import axios from "axios"
 import ExpenseModal from "./ExpenseModal.vue"
 import EditableText from "./EditableText.vue"
@@ -93,7 +108,10 @@ const expensesEdit = ref([])
 const getAPIExpenses = async () => {
     try {
         const response = await axios.get("/api/expenses")
-        expensesEdit.value = response.data
+		// Turning all the date strings into Date
+        expensesEdit.value = response.data.map((expense) => { 
+			return {...expense, "date": new Date(expense.date)} 
+		})
     } catch (error) {
         console.log(error)
     }
@@ -110,6 +128,20 @@ const getAPICategories = async () => {
     }
 }
 getAPICategories() // Get categories when loading component
+
+// Called when any DropdownSelector is updated inside the table and modal
+const updateCategorySelected = (newCat, idx) => {
+	expensesEdit.value[idx]["category"] = newCat
+}
+
+const updateCategories = (newCategory) => {
+	categoriesEdit.value.push(newCategory)
+}
+
+// Called when any EditableText is updated inside the table and modal
+const updateEditableText = (newVal, idx, inputVar) => {
+	expensesEdit.value[idx][inputVar] = newVal
+}
 
 // Function called from the modal, executed when the data is changed
 const changedData = (idx) => {
@@ -138,9 +170,6 @@ const onChangedDate = () => {
     // Sort the table by the date
     expensesEdit.value.sort((a, b) => a.date < b.date ? 1 : -1)
 }
-
-// To sort the table when the component is loaded:
-onChangedDate()
 </script>
 
 
@@ -170,10 +199,11 @@ onChangedDate()
 }
 
 .expenses-amount-text {
-    display: flex;
+	display: flex;
     align-items: center;
 }
-.expenses-amount-text span {
-    margin-right: .2rem;
+.expenses-amount-text button, .expenses-amount-text input {
+	padding-left: 0.2rem;
+	padding-right: 0.2rem;
 }
 </style>
