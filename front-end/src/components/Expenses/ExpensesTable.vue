@@ -100,9 +100,9 @@
 import { ref, } from "vue"
 import axios from "axios"
 import ExpenseModal from "./ExpenseModal.vue"
-import EditableText from "./EditableText.vue"
+import EditableText from "../ReusableComponents/EditableText.vue"
 import Datepicker from "@vuepic/vue-datepicker"
-import DropdownSelector from "./DropdownSelector.vue"
+import DropdownSelector from "../ReusableComponents/DropdownSelector.vue"
 
 const expensesEdit = ref([])
 const getAPIExpenses = async () => {

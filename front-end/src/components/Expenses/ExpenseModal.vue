@@ -89,8 +89,8 @@
 <script setup>
 import { watch, defineProps, } from "vue"
 // import Datepicker from "@vuepic/vue-datepicker"
-import EditableText from "./EditableText.vue"
-import DropdownSelector from "./DropdownSelector.vue"
+import EditableText from "../ReusableComponents/EditableText.vue"
+import DropdownSelector from "../ReusableComponents/DropdownSelector.vue"
 
 
 const props = defineProps({

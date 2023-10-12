@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import ExpensesTable from "../components/ExpensesTable.vue"
+import ExpensesTable from "../components/Expenses/ExpensesTable.vue"
 </script>
 
 <style>
