@@ -97,7 +97,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, } from "vue"
+import { ref, defineProps, watch, } from "vue"
 import axios from "axios"
 import ExpenseModal from "./ExpenseModal.vue"
 import EditableText from "../ReusableComponents/EditableText.vue"
@@ -122,6 +122,13 @@ const getAPIExpenses = async () => {
     }
 } 
 getAPIExpenses() // Get expenses when loading component
+
+watch(
+    () => [props.currMonth, props.currYear],
+    () => {
+        getAPIExpenses()
+    }
+)
 
 const categoriesEdit = ref([])
 const getAPICategories = async () => {
