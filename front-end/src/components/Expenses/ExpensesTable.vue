@@ -123,6 +123,7 @@ const getAPIExpenses = async () => {
 } 
 getAPIExpenses() // Get expenses when loading component
 
+// Watching for changes in the current month selected in MonthSelector
 watch(
     () => [props.currMonth, props.currYear],
     () => {
