@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, } from "vue"
+import { ref, defineProps, defineEmits, watch, } from "vue"
 import axios from "axios"
 import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
 import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
@@ -37,10 +37,14 @@ const props = defineProps({
         required: true,
     },
     updateCategories: Function,
+    currMonthInNum: Number,
+    currYear: Number,
 })
 
-const currMonth = ref(new Date().getMonth()) // Set to actual month
-const currYear = ref(new Date().getFullYear()) // Set to actual year
+const emit = defineEmits(["update:curr-month-in-num", "update:curr-year"])
+
+const currMonth = ref(props.currMonthInNum) // Set to actual month
+const currYear = ref(props.currYear) // Set to actual year
 const years = ref([])
 const expensesEdit = ref([])
 const totalSpent = ref(0)
@@ -71,11 +75,13 @@ getAPIExpenses() // Get expenses when loading component
 
 const updateCurrMonth = (newMonth) => {
     currMonth.value = newMonth
+    emit("update:curr-month-in-num", newMonth)
     getAPIExpenses() // Update expenses
 }
 
 const updateCurrYear = (newYear) => {
     currYear.value = newYear
+    emit("update:curr-year", newYear)
     getAPIExpenses() // Update expenses
 }
 
