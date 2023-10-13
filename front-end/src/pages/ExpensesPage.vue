@@ -9,12 +9,10 @@
                 @update:curr-year="updateCurrYear"
             />
         </div>
-        <div>
-            <TotalTitle 
-                :title="'Total spent'"
-                :amount="'200'"
-            />
-        </div>
+        <TotalTitle 
+            :title="'Total spent'"
+            :amount="totalSpent"
+        />
         <ExpensesTable
             :expenses="expensesEdit"
             @update:expenses="updateExpenses"
@@ -27,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, } from "vue"
+import { ref, defineProps, watch, } from "vue"
 import axios from "axios"
 import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
 import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
@@ -45,6 +43,7 @@ const currMonth = ref(new Date().getMonth()) // Set to actual month
 const currYear = ref(new Date().getFullYear()) // Set to actual year
 const years = ref([])
 const expensesEdit = ref([])
+const totalSpent = ref(0)
 
 const getAPIYears = async () => {
     try {
@@ -84,8 +83,23 @@ const updateExpenses = (newExpenses) => {
     expensesEdit.value = newExpenses
 }
 
+const updateTotalSpent = () => {
+    const cont = 0
+    totalSpent.value = expensesEdit.value.reduce(
+        (added, currExpense) => added + parseFloat(currExpense.amount), 
+        cont
+    )
+}
+
+// To update totalSpent.value when the page loads
+watch(
+    () => expensesEdit.value,
+    () => updateTotalSpent() 
+)
+
 // Function called from the modal, executed when the data is changed
 const changedData = (idx) => {
+    updateTotalSpent()
     console.log("Send a PUT here")
     console.log(expensesEdit.value[idx])
 }
