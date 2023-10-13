@@ -42,7 +42,7 @@ import { defineProps, ref, } from "vue"
 
 const props = defineProps({
     years: Array,
-    currMonth: String,
+    currMonthInNum: Number,
     currYear: {
         type: [Number, String],
         required: true,
@@ -64,7 +64,7 @@ const months = [
     "December",
 ]
 
-const monthEdit = ref(props.currMonth)
+const monthEdit = ref(months[props.currMonthInNum])
 const yearEdit = ref(props.currYear)
 
 const arrowClick = (isLeft) => {

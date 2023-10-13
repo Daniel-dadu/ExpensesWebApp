@@ -4,7 +4,7 @@
         <div class="month-selector-center">
             <MonthSelector 
                 :years="years" 
-                :curr-month="currMonth" 
+                :curr-month-in-num="currMonth" 
                 :curr-year="currYear"
             />
         </div>
@@ -13,16 +13,25 @@
 </template>
 
 <script setup>
+import { ref } from "vue"
+import axios from "axios"
 import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue";
 import ExpensesTable from "../components/Expenses/ExpensesTable.vue"
 
-const years = [
-    2023,
-    2024,
-    2025,
-]
-const currMonth = "July"
-const currYear = 2023
+const years = ref([])
+const getAPIYears = async () => {
+    try {
+        const response = await axios.get("/api/years")
+		// Turning all the date strings into Date
+        years.value = response.data
+    } catch (error) {
+        console.log(error)
+    }
+} 
+getAPIYears() // Get expenses when loading component
+
+const currMonth = new Date().getMonth()
+const currYear = new Date().getFullYear()
 </script>
 
 <style>

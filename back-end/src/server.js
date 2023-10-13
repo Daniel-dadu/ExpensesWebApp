@@ -11,6 +11,11 @@ app.get("/api/categories", (req, res) => {
     res.json(expenses.categories)
 })
 
+// TODO: Implement the logic to get the years (Issue #21)
+app.get("/api/years", (req, res) => {
+    res.json([2023, 2024])
+})
+
 app.listen(8000, () => {
     console.log("Server is listening on port 8000")
 })
