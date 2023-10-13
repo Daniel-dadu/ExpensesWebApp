@@ -11,7 +11,10 @@
             />
         </div>
         <div>
-            <TotalTitle />
+            <TotalTitle 
+                :title-text="'Total expenses'"
+                :title-amount="'200'"
+            />
         </div>
         <ExpensesTable
             :expenses="expensesEdit"
@@ -19,6 +22,7 @@
             :categories="props.categories"
             @update:categories="props.updateCategories"
             :changed-data="changedData"
+            :curr-month-in-num="currMonth"
         />
     </div>
 </template>

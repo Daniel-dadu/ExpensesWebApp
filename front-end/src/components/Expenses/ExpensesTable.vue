@@ -23,6 +23,8 @@
                     <Datepicker 
 						v-model="expense.date" 
 						:enable-time-picker="false" 
+                        :min-date="new Date(2023, props.currMonthInNum, 1)"
+                        :max-date="new Date(2023, props.currMonthInNum+1, 0)"
 						class="dp__theme_dark" 
 						:dark="true"
                     >
@@ -107,6 +109,8 @@ const props = defineProps({
     expenses: Array,
     categories: Array,
     changedData: Function,
+    // To only allow the user to select dates on the month from MonthSelector:
+    currMonthInNum: Number, 
 })
 
 const emit = defineEmits(["update:expenses", "update:categories"])
@@ -114,6 +118,7 @@ const emit = defineEmits(["update:expenses", "update:categories"])
 const expensesEdit = ref(props.expenses)
 const categoriesEdit = ref(props.categories)
 
+// To mantain the expenses and categories updated in case the back is updated
 watch(
     () => [props.expenses, props.categories],
     ([newExpenses, newCategories]) => {
