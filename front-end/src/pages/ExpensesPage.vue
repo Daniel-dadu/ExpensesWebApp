@@ -1,6 +1,5 @@
 <template>
     <div id="expenses-page">
-        <p class="h3" id="expenses-page-title">Expenses page</p>
         <div class="month-selector-center">
             <MonthSelector 
                 :years="years" 
@@ -12,8 +11,8 @@
         </div>
         <div>
             <TotalTitle 
-                :title-text="'Total expenses'"
-                :title-amount="'200'"
+                :title="'Total spent'"
+                :amount="'200'"
             />
         </div>
         <ExpensesTable

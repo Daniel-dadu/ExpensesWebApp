@@ -191,7 +191,6 @@ const onChangedDate = () => {
 }
 
 #add-expense-div {
-    margin-top: 1rem;
     display: flex; 
     justify-content: flex-end;
 }
