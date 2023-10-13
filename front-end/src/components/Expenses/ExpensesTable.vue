@@ -97,17 +97,22 @@
 </template>
 
 <script setup>
-import { ref, } from "vue"
+import { ref, defineProps, } from "vue"
 import axios from "axios"
 import ExpenseModal from "./ExpenseModal.vue"
 import EditableText from "../ReusableComponents/EditableText.vue"
 import Datepicker from "@vuepic/vue-datepicker"
 import DropdownSelector from "../ReusableComponents/DropdownSelector.vue"
 
+const props = defineProps({
+    currMonth: Number,
+    currYear: Number, 
+})
+
 const expensesEdit = ref([])
 const getAPIExpenses = async () => {
     try {
-        const response = await axios.get("/api/expenses")
+        const response = await axios.get(`/api/expenses/?year=${props.currYear}&month=${props.currMonth}`)
 		// Turning all the date strings into Date
         expensesEdit.value = response.data.map((expense) => { 
 			return {...expense, "date": new Date(expense.date)} 

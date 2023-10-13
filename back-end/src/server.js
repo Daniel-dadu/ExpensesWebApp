@@ -4,7 +4,14 @@ import { expenses } from "./expenses-obj"
 const app = express()
 
 app.get("/api/expenses", (req, res) => {
-    res.json(expenses.list)
+    const year = parseInt(req.query.year)
+    const month = parseInt(req.query.month)
+
+    let list = expenses.list.filter((expense) => 
+        expense.date.getFullYear() == year && expense.date.getMonth() == month
+    )
+
+    res.json(list)
 })
 
 app.get("/api/categories", (req, res) => {

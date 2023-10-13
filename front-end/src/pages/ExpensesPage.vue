@@ -14,7 +14,10 @@
             <p>{{ currMonth }}</p>
             <p>{{ currYear }}</p>
         </div>
-        <ExpensesTable />
+        <ExpensesTable 
+            :curr-month="currMonth"
+            :curr-year="currYear"
+        />
     </div>
 </template>
 
