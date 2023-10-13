@@ -4,9 +4,15 @@
         <div class="month-selector-center">
             <MonthSelector 
                 :years="years" 
-                :curr-month-in-num="currMonth" 
+                :curr-month-in-num="currMonth"
+                @update:curr-month-in-num="updateCurrMonth"
                 :curr-year="currYear"
+                @update:curr-year="updateCurrYear"
             />
+        </div>
+        <div>
+            <p>{{ currMonth }}</p>
+            <p>{{ currYear }}</p>
         </div>
         <ExpensesTable />
     </div>
@@ -30,8 +36,16 @@ const getAPIYears = async () => {
 } 
 getAPIYears() // Get expenses when loading component
 
-const currMonth = new Date().getMonth()
-const currYear = new Date().getFullYear()
+const currMonth = ref(new Date().getMonth())
+const currYear = ref(new Date().getFullYear())
+
+const updateCurrMonth = (newMonth) => {
+    currMonth.value = newMonth
+}
+
+const updateCurrYear = (newYear) => {
+    currYear.value = newYear
+}
 </script>
 
 <style>

@@ -36,6 +36,24 @@ export const expenses = {
             "createdAt": "2023-03-16T12:15:00.000Z",
             "updatedAt": "2023-03-16T12:15:00.000Z"
         },
+        {
+            "userId": "5f93e3e2c4e187001cc9244a",
+            "date": new Date(2023, 8, 1),
+            "category": "Transportation",
+            "description": "A Puebla",
+            "amount": 5,
+            "createdAt": "2023-03-16T12:15:00.000Z",
+            "updatedAt": "2023-03-16T12:15:00.000Z"
+        },
+        {
+            "userId": "5f93e3e2c4e187001cc9244a",
+            "date": new Date(2023, 8, 5),
+            "category": "Games",
+            "description": "Movies",
+            "amount": 49.25,
+            "createdAt": "2023-03-16T12:15:00.000Z",
+            "updatedAt": "2023-03-16T12:15:00.000Z"
+        },
     ],
     "categories": [
         "Groceries", 

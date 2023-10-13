@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, } from "vue"
+import { defineProps, defineEmits, ref, } from "vue"
 
 const props = defineProps({
     years: Array,
@@ -48,6 +48,8 @@ const props = defineProps({
         required: true,
     },
 })
+
+const emit = defineEmits(["update:curr-month-in-num", "update:curr-year"])
 
 const months = [
     "January",
@@ -75,6 +77,7 @@ const arrowClick = (isLeft) => {
         y != props.years[0]) {
             yearEdit.value = parseInt(y) - 1
             monthEdit.value = "December"
+            emit("update:curr-year", yearEdit.value)
         } else if (m !== "January") {
             monthEdit.value = months[months.indexOf(m)-1]
         }
@@ -83,17 +86,21 @@ const arrowClick = (isLeft) => {
         y != props.years.slice(-1)) {
             yearEdit.value = parseInt(y) + 1
             monthEdit.value = "January"
+            emit("update:curr-year", yearEdit.value)
         } else if (m !== "December") {
             monthEdit.value = months[months.indexOf(m)+1]
         }
     }
+    emit("update:curr-month-in-num", months.indexOf(monthEdit.value))
 }
 
 const setSelectedMonth = (event) => {
     monthEdit.value = event.target.value
+    emit("update:curr-month-in-num", months.indexOf(monthEdit.value))
 }
 const setSelectedYear = (event) => {
     yearEdit.value = event.target.value
+    emit("update:curr-year", yearEdit.value)
 }
 </script>
 
