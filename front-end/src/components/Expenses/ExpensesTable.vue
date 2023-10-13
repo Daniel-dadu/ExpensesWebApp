@@ -40,7 +40,7 @@
 						:initial-elem="expense.category"
 						@update:initial-elem="updateCategorySelected"
 						:index="index" 
-						:changedData="changedData" 
+						:changedData="props.changedData" 
                     />
                 </td>
                 <td>
@@ -75,7 +75,7 @@
 						:index="index"
 						:initial-data="expense"
 						:update-editable-text="updateEditableText"
-						:changed-data="changedData"
+						:changed-data="props.changedData"
 						:categories-data="categoriesEdit"
 						:update-categories="updateCategories"
 						:update-category-selected="updateCategorySelected"
@@ -97,73 +97,51 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, } from "vue"
-import axios from "axios"
+import { ref, defineProps, defineEmits, watch, } from "vue"
 import ExpenseModal from "./ExpenseModal.vue"
 import EditableText from "../ReusableComponents/EditableText.vue"
 import Datepicker from "@vuepic/vue-datepicker"
 import DropdownSelector from "../ReusableComponents/DropdownSelector.vue"
 
 const props = defineProps({
-    currMonth: Number,
-    currYear: Number, 
+    expenses: Array,
+    categories: Array,
+    changedData: Function,
 })
 
-const expensesEdit = ref([])
-const getAPIExpenses = async () => {
-    try {
-        const response = await axios.get(`/api/expenses/?year=${props.currYear}&month=${props.currMonth}`)
-		// Turning all the date strings into Date
-        expensesEdit.value = response.data.map((expense) => { 
-			return {...expense, "date": new Date(expense.date)} 
-		})
-    } catch (error) {
-        console.log(error)
-    }
-} 
-getAPIExpenses() // Get expenses when loading component
+const emit = defineEmits(["update:expenses", "update:categories"])
 
-// Watching for changes in the current month selected in MonthSelector
+const expensesEdit = ref(props.expenses)
+const categoriesEdit = ref(props.categories)
+
 watch(
-    () => [props.currMonth, props.currYear],
-    () => {
-        getAPIExpenses()
+    () => [props.expenses, props.categories],
+    ([newExpenses, newCategories]) => {
+        expensesEdit.value = newExpenses
+        categoriesEdit.value = newCategories
     }
 )
-
-const categoriesEdit = ref([])
-const getAPICategories = async () => {
-    try {
-        const response = await axios.get("/api/categories")
-        categoriesEdit.value = response.data
-    } catch (error) {
-        console.log(error)
-    }
-}
-getAPICategories() // Get categories when loading component
 
 // Called when any DropdownSelector is updated inside the table and modal
 const updateCategorySelected = (newCat, idx) => {
 	expensesEdit.value[idx]["category"] = newCat
+    emit("update:expenses", expensesEdit.value)
 }
 
 const updateCategories = (newCategory) => {
 	categoriesEdit.value.push(newCategory)
+    emit("update:categories", categoriesEdit.value)
 }
 
 // Called when any EditableText is updated inside the table and modal
 const updateEditableText = (newVal, idx, inputVar) => {
 	expensesEdit.value[idx][inputVar] = newVal
-}
-
-// Function called from the modal, executed when the data is changed
-const changedData = (idx) => {
-    console.log("Send a PUT here")
-    console.log(expensesEdit.value[idx])
+    emit("update:expenses", expensesEdit.value)
 }
 
 const removeExpense = (idx) => {
     expensesEdit.value.splice(idx, 1)
+    emit("update:expenses", expensesEdit.value)
 }
 
 const addExpense = () => {
@@ -177,11 +155,13 @@ const addExpense = () => {
         "createdAt": new Date(),
         "updatedAt": new Date()
     })
+    emit("update:expenses", expensesEdit.value)
 }
 
 const onChangedDate = () => {
     // Sort the table by the date
     expensesEdit.value.sort((a, b) => a.date < b.date ? 1 : -1)
+    emit("update:expenses", expensesEdit.value)
 }
 </script>
 
