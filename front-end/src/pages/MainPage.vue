@@ -49,4 +49,9 @@ import "@vuepic/vue-datepicker/dist/main.css"
 #main-nav-div {
 	padding: 2em;
 }
+
+.month-selector-center {
+	margin: auto;
+	width: 20rem;
+}
 </style>
