@@ -53,7 +53,7 @@
                             <div class="expenses-amount-text">
                                 <span>$</span>
                                 <EditableText 
-                                    :initialText="props.initialData.amount"
+                                    :initialText="numTwoDecimals(props.initialData.amount)"
                                     :index="props.index"
                                     :input-var="'amount'"
                                     @update:initialText="props.updateEditableText" 
@@ -91,7 +91,7 @@ import { watch, defineProps, } from "vue"
 // import Datepicker from "@vuepic/vue-datepicker"
 import EditableText from "../ReusableComponents/EditableText.vue"
 import DropdownSelector from "../ReusableComponents/DropdownSelector.vue"
-
+import { numTwoDecimals } from "../../functions/formatNumbers"
 
 const props = defineProps({
     index: {
