@@ -11,8 +11,7 @@
             />
         </div>
         <div>
-            <p>{{ currMonth }}</p>
-            <p>{{ currYear }}</p>
+            <TotalTitle />
         </div>
         <ExpensesTable 
             :curr-month="currMonth"
@@ -24,7 +23,8 @@
 <script setup>
 import { ref } from "vue"
 import axios from "axios"
-import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue";
+import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
+import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
 import ExpensesTable from "../components/Expenses/ExpensesTable.vue"
 
 const years = ref([])
