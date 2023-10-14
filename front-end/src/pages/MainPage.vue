@@ -72,8 +72,26 @@ import "@vuepic/vue-datepicker/dist/main.css"
 const month = ref(new Date().getMonth()) // Set to actual month
 const year = ref(new Date().getFullYear()) // Set to actual year
 
-const updateMonth = (newMonth) => month.value = newMonth
-const updateYear = (newYear) => year.value = newYear
+const categoriesEdit = ref([])
+const getAPICategories = async () => {
+    try {
+        const response = await axios.get(`/api/categories/?year=${year.value}&month=${month.value}`)
+        categoriesEdit.value = response.data
+    } catch (error) {
+        console.log(error)
+    }
+}
+getAPICategories() // Get categories when loading component
+
+const updateMonth = (newMonth) => {
+	month.value = newMonth
+	getAPICategories()
+}
+
+const updateYear = (newYear) => { 
+	year.value = newYear
+	getAPICategories()
+}
 
 const years = ref([])
 const getAPIYears = async () => {
@@ -86,17 +104,6 @@ const getAPIYears = async () => {
     }
 } 
 getAPIYears() // Get years when loading component
-
-const categoriesEdit = ref([])
-const getAPICategories = async () => {
-    try {
-        const response = await axios.get("/api/categories")
-        categoriesEdit.value = response.data
-    } catch (error) {
-        console.log(error)
-    }
-}
-getAPICategories() // Get categories when loading component
 
 const updateCategories = (newCategories) => {
 	categoriesEdit.value = newCategories

@@ -15,7 +15,14 @@ app.get("/api/expenses", (req, res) => {
 })
 
 app.get("/api/categories", (req, res) => {
-    res.json(expenses.categories)
+    const year = parseInt(req.query.year)
+    const month = parseInt(req.query.month)
+
+    const list = expenses.categories.filter((category) => 
+        category.year === year && category.month === month
+    )
+
+    res.json(list)
 })
 
 // TODO: Implement the logic to get the years (Issue #21)
