@@ -7,6 +7,14 @@ function generateObjectId() {
     });
 }
 
+const categoryIDs = [
+    generateObjectId(),
+    generateObjectId(),
+    generateObjectId(),
+    generateObjectId(),
+    generateObjectId(),
+]
+
 export const expenses = {
     "list": [
         {
@@ -70,51 +78,80 @@ export const expenses = {
             "updatedAt": "2023-03-16T12:15:00.000Z"
         },
     ],
-    "categories": [
+    "budget": [
         {
-            _id: generateObjectId(),
+            _id: categoryIDs[0],
             userId: '5f93e3e2c4e187001cc9244a',
             name: 'Groceries',
-            limit: 500,
-            month: 9,
-            year: 2023,
             createdAt: new Date(),
         },
         {
-            _id: generateObjectId(),
+            _id: categoryIDs[1],
             userId: '5f93e3e2c4e187001cc9244a',
             name: 'Entertainment',
-            limit: 200,
-            month: 9,
-            year: 2023,
             createdAt: new Date(),
         },
         {
-            _id: generateObjectId(),
+            _id: categoryIDs[2],
             userId: '5f93e3e2c4e187001cc9244a',
             name: 'Dining Out',
-            limit: 300,
-            month: 9,
-            year: 2023,
             createdAt: new Date(),
         },
         {
-            _id: generateObjectId(),
+            _id: categoryIDs[3],
             userId: '5f93e3e2c4e187001cc9244a',
             name: 'Transportation',
-            limit: 900,
-            month: 9,
-            year: 2023,
             createdAt: new Date(),
         },
         {
-            _id: generateObjectId(),
+            _id: categoryIDs[4],
             userId: '5f93e3e2c4e187001cc9244a',
             name: 'Games',
+            createdAt: new Date(),
+        },
+    ],
+    "budgetDetails": [
+        {
+            _id: generateObjectId(),
+            budgetId: categoryIDs[0],
             limit: 350,
             month: 9,
             year: 2023,
-            createdAt: new Date(),
+        },
+        {
+            _id: generateObjectId(),
+            budgetId: categoryIDs[1],
+            limit: 650,
+            month: 9,
+            year: 2023,
+        },
+        {
+            _id: generateObjectId(),
+            budgetId: categoryIDs[2],
+            limit: 380,
+            month: 9,
+            year: 2023,
+        },
+        {
+            _id: generateObjectId(),
+            budgetId: categoryIDs[3],
+            limit: 500,
+            month: 9,
+            year: 2023,
+        },
+        {
+            _id: generateObjectId(),
+            budgetId: categoryIDs[4],
+            limit: 125,
+            month: 9,
+            year: 2023,
+        },
+        {
+            _id: generateObjectId(),
+            budgetId: categoryIDs[4],
+            limit: 125,
+            month: 8,
+            year: 2023,
         },
     ]
 }

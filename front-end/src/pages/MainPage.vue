@@ -75,7 +75,7 @@ const year = ref(new Date().getFullYear()) // Set to actual year
 const categoriesEdit = ref([])
 const getAPICategories = async () => {
     try {
-        const response = await axios.get(`/api/categories/?year=${year.value}&month=${month.value}`)
+        const response = await axios.get(`/api/budget/?year=${year.value}&month=${month.value}`)
         categoriesEdit.value = response.data
     } catch (error) {
         console.log(error)

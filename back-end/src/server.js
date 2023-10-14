@@ -14,12 +14,18 @@ app.get("/api/expenses", (req, res) => {
     res.json(list)
 })
 
-app.get("/api/categories", (req, res) => {
+app.get("/api/budget", (req, res) => {
     const year = parseInt(req.query.year)
     const month = parseInt(req.query.month)
 
-    const list = expenses.categories.filter((category) => 
-        category.year === year && category.month === month
+    const budgets = expenses.budget
+
+    const listIDAndLimit = expenses.budgetDetails.filter((budgetD) => 
+        budgetD.year === year && budgetD.month === month
+    ).map((budgetD) => ({id: budgetD.budgetId, limit: budgetD.limit}))
+
+    let list = listIDAndLimit.map(({ id, limit }) => 
+        ({ name: budgets.find(b => b._id === id).name, limit })
     )
 
     res.json(list)
