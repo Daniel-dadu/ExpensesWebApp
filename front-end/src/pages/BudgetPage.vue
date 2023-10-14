@@ -12,12 +12,16 @@
         :title="'Total left'"
         :amount="totalLeft"
     />
+    <TableBudget
+        :categories="props.categories"
+    />
 </template>
 
 <script setup>
 import { ref, defineProps, defineEmits, watch, } from "vue"
 import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
 import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
+import TableBudget from "@/components/Budget/TableBudget.vue"
 
 const props = defineProps({
     categories: {

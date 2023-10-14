@@ -7,7 +7,7 @@
             Add Expense
         </button>
     </div>
-    <table class="table table-hover align-middle" id="expenses-table">
+    <table class="table table-hover align-middle my-table" id="expenses-table">
         <thead>
             <tr>
                 <th style="width: 15%;">Date</th>
@@ -86,7 +86,7 @@
                     />
                     <button 
 						type="button" 
-						class="btn btn-outline-danger delete-expense-btn"  
+						class="btn btn-outline-danger table-delete-btn"  
 						@click="removeExpense(index)"
                     >
                         <img src="@/assets/trash-can.svg" alt="Trash can" />
@@ -173,22 +173,9 @@ const onChangedDate = () => {
 
 
 <style>
-#expenses-table tr td:last-child {
-    width: 1%;
-    white-space: nowrap;
-}
 #expenses-table tr td:first-child {
     width: 1%;
     white-space: nowrap;
-}
-
-.delete-expense-btn {
-    margin-left: 1em;
-    border: 0;
-}
-.delete-expense-btn img {
-    /* To turn the svg to a lighter color */
-    filter:invert(82%) sepia(3%) saturate(473%) hue-rotate(179deg) brightness(93%) contrast(88%);
 }
 
 #add-expense-div {

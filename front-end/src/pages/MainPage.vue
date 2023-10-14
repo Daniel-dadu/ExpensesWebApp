@@ -116,4 +116,18 @@ const updateCategories = (newCategories) => {
 	margin: auto;
 	width: 20rem;
 }
+
+.my-table tr td:last-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.table-delete-btn {
+    margin-left: 1em;
+    border: 0;
+}
+.table-delete-btn img {
+    /* To turn the svg to a lighter color */
+    filter:invert(82%) sepia(3%) saturate(473%) hue-rotate(179deg) brightness(93%) contrast(88%);
+}
 </style>
