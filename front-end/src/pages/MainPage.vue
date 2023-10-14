@@ -23,7 +23,7 @@
 		</ul>
 	</div>
     <div class="tab-content" id="pills-tabContent">
-		<div class="tab-pane fade show active" id="pills-expenses" role="tabpanel" aria-labelledby="pills-expenses-tab" tabindex="0">
+		<div class="tab-pane fade show active pages-padding" id="pills-expenses" role="tabpanel" aria-labelledby="pills-expenses-tab" tabindex="0">
 			<!-- <ExpensesTable2 /> -->
 			<ExpensesPage
 				:categories="categoriesEdit"
@@ -32,10 +32,19 @@
 				@update:curr-month-in-num="updateMonth"
 				:curr-year="year"
 				@update:curr-year="updateYear"
+				:years="years"
 			/>
 		</div>
-		<div class="tab-pane fade" id="pills-budget" role="tabpanel" aria-labelledby="pills-budget-tab" tabindex="0">
-			BUDGET COMPONENT
+		<div class="tab-pane fade pages-padding" id="pills-budget" role="tabpanel" aria-labelledby="pills-budget-tab" tabindex="0">
+			<BudgetPage 
+				:categories="categoriesEdit"
+				:update-categories="updateCategories"
+				:curr-month-in-num="month"
+				@update:curr-month-in-num="updateMonth"
+				:curr-year="year"
+				@update:curr-year="updateYear"
+				:years="years"
+			/>
 		</div>
 		<div class="tab-pane fade" id="pills-savings" role="tabpanel" aria-labelledby="pills-savings-tab" tabindex="0">
 			SAVINGS COMPONENT
@@ -56,6 +65,7 @@
 import { ref } from "vue"
 import axios from "axios"
 import ExpensesPage from "@/pages/ExpensesPage.vue"
+import BudgetPage from "./BudgetPage.vue"
 // import ExpensesTable2 from "../testing/ExpensesTable2.vue"
 import "@vuepic/vue-datepicker/dist/main.css"
 
@@ -64,6 +74,18 @@ const year = ref(new Date().getFullYear()) // Set to actual year
 
 const updateMonth = (newMonth) => month.value = newMonth
 const updateYear = (newYear) => year.value = newYear
+
+const years = ref([])
+const getAPIYears = async () => {
+    try {
+        const response = await axios.get("/api/years")
+		// Turning all the date strings into Date
+        years.value = response.data
+    } catch (error) {
+        console.log(error)
+    }
+} 
+getAPIYears() // Get years when loading component
 
 const categoriesEdit = ref([])
 const getAPICategories = async () => {
@@ -84,6 +106,10 @@ const updateCategories = (newCategories) => {
 <style>
 #main-nav-div {
 	padding: 2em;
+}
+
+.pages-padding {
+    padding: 2rem;
 }
 
 .month-selector-center {

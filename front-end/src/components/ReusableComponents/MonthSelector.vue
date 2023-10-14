@@ -9,24 +9,30 @@
         <select 
             class="form-select" 
             @change="setSelectedMonth($event)"
+            v-model="monthEdit"
         >
             <option 
                 v-for="(month, index) in months"
                 :key="index"
                 :value="month"
                 :selected="monthEdit === month"
-            >{{ month }}</option>
+            >
+                {{ month }}
+            </option>
         </select>
         <select 
             class="form-select no-arrow"
             @change="setSelectedYear($event)"
+            v-model="yearEdit"
         >
             <option 
                 v-for="(year, index) in props.years"
                 :key="index"
                 :value="year"
                 :selected="yearEdit == year"
-            >{{ year }}</option>
+            >
+                {{ year }}
+            </option>
         </select>
         <button 
             class="btn btn-outline-secondary arrows-icons-btn" type="button"
@@ -38,13 +44,13 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, } from "vue"
+import { defineProps, defineEmits, ref, watch, } from "vue"
 
 const props = defineProps({
     years: Array,
     currMonthInNum: Number,
     currYear: {
-        type: [Number, String],
+        type: Number,
         required: true,
     },
 })
@@ -77,7 +83,7 @@ const arrowClick = (isLeft) => {
         y != props.years[0]) {
             yearEdit.value = parseInt(y) - 1
             monthEdit.value = "December"
-            emit("update:curr-year", yearEdit.value)
+            emit("update:curr-year", parseInt(yearEdit.value))
         } else if (m !== "January") {
             monthEdit.value = months[months.indexOf(m)-1]
         }
@@ -86,7 +92,7 @@ const arrowClick = (isLeft) => {
         y != props.years.slice(-1)) {
             yearEdit.value = parseInt(y) + 1
             monthEdit.value = "January"
-            emit("update:curr-year", yearEdit.value)
+            emit("update:curr-year", parseInt(yearEdit.value))
         } else if (m !== "December") {
             monthEdit.value = months[months.indexOf(m)+1]
         }
@@ -100,8 +106,25 @@ const setSelectedMonth = (event) => {
 }
 const setSelectedYear = (event) => {
     yearEdit.value = event.target.value
-    emit("update:curr-year", yearEdit.value)
+    emit("update:curr-year", parseInt(yearEdit.value))
 }
+
+watch(
+    () => [props.currMonthInNum, props.currYear],
+    ([newMonth, newYear]) => {
+        monthEdit.value = months[newMonth]
+        yearEdit.value = newYear
+    }
+)
+
+watch(
+    () => yearEdit.value,
+    (newYear) => emit("update:curr-year", parseInt(newYear))
+)
+watch(
+    () => monthEdit.value,
+    (newMonth) => emit("update:curr-month-in-num", months.indexOf(newMonth))
+)
 </script>
 
 <style>

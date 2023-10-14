@@ -20,7 +20,7 @@ app.get("/api/categories", (req, res) => {
 
 // TODO: Implement the logic to get the years (Issue #21)
 app.get("/api/years", (req, res) => {
-    res.json([2023, 2024])
+    res.json([2023, 2024, 2025])
 })
 
 app.listen(8000, () => {

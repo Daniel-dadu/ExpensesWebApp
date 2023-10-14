@@ -1,27 +1,25 @@
 <template>
-    <div id="expenses-page">
-        <div class="month-selector-center">
-            <MonthSelector 
-                :years="years" 
-                :curr-month-in-num="currMonth"
-                @update:curr-month-in-num="updateCurrMonth"
-                :curr-year="currYear"
-                @update:curr-year="updateCurrYear"
-            />
-        </div>
-        <TotalTitle 
-            :title="'Total spent'"
-            :amount="totalSpent"
-        />
-        <ExpensesTable
-            :expenses="expensesEdit"
-            @update:expenses="updateExpenses"
-            :categories="props.categories"
-            @update:categories="props.updateCategories"
-            :changed-data="changedData"
+    <div class="month-selector-center">
+        <MonthSelector 
+            :years="props.years" 
             :curr-month-in-num="currMonth"
+            @update:curr-month-in-num="updateCurrMonth"
+            :curr-year="currYear"
+            @update:curr-year="updateCurrYear"
         />
     </div>
+    <TotalTitle 
+        :title="'Total spent'"
+        :amount="totalSpent"
+    />
+    <ExpensesTable
+        :expenses="expensesEdit"
+        @update:expenses="updateExpenses"
+        :categories="props.categories"
+        @update:categories="props.updateCategories"
+        :changed-data="changedData"
+        :curr-month-in-num="currMonth"
+    />
 </template>
 
 <script setup>
@@ -39,26 +37,23 @@ const props = defineProps({
     updateCategories: Function,
     currMonthInNum: Number,
     currYear: Number,
+    years: Array,
 })
 
 const emit = defineEmits(["update:curr-month-in-num", "update:curr-year"])
 
 const currMonth = ref(props.currMonthInNum) // Set to actual month
 const currYear = ref(props.currYear) // Set to actual year
-const years = ref([])
 const expensesEdit = ref([])
 const totalSpent = ref(0)
 
-const getAPIYears = async () => {
-    try {
-        const response = await axios.get("/api/years")
-		// Turning all the date strings into Date
-        years.value = response.data
-    } catch (error) {
-        console.log(error)
+watch(
+    () => [props.currMonthInNum, props.currYear],
+    ([newMonth, newYear]) => {
+        currMonth.value = newMonth
+        currYear.value = newYear
     }
-} 
-getAPIYears() // Get expenses when loading component
+)
 
 const getAPIExpenses = async () => {
     try {
@@ -112,10 +107,6 @@ const changedData = (idx) => {
 </script>
 
 <style>
-#expenses-page {
-    padding: 2rem;
-}
-
 #expenses-page-title {
     margin-bottom: 2rem;
 }
