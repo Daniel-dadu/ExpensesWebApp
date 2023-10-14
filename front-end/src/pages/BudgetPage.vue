@@ -8,11 +8,16 @@
             @update:curr-year="updateCurrYear"
         />
     </div>
+    <TotalTitle 
+        :title="'Total left'"
+        :amount="totalLeft"
+    />
 </template>
 
 <script setup>
 import { ref, defineProps, defineEmits, watch, } from "vue"
 import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
+import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
 
 const props = defineProps({
     categories: {
@@ -29,6 +34,7 @@ const emit = defineEmits(["update:curr-month-in-num", "update:curr-year"])
 
 const currMonth = ref(props.currMonthInNum) // Set to actual month
 const currYear = ref(props.currYear) // Set to actual year
+const totalLeft = ref(0)
 
 watch(
     () => [props.currMonthInNum, props.currYear],
