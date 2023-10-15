@@ -2,15 +2,15 @@
     <div class="month-selector-center">
         <MonthSelector 
             :years="props.years" 
-            :curr-month-in-num="currMonth"
+            :curr-month-in-num="props.currMonthInNum"
             @update:curr-month-in-num="updateCurrMonth"
-            :curr-year="currYear"
+            :curr-year="props.currYear"
             @update:curr-year="updateCurrYear"
         />
     </div>
     <TotalTitle 
         :title="'Total left'"
-        :amount="totalLeft"
+        :amount="0"
     />
     <TableBudget
         :categories="props.categories"
@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, watch, } from "vue"
+import { defineProps, defineEmits, } from "vue"
 import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
 import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
 import TableBudget from "@/components/Budget/TableBudget.vue"
@@ -37,25 +37,6 @@ const props = defineProps({
 
 const emit = defineEmits(["update:curr-month-in-num", "update:curr-year"])
 
-const currMonth = ref(props.currMonthInNum) // Set to actual month
-const currYear = ref(props.currYear) // Set to actual year
-const totalLeft = ref(0)
-
-watch(
-    () => [props.currMonthInNum, props.currYear],
-    ([newMonth, newYear]) => {
-        currMonth.value = newMonth
-        currYear.value = newYear
-    }
-)
-
-const updateCurrMonth = (newMonth) => {
-    currMonth.value = newMonth
-    emit("update:curr-month-in-num", newMonth)
-}
-
-const updateCurrYear = (newYear) => {
-    currYear.value = newYear
-    emit("update:curr-year", newYear)
-}
+const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
+const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
 </script>
