@@ -20,7 +20,12 @@
                     />
                 </td>
                 <td>
-                    {{ category.limit }}
+                    <EditableText 
+						:initial-text="category.limit" 
+						:index="index"
+						:input-var="'limit'" 
+						@update:initial-text="updateEditableText"
+                    />
                 </td>
                 <td>
                     $500
@@ -60,7 +65,7 @@ watch(
 )
 
 const updateEditableText = (newVal, idx, inputVar) => {
-	budgetEdit.value[idx][inputVar] = newVal
+	budgetEdit.value[idx][inputVar] = parseFloat(newVal)
     emit("update:categories", budgetEdit.value)
 }
 </script>
