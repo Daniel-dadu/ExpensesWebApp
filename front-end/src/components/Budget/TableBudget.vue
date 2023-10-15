@@ -5,7 +5,7 @@
                 <th>Category</th>
                 <th>Limit</th>
                 <th>Spent</th>
-                <th>Total</th>
+                <th>Left</th>
                 <th></th>
             </tr>
         </thead>
@@ -20,7 +20,7 @@
                     />
                 </td>
                 <td>
-                    <EditableText 
+                    $ <EditableText 
 						:initial-text="category.limit" 
 						:index="index"
 						:input-var="'limit'" 
@@ -31,13 +31,13 @@
                     $ {{ getSpentInBudget(category.name) }}
                 </td>
                 <td>
-                    $1500
+                    $ {{ category.limit - getSpentInBudget(category.name) }}
                 </td>
                 <td>
                     <button 
 						type="button" 
 						class="btn btn-outline-danger table-delete-btn"  
-						@click="removeExpense(index)"
+						@click="removeCategory(index)"
                     >
                         <img src="@/assets/trash-can.svg" alt="Trash can" />
                     </button>
@@ -45,10 +45,26 @@
             </tr>
         </tbody>
     </table>
+    <div 
+        v-if="showToast"
+        class="toast align-items-center text-bg-danger bottom-left-toast" 
+        style="display: block;"
+    >
+        <div class="d-flex">
+            <div class="toast-body">
+                Remove the expenses that use this budget category or change their budget category to be able to remove it.
+            </div>
+            <button 
+                type="button" 
+                class="btn-close me-2 m-auto"
+                @click="closeToast"
+            ></button>
+        </div>
+    </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, } from "vue"
+import { defineProps, defineEmits, ref, } from "vue"
 import EditableText from "../ReusableComponents/EditableText.vue"
 
 const props = defineProps({
@@ -57,6 +73,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits(["update:categories"])
+
+const showToast = ref(false)
 
 const updateEditableText = (newVal, idx, inputVar) => {
     // To deep copy the array
@@ -72,4 +90,30 @@ const getSpentInBudget = (name) => {
         cont
     )
 }
+
+const removeCategory = (idx) => {
+    for (const exp of props.expenses) {
+        if(exp.category == props.categories[idx].name) {
+            showToast.value = true
+            return
+        }
+    }
+    showToast.value = false
+    // To deep copy the array
+    let newBudgets = props.categories.map(i => ({...i}))
+    newBudgets.splice(idx, 1)
+    emit("update:categories", newBudgets)
+}
+
+const closeToast = () => showToast.value = false
 </script>
+
+<style>
+.bottom-left-toast {
+    display: block;
+    position: fixed;
+    bottom: 20px; /* Adjust this value to control the distance from the bottom */
+    right: 20px; /* Adjust this value to control the distance from the right */
+    z-index: 999; /* Adjust the z-index as needed */
+}
+</style>
