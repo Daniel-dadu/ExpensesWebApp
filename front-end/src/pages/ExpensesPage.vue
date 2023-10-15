@@ -30,10 +30,7 @@ import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
 import ExpensesTable from "../components/Expenses/ExpensesTable.vue"
 
 const props = defineProps({
-    categories: {
-        type: Array,
-        required: true,
-    },
+    categories: Array,
     updateCategories: Function,
     currMonthInNum: Number,
     currYear: Number,

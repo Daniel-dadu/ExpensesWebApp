@@ -108,7 +108,7 @@ import { numTwoDecimals } from "../../functions/formatNumbers"
 
 const props = defineProps({
     expenses: Array,
-    categories: Array,
+    categories: Array, // Every element is {name: String, limit: Number}
     changedData: Function,
     // To only allow the user to select dates on the month from MonthSelector:
     currMonthInNum: Number, 
@@ -117,14 +117,15 @@ const props = defineProps({
 const emit = defineEmits(["update:expenses", "update:categories"])
 
 const expensesEdit = ref(props.expenses)
-const categoriesEdit = ref(props.categories)
+// This will only have the names, not the limit amount
+const categoriesEdit = ref(props.categories.map(budget => budget.name))
 
 // To mantain the expenses and categories updated in case the back is updated
 watch(
     () => [props.expenses, props.categories],
-    ([newExpenses, newCategories]) => {
+    ([newExpenses, newBudget]) => {
         expensesEdit.value = newExpenses
-        categoriesEdit.value = newCategories
+        categoriesEdit.value = newBudget.map(budget => budget.name)
     }
 )
 
@@ -134,9 +135,10 @@ const updateCategorySelected = (newCat, idx) => {
     emit("update:expenses", expensesEdit.value)
 }
 
-const updateCategories = (newCategory) => {
-	categoriesEdit.value.push(newCategory)
-    emit("update:categories", categoriesEdit.value)
+const updateCategories = (newBudget) => {
+	categoriesEdit.value.push(newBudget)
+    // Adding the new as an object with its limit
+    emit("update:categories", [...props.categories, {name: newBudget, limit: 0}])
 }
 
 // Called when any EditableText is updated inside the table and modal
