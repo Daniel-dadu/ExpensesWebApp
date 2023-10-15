@@ -35,13 +35,14 @@ const props = defineProps({
     currMonthInNum: Number,
     currYear: Number,
     years: Array,
+    expenses: Array,
 })
 
-const emit = defineEmits(["update:curr-month-in-num", "update:curr-year"])
+const emit = defineEmits(["update:curr-month-in-num", "update:curr-year", "update:expenses"])
 
 const currMonth = ref(props.currMonthInNum) // Set to actual month
 const currYear = ref(props.currYear) // Set to actual year
-const expensesEdit = ref([])
+const expensesEdit = ref(props.expenses)
 const totalSpent = ref(0)
 
 watch(
@@ -52,18 +53,7 @@ watch(
     }
 )
 
-const getAPIExpenses = async () => {
-    try {
-        const response = await axios.get(`/api/expenses/?year=${currYear.value}&month=${currMonth.value}`)
-		// Turning all the date strings into Date
-        expensesEdit.value = response.data.map((expense) => { 
-			return {...expense, "date": new Date(expense.date)} 
-		})
-    } catch (error) {
-        console.log(error)
-    }
-} 
-getAPIExpenses() // Get expenses when loading component
+
 
 const updateCurrMonth = (newMonth) => {
     currMonth.value = newMonth
@@ -79,6 +69,7 @@ const updateCurrYear = (newYear) => {
 
 const updateExpenses = (newExpenses) => {
     expensesEdit.value = newExpenses
+    emit("update:expenses", newExpenses)
 }
 
 const updateTotalSpent = () => {

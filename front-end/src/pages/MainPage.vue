@@ -33,6 +33,8 @@
 				:curr-year="year"
 				@update:curr-year="updateYear"
 				:years="years"
+				:expenses="expenses"
+				@update:expenses="updateExpenses"
 			/>
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-budget" role="tabpanel" aria-labelledby="pills-budget-tab" tabindex="0">
@@ -108,6 +110,25 @@ getAPIYears() // Get years when loading component
 const updateCategories = (newCategories) => {
 	categoriesEdit.value = newCategories
 }
+
+const expenses = ref([])
+const getAPIExpenses = async () => {
+    try {
+        const response = await axios.get(`/api/expenses/?year=${currYear.value}&month=${currMonth.value}`)
+		// Turning all the date strings into Date
+        expensesEdit.value = response.data.map((expense) => { 
+			return {...expense, "date": new Date(expense.date)} 
+		})
+    } catch (error) {
+        console.log(error)
+    }
+} 
+getAPIExpenses() // Get expenses when loading component
+
+const updateExpenses = (newExpenses) => {
+	expenses.value = newExpenses
+}
+
 </script>
 
 <style>
