@@ -28,7 +28,7 @@
                     />
                 </td>
                 <td>
-                    $500
+                    $ {{ getSpentInBudget(category.name) }}
                 </td>
                 <td>
                     $1500
@@ -53,6 +53,7 @@ import EditableText from "../ReusableComponents/EditableText.vue"
 
 const props = defineProps({
     categories: Array,
+    expenses: Array,
 })
 
 const emit = defineEmits(["update:categories"])
@@ -62,5 +63,13 @@ const updateEditableText = (newVal, idx, inputVar) => {
     let newBudgets = props.categories.map(i => ({...i}))
 	newBudgets[idx][inputVar] = newVal
     emit("update:categories", newBudgets)
+}
+
+const getSpentInBudget = (name) => {
+    let cont = 0
+    return props.expenses.reduce(
+        (acc, currExp) => currExp.category == name ? acc + parseFloat(currExp.amount) : acc, 
+        cont
+    )
 }
 </script>

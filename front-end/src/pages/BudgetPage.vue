@@ -15,6 +15,7 @@
     <TableBudget
         :categories="props.categories"
         @update:categories="props.updateCategories"
+        :expenses="props.expenses"
     />
 </template>
 
@@ -33,6 +34,7 @@ const props = defineProps({
     currMonthInNum: Number,
     currYear: Number,
     years: Array,
+    expenses: Array,
 })
 
 const emit = defineEmits(["update:curr-month-in-num", "update:curr-year"])

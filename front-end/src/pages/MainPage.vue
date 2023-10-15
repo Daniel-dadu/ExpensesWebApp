@@ -46,6 +46,7 @@
 				:curr-year="year"
 				@update:curr-year="updateYear"
 				:years="years"
+				:expenses="expenses"
 			/>
 		</div>
 		<div class="tab-pane fade" id="pills-savings" role="tabpanel" aria-labelledby="pills-savings-tab" tabindex="0">
