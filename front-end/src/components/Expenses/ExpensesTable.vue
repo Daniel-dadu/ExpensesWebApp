@@ -120,13 +120,20 @@ const expensesEdit = ref(props.expenses)
 // This will only have the names, not the limit amount
 const categoriesEdit = ref(props.categories.map(budget => budget.name))
 
-// To mantain the expenses and categories updated in case the back is updated
+// To mantain the expenses updated in case the back is updated
 watch(
-    () => [props.expenses, props.categories],
-    ([newExpenses, newBudget]) => {
+    () => props.expenses,
+    (newExpenses) => {
         expensesEdit.value = newExpenses
-        categoriesEdit.value = newBudget.map(budget => budget.name)
     }
+)
+
+watch(
+    () => props.categories,
+    (newBudget) => {
+        categoriesEdit.value = newBudget.map(budget => budget.name)
+    },
+    { deep: true } // To watch for changes inside the budget object
 )
 
 // Called when any DropdownSelector is updated inside the table and modal

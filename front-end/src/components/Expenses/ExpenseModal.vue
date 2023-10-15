@@ -120,13 +120,6 @@ watch(
     }
 )
 
-watch(
-    () => props.categoriesData,
-    () => {
-        console.log("Changed Categories Array")
-    }
-)
-
 // Watch for changes in Date
 watch(
     () => props.initialData.date,

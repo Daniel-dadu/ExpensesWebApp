@@ -10,9 +10,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(category, index) in categoriesEdit" :key="index">
+            <tr v-for="(category, index) in budgetEdit" :key="index">
                 <td>
-                    {{ category.name }}
+                    <EditableText 
+						:initial-text="category.name" 
+						:index="index"
+						:input-var="'name'" 
+						@update:initial-text="updateEditableText"
+                    />
                 </td>
                 <td>
                     {{ category.limit }}
@@ -38,16 +43,24 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch, } from "vue"
+import { defineProps, defineEmits, ref, watch, } from "vue"
+import EditableText from "../ReusableComponents/EditableText.vue"
 
 const props = defineProps({
     categories: Array,
 })
 
-const categoriesEdit = ref(props.categories)
+const emit = defineEmits(["update:categories"])
+
+const budgetEdit = ref(props.categories)
 
 watch(
     () => props.categories,
-    (newCategories) => categoriesEdit.value = newCategories
+    (newBudget) => budgetEdit.value = newBudget
 )
+
+const updateEditableText = (newVal, idx, inputVar) => {
+	budgetEdit.value[idx][inputVar] = newVal
+    emit("update:categories", budgetEdit.value)
+}
 </script>

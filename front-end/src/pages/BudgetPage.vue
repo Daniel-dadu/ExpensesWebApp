@@ -14,6 +14,7 @@
     />
     <TableBudget
         :categories="props.categories"
+        @update:categories="props.updateCategories"
     />
 </template>
 
