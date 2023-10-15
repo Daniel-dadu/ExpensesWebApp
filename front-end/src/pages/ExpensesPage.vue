@@ -13,7 +13,7 @@
         :amount="totalSpent"
     />
     <ExpensesTable
-        :expenses="expensesEdit"
+        :expenses="props.expenses"
         @update:expenses="updateExpenses"
         :categories="props.categories"
         @update:categories="props.updateCategories"
@@ -24,7 +24,6 @@
 
 <script setup>
 import { ref, defineProps, defineEmits, watch, } from "vue"
-import axios from "axios"
 import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
 import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
 import ExpensesTable from "../components/Expenses/ExpensesTable.vue"
@@ -42,7 +41,6 @@ const emit = defineEmits(["update:curr-month-in-num", "update:curr-year", "updat
 
 const currMonth = ref(props.currMonthInNum) // Set to actual month
 const currYear = ref(props.currYear) // Set to actual year
-const expensesEdit = ref(props.expenses)
 const totalSpent = ref(0)
 
 watch(
@@ -53,44 +51,38 @@ watch(
     }
 )
 
-
-
 const updateCurrMonth = (newMonth) => {
     currMonth.value = newMonth
     emit("update:curr-month-in-num", newMonth)
-    getAPIExpenses() // Update expenses
 }
 
 const updateCurrYear = (newYear) => {
     currYear.value = newYear
     emit("update:curr-year", newYear)
-    getAPIExpenses() // Update expenses
 }
 
 const updateExpenses = (newExpenses) => {
-    expensesEdit.value = newExpenses
     emit("update:expenses", newExpenses)
 }
 
 const updateTotalSpent = () => {
     const cont = 0
-    totalSpent.value = expensesEdit.value.reduce(
+    totalSpent.value = props.expenses.reduce(
         (added, currExpense) => added + parseFloat(currExpense.amount), 
         cont
     )
 }
 
-// To update totalSpent.value when the page loads
 watch(
-    () => expensesEdit.value,
-    () => updateTotalSpent() 
+    props.expenses,
+    () => updateTotalSpent()
 )
 
 // Function called from the modal, executed when the data is changed
 const changedData = (idx) => {
     updateTotalSpent()
     console.log("Send a PUT here")
-    console.log(expensesEdit.value[idx])
+    console.log(props.expenses[idx])
 }
 </script>
 

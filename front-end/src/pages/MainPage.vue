@@ -85,16 +85,6 @@ const getAPICategories = async () => {
 }
 getAPICategories() // Get categories when loading component
 
-const updateMonth = (newMonth) => {
-	month.value = newMonth
-	getAPICategories()
-}
-
-const updateYear = (newYear) => { 
-	year.value = newYear
-	getAPICategories()
-}
-
 const years = ref([])
 const getAPIYears = async () => {
     try {
@@ -114,9 +104,9 @@ const updateCategories = (newCategories) => {
 const expenses = ref([])
 const getAPIExpenses = async () => {
     try {
-        const response = await axios.get(`/api/expenses/?year=${currYear.value}&month=${currMonth.value}`)
+        const response = await axios.get(`/api/expenses/?year=${year.value}&month=${month.value}`)
 		// Turning all the date strings into Date
-        expensesEdit.value = response.data.map((expense) => { 
+        expenses.value = response.data.map((expense) => { 
 			return {...expense, "date": new Date(expense.date)} 
 		})
     } catch (error) {
@@ -129,6 +119,17 @@ const updateExpenses = (newExpenses) => {
 	expenses.value = newExpenses
 }
 
+const updateMonth = (newMonth) => {
+	month.value = newMonth
+	getAPICategories()
+	getAPIExpenses()
+}
+
+const updateYear = (newYear) => { 
+	year.value = newYear
+	getAPICategories()
+	getAPIExpenses()
+}
 </script>
 
 <style>
