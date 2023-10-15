@@ -10,7 +10,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(category, index) in budgetEdit" :key="index">
+            <tr v-for="(category, index) in props.categories" :key="index">
                 <td>
                     <EditableText 
 						:initial-text="category.name" 
@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watch, } from "vue"
+import { defineProps, defineEmits, } from "vue"
 import EditableText from "../ReusableComponents/EditableText.vue"
 
 const props = defineProps({
@@ -57,15 +57,10 @@ const props = defineProps({
 
 const emit = defineEmits(["update:categories"])
 
-const budgetEdit = ref(props.categories)
-
-watch(
-    () => props.categories,
-    (newBudget) => budgetEdit.value = newBudget
-)
-
 const updateEditableText = (newVal, idx, inputVar) => {
-	budgetEdit.value[idx][inputVar] = parseFloat(newVal)
-    emit("update:categories", budgetEdit.value)
+    // To deep copy the array
+    let newBudgets = JSON.parse(JSON.stringify(props.categories))
+	newBudgets[idx][inputVar] = newVal
+    emit("update:categories", newBudgets)
 }
 </script>

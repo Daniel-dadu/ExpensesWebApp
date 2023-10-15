@@ -74,7 +74,7 @@ const updateTotalSpent = () => {
 }
 
 watch(
-    props.expenses,
+    () => props.expenses,
     () => updateTotalSpent()
 )
 
