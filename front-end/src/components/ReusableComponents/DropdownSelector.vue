@@ -10,7 +10,7 @@
         >
         <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"></button>
         <ul class="dropdown-menu dropdown-menu-end">
-            <li v-for="(element, idx) in elementsEdit" :key="idx">
+            <li v-for="(element, idx) in props.elements" :key="idx">
                 <a class="dropdown-item" @click="selectOtherElem(element)" style="cursor: pointer;">
                     {{ element }}
                 </a>
@@ -39,17 +39,8 @@ const props = defineProps({
 })
 const emit = defineEmits(["update:initial-elem", "update:elements"])
 
-const elementsEdit = ref(props.elements)
 const selectedEdit = ref(props.initialElem)
 const textInput = ref(null)
-
-// To update categories when got a response from the backend
-watch(
-    () => props.elements, 
-    (newVal) => {
-        elementsEdit.value = newVal
-    }
-)
 
 // To keep selectedEdit updated
 watch(
@@ -61,7 +52,7 @@ watch(
 
 const finishEditing = () => {
     let isInElements = false
-    for (const elem of elementsEdit.value) {
+    for (const elem of props.elements) {
         if (elem === selectedEdit.value) {
             isInElements = true
             break

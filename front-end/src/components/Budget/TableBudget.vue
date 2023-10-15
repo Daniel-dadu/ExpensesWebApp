@@ -59,7 +59,7 @@ const emit = defineEmits(["update:categories"])
 
 const updateEditableText = (newVal, idx, inputVar) => {
     // To deep copy the array
-    let newBudgets = JSON.parse(JSON.stringify(props.categories))
+    let newBudgets = props.categories.map(i => ({...i}))
 	newBudgets[idx][inputVar] = newVal
     emit("update:categories", newBudgets)
 }

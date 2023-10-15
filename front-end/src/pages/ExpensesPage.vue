@@ -2,9 +2,9 @@
     <div class="month-selector-center">
         <MonthSelector 
             :years="props.years" 
-            :curr-month-in-num="currMonth"
+            :curr-month-in-num="props.currMonthInNum"
             @update:curr-month-in-num="updateCurrMonth"
-            :curr-year="currYear"
+            :curr-year="props.currYear"
             @update:curr-year="updateCurrYear"
         />
     </div>
@@ -18,7 +18,7 @@
         :categories="props.categories"
         @update:categories="props.updateCategories"
         :changed-data="changedData"
-        :curr-month-in-num="currMonth"
+        :curr-month-in-num="props.currMonthInNum"
     />
 </template>
 
@@ -39,31 +39,11 @@ const props = defineProps({
 
 const emit = defineEmits(["update:curr-month-in-num", "update:curr-year", "update:expenses"])
 
-const currMonth = ref(props.currMonthInNum) // Set to actual month
-const currYear = ref(props.currYear) // Set to actual year
 const totalSpent = ref(0)
 
-watch(
-    () => [props.currMonthInNum, props.currYear],
-    ([newMonth, newYear]) => {
-        currMonth.value = newMonth
-        currYear.value = newYear
-    }
-)
-
-const updateCurrMonth = (newMonth) => {
-    currMonth.value = newMonth
-    emit("update:curr-month-in-num", newMonth)
-}
-
-const updateCurrYear = (newYear) => {
-    currYear.value = newYear
-    emit("update:curr-year", newYear)
-}
-
-const updateExpenses = (newExpenses) => {
-    emit("update:expenses", newExpenses)
-}
+const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
+const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
+const updateExpenses = (newExpenses) => emit("update:expenses", newExpenses)
 
 const updateTotalSpent = () => {
     const cont = 0

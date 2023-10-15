@@ -18,7 +18,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(expense, index) in expensesEdit" :key="index">
+            <tr v-for="(expense, index) in props.expenses" :key="index">
                 <td>
                     <Datepicker 
 						v-model="expense.date" 
@@ -116,17 +116,8 @@ const props = defineProps({
 
 const emit = defineEmits(["update:expenses", "update:categories"])
 
-const expensesEdit = ref(props.expenses)
 // This will only have the names, not the limit amount
 const categoriesEdit = ref(props.categories.map(budget => budget.name))
-
-// To mantain the expenses updated in case the back is updated
-watch(
-    () => props.expenses,
-    (newExpenses) => {
-        expensesEdit.value = newExpenses
-    }
-)
 
 watch(
     () => props.categories,
@@ -138,8 +129,10 @@ watch(
 
 // Called when any DropdownSelector is updated inside the table and modal
 const updateCategorySelected = (newCat, idx) => {
-	expensesEdit.value[idx]["category"] = newCat
-    emit("update:expenses", expensesEdit.value)
+    // Deep copying:
+    let newExpenses = props.expenses.map(i => ({...i}))
+	newExpenses[idx]["category"] = newCat
+    emit("update:expenses", newExpenses)
 }
 
 const updateCategories = (newBudget) => {
@@ -150,18 +143,24 @@ const updateCategories = (newBudget) => {
 
 // Called when any EditableText is updated inside the table and modal
 const updateEditableText = (newVal, idx, inputVar) => {
-	expensesEdit.value[idx][inputVar] = newVal
-    emit("update:expenses", expensesEdit.value)
+    // Deep copying:
+    let newExpenses = props.expenses.map(i => ({...i}))
+	newExpenses[idx][inputVar] = newVal
+    emit("update:expenses", newExpenses)
 }
 
 const removeExpense = (idx) => {
-    expensesEdit.value.splice(idx, 1)
-    emit("update:expenses", expensesEdit.value)
+    // Deep copying:
+    let newExpenses = props.expenses.map(i => ({...i}))
+	newExpenses.splice(idx, 1)
+    emit("update:expenses", newExpenses)
 }
 
 const addExpense = () => {
     // Adding it at the beginning of the array
-    expensesEdit.value.unshift({
+    // Deep copying:
+    let newExpenses = props.expenses.map(i => ({...i}))
+    newExpenses.unshift({ 
         "userId": "5f93e3e2c4e187001cc9244a", // CHANGE THIS
         "date": new Date(),
         "category": null,
@@ -170,13 +169,15 @@ const addExpense = () => {
         "createdAt": new Date(),
         "updatedAt": new Date()
     })
-    emit("update:expenses", expensesEdit.value)
+    emit("update:expenses", newExpenses)
 }
 
 const onChangedDate = () => {
     // Sort the table by the date
-    expensesEdit.value.sort((a, b) => a.date < b.date ? 1 : -1)
-    emit("update:expenses", expensesEdit.value)
+    // Deep copying:
+    let newExpenses = props.expenses.map(i => ({...i}))
+    newExpenses.sort((a, b) => a.date < b.date ? 1 : -1)
+    emit("update:expenses", newExpenses)
 }
 </script>
 
