@@ -28,10 +28,10 @@
                     />
                 </td>
                 <td>
-                    $ {{ getSpentInBudget(category.name) }}
+                    $ {{ props.amountsSpentInBudgets[index] }}
                 </td>
                 <td>
-                    $ {{ category.limit - getSpentInBudget(category.name) }}
+                    $ {{ category.limit - props.amountsSpentInBudgets[index] }}
                 </td>
                 <td>
                     <button 
@@ -57,7 +57,7 @@
             <button 
                 type="button" 
                 class="btn-close me-2 m-auto"
-                @click="closeToast"
+                @click="() => showToast = false"
             ></button>
         </div>
     </div>
@@ -70,6 +70,7 @@ import EditableText from "../ReusableComponents/EditableText.vue"
 const props = defineProps({
     categories: Array,
     expenses: Array,
+    amountsSpentInBudgets: Array,
 })
 
 const emit = defineEmits(["update:categories"])
@@ -79,16 +80,8 @@ const showToast = ref(false)
 const updateEditableText = (newVal, idx, inputVar) => {
     // To deep copy the array
     let newBudgets = props.categories.map(i => ({...i}))
-	newBudgets[idx][inputVar] = newVal
+	newBudgets[idx][inputVar] = inputVar == "limit" ? parseFloat(newVal) : newVal
     emit("update:categories", newBudgets)
-}
-
-const getSpentInBudget = (name) => {
-    let cont = 0
-    return props.expenses.reduce(
-        (acc, currExp) => currExp.category == name ? acc + parseFloat(currExp.amount) : acc, 
-        cont
-    )
 }
 
 const removeCategory = (idx) => {
@@ -98,14 +91,15 @@ const removeCategory = (idx) => {
             return
         }
     }
+
+    // If there is an active toast, close it
     showToast.value = false
+
     // To deep copy the array
     let newBudgets = props.categories.map(i => ({...i}))
     newBudgets.splice(idx, 1)
     emit("update:categories", newBudgets)
 }
-
-const closeToast = () => showToast.value = false
 </script>
 
 <style>
