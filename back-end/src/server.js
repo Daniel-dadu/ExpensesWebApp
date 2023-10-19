@@ -26,18 +26,23 @@ app.get("/api/expenses", async (req, res) => {
     res.json(list)
 })
 
-app.get("/api/budget", (req, res) => {
+app.get("/api/budget", async (req, res) => {
+    await client.connect()
+    const db = client.db("ExpensesCluster")
+
     const year = parseInt(req.query.year)
     const month = parseInt(req.query.month)
 
-    const budgets = expenses.budget
+    const budgets = await db.collection("budgets").find({}).toArray()
+    
+    const budget_details = await db.collection("budget_details").find({}).toArray()
 
-    const listIDAndLimit = expenses.budgetDetails.filter((budgetD) => 
+    const listIDAndLimit = budget_details.filter((budgetD) => 
         budgetD.year === year && budgetD.month === month
-    ).map((budgetD) => ({id: budgetD.budgetId, limit: budgetD.limit}))
+    ).map((budgetD) => ({id: budgetD.budgetId.toString(), limit: budgetD.limit}))
 
     let list = listIDAndLimit.map(({ id, limit }) => 
-        ({ name: budgets.find(b => b._id === id).name, limit })
+        ({ name: budgets.find(b => b._id.toString() === id).name, limit })
     )
 
     res.json(list)

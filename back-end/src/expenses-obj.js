@@ -1,8 +1,8 @@
 // Suggested by ChatGPT (GPT 3.5)
 function generateObjectId() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
         const r = (Math.random() * 16) | 0,
-            v = c === 'x' ? r : (r & 0x3) | 0x8;
+            v = c === "x" ? r : (r & 0x3) | 0x8;
         return v.toString(16);
     });
 }
@@ -65,75 +65,70 @@ export const expenses = {
     ],
     "budget": [
         {
-            _id: categoryIDs[0],
-            userId: '5f93e3e2c4e187001cc9244a',
-            name: 'Groceries',
-            createdAt: new Date(),
+            userId: "1",
+            name: "Groceries",
+            createdAt: "2023-03-15T08:30:00.000Z",
         },
         {
-            _id: categoryIDs[1],
-            userId: '5f93e3e2c4e187001cc9244a',
-            name: 'Entertainment',
-            createdAt: new Date(),
+            userId: "1",
+            name: "Entertainment",
+            createdAt: "2023-03-15T08:30:00.000Z",
         },
         {
-            _id: categoryIDs[2],
-            userId: '5f93e3e2c4e187001cc9244a',
-            name: 'Dining Out',
-            createdAt: new Date(),
+            userId: "1",
+            name: "Dining Out",
+            createdAt: "2023-03-15T08:30:00.000Z",
         },
         {
-            _id: categoryIDs[3],
-            userId: '5f93e3e2c4e187001cc9244a',
-            name: 'Transportation',
-            createdAt: new Date(),
+            userId: "1",
+            name: "Transportation",
+            createdAt: "2023-03-15T08:30:00.000Z",
         },
         {
-            _id: categoryIDs[4],
-            userId: '5f93e3e2c4e187001cc9244a',
-            name: 'Games',
-            createdAt: new Date(),
+            userId: "1",
+            name: "Games",
+            createdAt: "2023-03-15T08:30:00.000Z",
         },
     ],
     "budgetDetails": [
         {
-            _id: generateObjectId(),
-            budgetId: categoryIDs[0],
+            budgetId: ObjectId("65308fdab6497f11c59cebaf"),
             limit: 350,
             month: 9,
             year: 2023,
         },
         {
-            _id: generateObjectId(),
-            budgetId: categoryIDs[1],
+            budgetId: ObjectId("65308fdab6497f11c59cebb0"),
             limit: 650,
             month: 9,
             year: 2023,
         },
         {
-            _id: generateObjectId(),
-            budgetId: categoryIDs[2],
+            budgetId: ObjectId("65308fdab6497f11c59cebb1"),
             limit: 380,
             month: 9,
             year: 2023,
         },
         {
-            _id: generateObjectId(),
-            budgetId: categoryIDs[3],
+            budgetId: ObjectId("65308fdab6497f11c59cebb2"),
             limit: 500,
             month: 9,
             year: 2023,
         },
         {
-            _id: generateObjectId(),
-            budgetId: categoryIDs[4],
+            budgetId: ObjectId("65308fdab6497f11c59cebb3"),
             limit: 125,
             month: 9,
             year: 2023,
         },
         {
-            _id: generateObjectId(),
-            budgetId: categoryIDs[4],
+            budgetId: ObjectId("65308fdab6497f11c59cebb2"),
+            limit: 500,
+            month: 8,
+            year: 2023,
+        },
+        {
+            budgetId: ObjectId("65308fdab6497f11c59cebb3"),
             limit: 125,
             month: 8,
             year: 2023,
