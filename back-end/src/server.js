@@ -1,14 +1,26 @@
 import express from "express"
-import { expenses } from "./expenses-obj"
+import { MongoClient } from "mongodb"
 
 const app = express()
 
-app.get("/api/expenses", (req, res) => {
+// require('dotenv').config()
+// DOING THIS BECAUSE NODEMON DOESN'T ALLOW ME TO USE ENV VARIABLES
+import { mongo } from "./env.js"
+
+const url = mongo
+const client = new MongoClient(url)
+
+app.get("/api/expenses", async (req, res) => {
+    await client.connect()
+    const db = client.db("ExpensesCluster")
+
     const year = parseInt(req.query.year)
     const month = parseInt(req.query.month)
 
-    let list = expenses.list.filter((expense) => 
-        expense.date.getFullYear() == year && expense.date.getMonth() == month
+    const expenses = await db.collection("expenses").find({}).toArray()
+
+    let list = expenses.filter((expense) => 
+        new Date(expense.date).getFullYear() == year && new Date(expense.date).getMonth() == month
     )
 
     res.json(list)

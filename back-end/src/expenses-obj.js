@@ -18,64 +18,49 @@ const categoryIDs = [
 export const expenses = {
     "list": [
         {
-            _id: generateObjectId(),
-            "userId": "5f93e3e2c4e187001cc92448",
-            "date": new Date(2023, 9, 7),
-            "category": "Groceries",
-            "description": "Weekly grocery shopping",
-            "amount": 85.75,
-            "createdAt": "2023-03-15T08:30:00.000Z",
-            "updatedAt": "2023-03-15T08:30:00.000Z"
+            userId: "1",
+            date: "2023-10-15T08:30:00.000Z",
+            category: "Groceries",
+            description: "Weekly grocery shopping",
+            amount: 85.75,
+            createdAt: "2023-03-15T08:30:00.000Z",
+            updatedAt: "2023-03-15T08:30:00.000Z"
         },
         {
-            _id: generateObjectId(),
-            "userId": "5f93e3e2c4e187001cc9244c",
-            "date": new Date(2023, 9, 5),
-            "category": "Entertainment",
-            "description": "Peliculita porfaaa",
-            "amount": 20.50,
-            "createdAt": "2023-03-17T19:45:00.000Z",
-            "updatedAt": "2023-03-17T19:45:00.000Z"
+            userId: "1",
+            date: "2023-10-18T08:30:00.000Z",
+            category: "Entertainment",
+            description: "Peliculita porfaaa",
+            amount: 20.50,
+            createdAt: "2023-03-17T19:45:00.000Z",
+            updatedAt: "2023-03-17T19:45:00.000Z"
         },
         {
-            _id: generateObjectId(),
-            "userId": "5f93e3e2c4e187001cc9244e",
-            "date": new Date(2023, 9, 3),
-            "category": "Dining Out",
-            "description": "Dinner at a local restaurant",
-            "amount": 55.00,
-            "createdAt": "2023-03-18T20:00:00.000Z",
-            "updatedAt": "2023-03-18T20:00:00.000Z"
+            userId: "1",
+            date: "2023-10-13T08:30:00.000Z",
+            category: "Dining Out",
+            description: "Dinner at a local restaurant",
+            amount: 55.00,
+            createdAt: "2023-03-18T20:00:00.000Z",
+            updatedAt: "2023-03-18T20:00:00.000Z"
         },
         {
-            _id: generateObjectId(),
-            "userId": "5f93e3e2c4e187001cc9244a",
-            "date": new Date(2023, 9, 1),
-            "category": "Transportation",
-            "description": "Gasoline refill",
-            "amount": 45.25,
-            "createdAt": "2023-03-16T12:15:00.000Z",
-            "updatedAt": "2023-03-16T12:15:00.000Z"
+            userId: "1",
+            date: "2023-09-12T08:30:00.000Z",
+            category: "Transportation",
+            description: "A Puebla",
+            amount: 5,
+            createdAt: "2023-03-16T12:15:00.000Z",
+            updatedAt: "2023-03-16T12:15:00.000Z"
         },
         {
-            _id: generateObjectId(),
-            "userId": "5f93e3e2c4e187001cc9244a",
-            "date": new Date(2023, 8, 1),
-            "category": "Transportation",
-            "description": "A Puebla",
-            "amount": 5,
-            "createdAt": "2023-03-16T12:15:00.000Z",
-            "updatedAt": "2023-03-16T12:15:00.000Z"
-        },
-        {
-            _id: generateObjectId(),
-            "userId": "5f93e3e2c4e187001cc9244a",
-            "date": new Date(2023, 8, 5),
-            "category": "Games",
-            "description": "Movies",
-            "amount": 49.25,
-            "createdAt": "2023-03-16T12:15:00.000Z",
-            "updatedAt": "2023-03-16T12:15:00.000Z"
+            userId: "1",
+            date: "2023-09-15T08:30:00.000Z",
+            category: "Games",
+            description: "Movies",
+            amount: 49.25,
+            createdAt: "2023-03-16T12:15:00.000Z",
+            updatedAt: "2023-03-16T12:15:00.000Z"
         },
     ],
     "budget": [
