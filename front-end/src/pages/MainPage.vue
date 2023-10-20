@@ -59,7 +59,7 @@
 			SUMMARY COMPONENT
 		</div>
 		<div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
-			PROFILE COMPONENT
+			<ProfilePage />
 		</div>
     </div>
 </template>
@@ -69,7 +69,7 @@ import { ref } from "vue"
 import axios from "axios"
 import ExpensesPage from "@/pages/ExpensesPage.vue"
 import BudgetPage from "./BudgetPage.vue"
-// import ExpensesTable2 from "../testing/ExpensesTable2.vue"
+import ProfilePage from "./ProfilePage.vue"
 import "@vuepic/vue-datepicker/dist/main.css"
 
 const month = ref(new Date().getMonth()) // Set to actual month

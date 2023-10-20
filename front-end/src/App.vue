@@ -1,16 +1,10 @@
 <template>
-    <MainPage/>
+	<!-- TODO: Add logic to open login page if the user is not logged in -->
+	<router-view></router-view>
 </template>
 
-<script>
-import MainPage from './pages/MainPage.vue'
+<script setup>
 
-export default {
-	name: 'App',
-	components: {
-		MainPage
-	}
-}
 </script>
 
 <style>

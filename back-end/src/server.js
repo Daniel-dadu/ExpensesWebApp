@@ -2,6 +2,7 @@ import express from "express"
 import { MongoClient } from "mongodb"
 
 const app = express()
+app.use(express.json())
 
 // require('dotenv').config()
 // DOING THIS BECAUSE NODEMON DOESN'T ALLOW ME TO USE ENV VARIABLES
@@ -53,6 +54,16 @@ app.get("/api/years", (req, res) => {
     res.json([2023, 2024, 2025])
 })
 
-app.listen(8000, () => {
-    console.log("Server is listening on port 8000")
+app.post("/api/expenses/:userId", (req, res) => {
+    const userId = req.params.userId
+    const newExpense = req.body
+    console.log(userId)
+    console.log(newExpense)
+
+    res.json("good")
+})
+
+const port = 8000
+app.listen(port, () => {
+    console.log(`Server is listening on port ${port}`)
 })
