@@ -57,9 +57,6 @@ app.get("/api/years", (req, res) => {
 app.post("/api/expenses/:userId", (req, res) => {
     const userId = req.params.userId
     const newExpense = req.body
-    console.log(userId)
-    console.log(newExpense)
-
     res.json("good")
 })
 

@@ -1,5 +1,13 @@
 <template>
-<table class="table table-hover align-middle my-table">
+    <div class="add-table-elem-div">
+        <button 
+        type="button" 
+        class="btn btn-outline-success" 
+        @click="addBudget">
+            Add Budget
+        </button>
+    </div>
+    <table class="table table-hover align-middle my-table">
         <thead>
             <tr>
                 <th>Category</th>
@@ -81,6 +89,16 @@ const updateEditableText = (newVal, idx, inputVar) => {
     // To deep copy the array
     let newBudgets = props.categories.map(i => ({...i}))
 	newBudgets[idx][inputVar] = inputVar == "limit" ? parseFloat(newVal) : newVal
+    emit("update:categories", newBudgets)
+}
+
+const addBudget = () => {
+    // To deep copy the array
+    let newBudgets = props.categories.map(i => ({...i}))
+    newBudgets.push({
+        name: "Add a name",
+        limit: 0,
+    })
     emit("update:categories", newBudgets)
 }
 

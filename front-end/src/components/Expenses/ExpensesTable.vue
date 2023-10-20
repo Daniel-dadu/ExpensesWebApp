@@ -1,5 +1,5 @@
 <template>
-    <div id="add-expense-div">
+    <div class="add-table-elem-div">
         <button 
         type="button" 
         class="btn btn-outline-success" 
@@ -162,12 +162,12 @@ const addExpense = () => {
     let newExpenses = props.expenses.map(i => ({...i}))
     newExpenses.unshift({ 
         "userId": "5f93e3e2c4e187001cc9244a", // CHANGE THIS
-        "date": new Date().toJSON(),
+        "date": new Date(),
         "category": null,
         "description": "Add description",
         "amount": 0,
-        "createdAt": new Date().toJSON(),
-        "updatedAt": new Date().toJSON(),
+        "createdAt": new Date(),
+        "updatedAt": new Date(),
     })
     emit("update:expenses", newExpenses)
 }
@@ -188,7 +188,7 @@ const onChangedDate = () => {
     white-space: nowrap;
 }
 
-#add-expense-div {
+.add-table-elem-div {
     display: flex; 
     justify-content: flex-end;
 }
