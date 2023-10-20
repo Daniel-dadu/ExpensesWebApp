@@ -65,12 +65,21 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, onMounted } from "vue"
+import { useRouter } from "vue-router"
 import axios from "axios"
 import ExpensesPage from "@/pages/ExpensesPage.vue"
 import BudgetPage from "./BudgetPage.vue"
 import ProfilePage from "./ProfilePage.vue"
 import "@vuepic/vue-datepicker/dist/main.css"
+
+// To verify if the user logged in
+onMounted(() => {
+	if(window.localStorage.length === 0) {
+		const router = useRouter()
+		router.push("/login")
+	}
+})
 
 const month = ref(new Date().getMonth()) // Set to actual month
 const year = ref(new Date().getFullYear()) // Set to actual year

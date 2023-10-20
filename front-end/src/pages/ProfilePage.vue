@@ -20,6 +20,7 @@ const userEmail = ref(window.localStorage.getItem("email"))
 
 const onLogout = () => {
     signOut(auth)
+    window.localStorage.clear()
     router.push("/login")
 }
 
