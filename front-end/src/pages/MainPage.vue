@@ -87,7 +87,7 @@ const year = ref(new Date().getFullYear()) // Set to actual year
 const categoriesEdit = ref([])
 const getAPICategories = async () => {
     try {
-        const response = await axios.get(`/api/budget/?year=${year.value}&month=${month.value}`)
+        const response = await axios.get(`/api/budget/${window.localStorage.getItem("email")}/?year=${year.value}&month=${month.value}`)
         categoriesEdit.value = response.data
     } catch (error) {
         console.log(error)
@@ -98,7 +98,7 @@ getAPICategories() // Get categories when loading component
 const years = ref([])
 const getAPIYears = async () => {
     try {
-        const response = await axios.get("/api/years")
+        const response = await axios.get(`/api/years/${window.localStorage.getItem("email")}`)
 		// Turning all the date strings into Date
         years.value = response.data
     } catch (error) {
@@ -114,7 +114,7 @@ const updateCategories = (newCategories) => {
 const expenses = ref([])
 const getAPIExpenses = async () => {
     try {
-        const response = await axios.get(`/api/expenses/?year=${year.value}&month=${month.value}`)
+        const response = await axios.get(`/api/expenses/${window.localStorage.getItem("email")}/?year=${year.value}&month=${month.value}`)
 		// Turning all the date strings into Date
         expenses.value = response.data.map((expense) => { 
 			return {...expense, "date": new Date(expense.date)} 
