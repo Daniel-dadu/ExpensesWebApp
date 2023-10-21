@@ -59,10 +59,14 @@ watch(
 )
 
 // Function called from the modal, executed when the data is changed
-const changedData = (idx) => {
+const changedData = (idx, from, data) => {
     updateTotalSpent()
     console.log("Send a PUT here")
     console.log(props.expenses[idx])
+    if(from === "addExpense") {
+        console.log("addExpense")
+        
+    }
 }
 </script>
 

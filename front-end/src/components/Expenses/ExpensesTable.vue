@@ -169,6 +169,7 @@ const addExpense = () => {
         "createdAt": new Date(),
         "updatedAt": new Date(),
     })
+    props.changedData(0, "addExpense", newExpenses)
     emit("update:expenses", newExpenses)
 }
 

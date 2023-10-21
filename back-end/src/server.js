@@ -96,7 +96,6 @@ app.get("/api/budget/:email", async (req, res) => {
     res.json(budgets)
 })
 
-// TODO: Implement the logic to get the years (Issue #21)
 app.get("/api/years/:email", async (req, res) => {
     await client.connect()
     const db = client.db("ExpensesCluster")
@@ -138,9 +137,14 @@ app.get("/api/years/:email", async (req, res) => {
     res.json(years)
 })
 
-app.post("/api/expenses/:userId", (req, res) => {
-    const userId = req.params.userId
+app.post("/api/expenses/:userId", async (req, res) => {
+    await client.connect()
+    const db = client.db("ExpensesCluster")
+    // const userId = req.params.userId
     const newExpense = req.body
+
+    await db.collection("expenses").insertOne(newExpense)
+
     res.json("good")
 })
 
