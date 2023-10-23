@@ -24,6 +24,7 @@
 
 <script setup>
 import { ref, defineProps, defineEmits, watch, } from "vue"
+import axios from "axios"
 import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
 import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
 import ExpensesTable from "../components/Expenses/ExpensesTable.vue"
@@ -43,9 +44,10 @@ const totalSpent = ref(0)
 
 const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
 const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
-const updateExpenses = (newExpenses) => emit("update:expenses", newExpenses)
+const updateExpenses = (option, idx, field, data) => emit("update:expenses", option, idx, field, data)
 
 const updateTotalSpent = () => {
+    console.log("Updating total spent in Expenses Page")
     const cont = 0
     totalSpent.value = props.expenses.reduce(
         (added, currExpense) => added + parseFloat(currExpense.amount), 
@@ -59,13 +61,20 @@ watch(
 )
 
 // Function called from the modal, executed when the data is changed
-const changedData = (idx, from, data) => {
+const changedData = async (from, idx, data) => {
     updateTotalSpent()
-    console.log("Send a PUT here")
-    console.log(props.expenses[idx])
+    // console.log("Send a PUT here")
+    // console.log(props.expenses[idx])
     if(from === "addExpense") {
         console.log("addExpense")
-        
+        console.log(data)
+        try {
+            const response = await axios.post(`/api/add-expense/${window.localStorage.getItem("email")}`, data)
+            const newId = response.data
+            emit("update:expenses", "field", idx, "_id", newId)
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
 </script>

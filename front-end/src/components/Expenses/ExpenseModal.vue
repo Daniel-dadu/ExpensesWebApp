@@ -110,21 +110,22 @@ const props = defineProps({
 
 // Watch for changes in data from this modal and the table
 watch(
-    () => [
-        props.initialData.date,
-        props.initialData.description,
-        props.initialData.amount,
-    ],
-    () => {
-        props.changedData(props.index)
-    }
-)
-
-// Watch for changes in Date
-watch(
     () => props.initialData.date,
     () => {
+        props.changedData("date", props.index)
         props.onChangedDate()
+    }
+)
+watch(
+    () => props.initialData.description,
+    () => {
+        props.changedData("description", props.index)
+    }
+)
+watch(
+    () => props.initialData.amount,
+    () => {
+        props.changedData("amount", props.index)
     }
 )
 </script>

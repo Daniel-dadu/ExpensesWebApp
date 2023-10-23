@@ -125,8 +125,21 @@ const getAPIExpenses = async () => {
 } 
 getAPIExpenses() // Get expenses when loading component
 
-const updateExpenses = (newExpenses) => {
-	expenses.value = newExpenses
+const updateExpenses = (option, idx, field, data) => {
+	if (option == "remove") {
+		// To remove the expense:
+		expenses.value.splice(idx, 1)
+	} else if (option == "sort") {
+		// Sort the table by the date
+		expenses.value.sort((a, b) => a.date < b.date ? 1 : -1)
+	} else if(option == "field") {
+		expenses.value[idx][field] = data
+	} else if(option == "add") {
+		// To add the expense at the beginning
+		expenses.value.unshift(data)
+	} else {
+		expenses.value = data
+	}
 }
 
 const updateMonth = (newMonth) => {

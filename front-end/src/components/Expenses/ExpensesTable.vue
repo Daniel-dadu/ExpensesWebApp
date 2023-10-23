@@ -129,10 +129,7 @@ watch(
 
 // Called when any DropdownSelector is updated inside the table and modal
 const updateCategorySelected = (newCat, idx) => {
-    // Deep copying:
-    let newExpenses = props.expenses.map(i => ({...i}))
-	newExpenses[idx]["category"] = newCat
-    emit("update:expenses", newExpenses)
+    emit("update:expenses", "field", idx, "category", newCat)
 }
 
 const updateCategories = (newBudget) => {
@@ -143,42 +140,30 @@ const updateCategories = (newBudget) => {
 
 // Called when any EditableText is updated inside the table and modal
 const updateEditableText = (newVal, idx, inputVar) => {
-    // Deep copying:
-    let newExpenses = props.expenses.map(i => ({...i}))
-	newExpenses[idx][inputVar] = newVal
-    emit("update:expenses", newExpenses)
+    emit("update:expenses", "field", idx, inputVar, newVal)
 }
 
 const removeExpense = (idx) => {
-    // Deep copying:
-    let newExpenses = props.expenses.map(i => ({...i}))
-	newExpenses.splice(idx, 1)
-    emit("update:expenses", newExpenses)
+    emit("update:expenses", "remove", idx)
 }
 
 const addExpense = () => {
-    // Adding it at the beginning of the array
-    // Deep copying:
-    let newExpenses = props.expenses.map(i => ({...i}))
-    newExpenses.unshift({ 
-        "userId": "5f93e3e2c4e187001cc9244a", // CHANGE THIS
+    let newExpense = { 
+        "userId": window.localStorage.getItem("email"),
         "date": new Date(),
         "category": null,
         "description": "Add description",
         "amount": 0,
         "createdAt": new Date(),
         "updatedAt": new Date(),
-    })
-    props.changedData(0, "addExpense", newExpenses)
-    emit("update:expenses", newExpenses)
+    }
+    props.changedData("addExpense", 0, newExpense)
+    emit("update:expenses", "add", null, null, newExpense)
 }
 
 const onChangedDate = () => {
     // Sort the table by the date
-    // Deep copying:
-    let newExpenses = props.expenses.map(i => ({...i}))
-    newExpenses.sort((a, b) => a.date < b.date ? 1 : -1)
-    emit("update:expenses", newExpenses)
+    emit("update:expenses", "sort")
 }
 </script>
 

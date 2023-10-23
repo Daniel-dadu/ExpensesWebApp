@@ -43,7 +43,7 @@ app.get("/api/expenses/:email", async (req, res) => {
         },
         {
             $project: {
-                _id: 0,
+                _id: 1,
                 date: 1,
                 category: 1,
                 description: 1,
@@ -137,15 +137,16 @@ app.get("/api/years/:email", async (req, res) => {
     res.json(years)
 })
 
-app.post("/api/expenses/:userId", async (req, res) => {
+app.post("/api/add-expense/:userId", async (req, res) => {
     await client.connect()
     const db = client.db("ExpensesCluster")
     // const userId = req.params.userId
     const newExpense = req.body
 
-    await db.collection("expenses").insertOne(newExpense)
+    const inserted = await db.collection("expenses").insertOne(newExpense)
 
-    res.json("good")
+    // Returning the id of the new expense inserted
+    res.json(inserted.insertedId)
 })
 
 const port = 8000
