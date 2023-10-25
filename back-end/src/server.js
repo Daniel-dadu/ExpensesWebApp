@@ -1,5 +1,5 @@
 import express from "express"
-import { MongoClient } from "mongodb"
+import { MongoClient, ObjectId } from "mongodb"
 
 const app = express()
 app.use(express.json())
@@ -147,6 +147,26 @@ app.post("/api/add-expense/:userId", async (req, res) => {
 
     // Returning the id of the new expense inserted
     res.json(inserted.insertedId)
+})
+
+app.delete("/api/remove-expense/:userId", async (req, res) => {
+    await client.connect()
+    const db = client.db("ExpensesCluster")
+    // const userId = req.params.userId
+    const expenseId = req.body.id
+
+    try {
+        const result = await db.collection("expenses").deleteOne({
+            _id: new ObjectId(expenseId)
+        })
+        if (result.deletedCount === 1) {
+            res.json("Expense deleted successfully")
+        } else {
+            res.status(404).json("Expense not found")
+        }
+    } catch(error) {
+        res.status(500).json(error)
+    }
 })
 
 const port = 8000

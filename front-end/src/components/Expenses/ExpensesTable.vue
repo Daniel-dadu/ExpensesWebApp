@@ -148,7 +148,9 @@ const updateEditableText = (newVal, idx, inputVar) => {
 }
 
 const removeExpense = (idx) => {
+    const object_id = props.expenses[idx]._id
     emit("update:expenses", "remove", idx)
+    props.updateDataInBackend("removeExpense", null, object_id)
 }
 
 const addExpense = () => {

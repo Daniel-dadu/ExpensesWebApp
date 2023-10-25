@@ -74,6 +74,13 @@ const updateDataInBackend = async (from, idx, data) => {
         } catch (error) {
             console.log(error)
         }
+    } else if (from === "removeExpense") {
+        try {
+            // The data is the _id of the object that will be deleted
+            await axios.delete(`/api/remove-expense/${window.localStorage.getItem("email")}`, { data: { id: data } } )
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
 </script>
