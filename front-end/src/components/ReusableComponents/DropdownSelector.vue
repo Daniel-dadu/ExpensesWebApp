@@ -31,7 +31,7 @@ const props = defineProps({
         type: [String, Number],
         required: false,
     },
-    changedData: {
+    updateDataInBackend: {
         type: Function,
         required: false
     },
@@ -67,8 +67,8 @@ const finishEditing = () => {
         emit("update:elements", selectedEdit.value)
     }
 
-    // Call changedData from ExpensesTable
-    props.changedData(props.index)
+    // Call updateDataInBackend from ExpensesTable
+    props.updateDataInBackend(props.index)
 
     textInput.value.blur() // To unfocus the input text
 }
@@ -76,7 +76,7 @@ const finishEditing = () => {
 const selectOtherElem = (newElem) => {
     // Update the value in the Table
     emit("update:initial-elem", newElem, props.index)
-    // Call changedData from ExpensesTable
-    props.changedData(props.index)
+    // Call updateDataInBackend from ExpensesTable
+    props.updateDataInBackend(props.index)
 }
 </script>

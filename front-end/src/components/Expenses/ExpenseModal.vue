@@ -34,7 +34,7 @@
                             :initial-elem="props.initialData.category"
                             @update:initial-elem="props.updateCategorySelected"
                             :index="props.index" 
-                            :changedData="changedData" 
+                            :update-data-in-backend="updateDataInBackend" 
                             />
                         </div>
 
@@ -100,7 +100,7 @@ const props = defineProps({
     },
     initialData: Object,
     updateEditableText: Function,
-    changedData: Function,
+    updateDataInBackend: Function,
     categoriesData: Array,
     updateCategories: Function,
     updateCategorySelected: Function,
@@ -112,20 +112,20 @@ const props = defineProps({
 watch(
     () => props.initialData.date,
     () => {
-        props.changedData("date", props.index)
+        props.updateDataInBackend("date", props.index)
         props.onChangedDate()
     }
 )
 watch(
     () => props.initialData.description,
     () => {
-        props.changedData("description", props.index)
+        props.updateDataInBackend("description", props.index)
     }
 )
 watch(
     () => props.initialData.amount,
     () => {
-        props.changedData("amount", props.index)
+        props.updateDataInBackend("amount", props.index)
     }
 )
 </script>

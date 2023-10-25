@@ -19,7 +19,6 @@
         @update:categories="props.updateCategories"
         :update-data-in-backend="updateDataInBackend"
         :curr-month-in-num="props.currMonthInNum"
-        :update-total-spent="updateTotalSpent"
     />
 </template>
 
@@ -81,7 +80,15 @@ const updateDataInBackend = async (from, idx, data) => {
         }
     } else if (from === 3) { // 3 - Change field
         try {
-            // The data is the _id of the object that will be deleted
+            if(data.field === "amount") {
+                updateTotalSpent()
+            }
+            // The data parameter looks like this:
+            // data: {
+            //     id: expense id, 
+            //     field: name of field, 
+            //     newValue: new value of field
+            // }
             await axios.put(`/api/update-expense/${window.localStorage.getItem("email")}`, data )
         } catch (error) {
             console.log(error)

@@ -143,10 +143,18 @@ app.post("/api/add-expense/:userId", async (req, res) => {
     // const userId = req.params.userId
     const newExpense = req.body
 
-    const inserted = await db.collection("expenses").insertOne(newExpense)
+    try {
+        const result = await db.collection("expenses").insertOne(newExpense)
+        
+        if (result.acknowledged) {
+            res.json(result.insertedId)
+        } else {
+            res.status(404).json("Expense not found")
+        }
+    } catch(error) {
+        res.status(500).json(error)
+    }
 
-    // Returning the id of the new expense inserted
-    res.json(inserted.insertedId)
 })
 
 app.delete("/api/remove-expense/:userId", async (req, res) => {
@@ -177,6 +185,7 @@ app.put("/api/update-expense/:userId", async (req, res) => {
     const fieldToUpdate = req.body.field
     const newFieldVal = req.body.newValue
 
+    console.log(expenseId, fieldToUpdate, newFieldVal)
     try {
         const result = await db.collection("expenses").updateOne(
             { _id: new ObjectId(expenseId) }, // ID of document to update

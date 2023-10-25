@@ -42,7 +42,7 @@
 						:initial-elem="expense.category"
 						@update:initial-elem="updateCategorySelected"
 						:index="index" 
-						:updateDataInBackend="props.updateDataInBackend" 
+						:update-data-in-backend="props.updateDataInBackend" 
                     />
                 </td>
                 <td>
@@ -77,7 +77,7 @@
 						:index="index"
 						:initial-data="expense"
 						:update-editable-text="updateEditableText"
-						:changed-data="props.updateDataInBackend"
+						:update-data-in-backend="props.updateDataInBackend"
 						:categories-data="categoriesEdit"
 						:update-categories="updateCategories"
 						:update-category-selected="updateCategorySelected"
@@ -112,7 +112,6 @@ const props = defineProps({
     updateDataInBackend: Function,
     // To only allow the user to select dates on the month from MonthSelector:
     currMonthInNum: Number, 
-    updateTotalSpent: Function,
 })
 
 const emit = defineEmits(["update:expenses", "update:categories"])
@@ -131,6 +130,12 @@ watch(
 // Called when any DropdownSelector is updated inside the table and modal
 const updateCategorySelected = (newCat, idx) => {
     emit("update:expenses", "field", idx, "category", newCat)
+    console.log(props.expenses[idx])
+    props.updateDataInBackend(3, null, {
+        id: props.expenses[idx]._id,
+        field: "category",
+        newValue: newCat,
+    })
 }
 
 const updateCategories = (newBudget) => {
@@ -142,9 +147,6 @@ const updateCategories = (newBudget) => {
 // Called when any EditableText is updated inside the table and modal
 const updateEditableText = (newVal, idx, inputVar) => {
     emit("update:expenses", "field", idx, inputVar, newVal)
-    if(inputVar == "amount") {
-        props.updateTotalSpent()
-    }
     props.updateDataInBackend(3, null, {
         id: props.expenses[idx]._id,
         field: inputVar,
@@ -169,7 +171,7 @@ const addExpense = () => {
         "createdAt": new Date(),
         "updatedAt": new Date(),
     }
-    props.updateDataInBackend("addExpense", 0, newExpense)
+    props.updateDataInBackend(1, 0, newExpense)
     emit("update:expenses", "add", null, null, newExpense)
 }
 
