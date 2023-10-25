@@ -145,12 +145,18 @@ const updateEditableText = (newVal, idx, inputVar) => {
     if(inputVar == "amount") {
         props.updateTotalSpent()
     }
+    props.updateDataInBackend(3, null, {
+        id: props.expenses[idx]._id,
+        field: inputVar,
+        newValue: newVal,
+    })
 }
 
 const removeExpense = (idx) => {
     const object_id = props.expenses[idx]._id
     emit("update:expenses", "remove", idx)
-    props.updateDataInBackend("removeExpense", null, object_id)
+    // Pass the id of the object to know which one delete in the db
+    props.updateDataInBackend(2, null, object_id)
 }
 
 const addExpense = () => {

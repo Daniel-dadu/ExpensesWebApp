@@ -169,6 +169,31 @@ app.delete("/api/remove-expense/:userId", async (req, res) => {
     }
 })
 
+app.put("/api/update-expense/:userId", async (req, res) => {
+    await client.connect()
+    const db = client.db("ExpensesCluster")
+    // const userId = req.params.userId
+    const expenseId = req.body.id
+    const fieldToUpdate = req.body.field
+    const newFieldVal = req.body.newValue
+
+    try {
+        const result = await db.collection("expenses").updateOne(
+            { _id: new ObjectId(expenseId) }, // ID of document to update
+            { $set: { [fieldToUpdate]: newFieldVal } } // changing new value
+        )
+
+        if (result.matchedCount === 1) {
+            res.json("Expense updated successfully")
+        } else {
+            res.status(404).json("Expense not found")
+        }
+    } catch(error) {
+        res.status(500).json(error)
+    }
+
+})
+
 const port = 8000
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}`)

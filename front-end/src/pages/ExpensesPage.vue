@@ -64,9 +64,7 @@ watch(
 
 // Function called from the modal, executed when the data is changed
 const updateDataInBackend = async (from, idx, data) => {
-    if(from === "addExpense") {
-        console.log("addExpense")
-        console.log(data)
+    if(from === 1) { // 1 - Add expense
         try {
             const response = await axios.post(`/api/add-expense/${window.localStorage.getItem("email")}`, data)
             const newId = response.data
@@ -74,10 +72,17 @@ const updateDataInBackend = async (from, idx, data) => {
         } catch (error) {
             console.log(error)
         }
-    } else if (from === "removeExpense") {
+    } else if (from === 2) { // 2 - Delete expense
         try {
             // The data is the _id of the object that will be deleted
             await axios.delete(`/api/remove-expense/${window.localStorage.getItem("email")}`, { data: { id: data } } )
+        } catch (error) {
+            console.log(error)
+        }
+    } else if (from === 3) { // 3 - Change field
+        try {
+            // The data is the _id of the object that will be deleted
+            await axios.put(`/api/update-expense/${window.localStorage.getItem("email")}`, data )
         } catch (error) {
             console.log(error)
         }
