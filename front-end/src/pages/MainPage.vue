@@ -35,6 +35,7 @@
 				:years="years"
 				:expenses="expenses"
 				@update:expenses="updateExpenses"
+				:got-expenses-from-API="gotExpensesFromAPI"
 			/>
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-budget" role="tabpanel" aria-labelledby="pills-budget-tab" tabindex="0">
@@ -112,6 +113,8 @@ const updateCategories = (newCategories) => {
 }
 
 const expenses = ref([])
+// To indicate the Expenses Page that the expenses were loaded
+const gotExpensesFromAPI = ref(false)
 const getAPIExpenses = async () => {
     try {
         const response = await axios.get(`/api/expenses/${window.localStorage.getItem("email")}/?year=${year.value}&month=${month.value}`)
@@ -119,6 +122,7 @@ const getAPIExpenses = async () => {
         expenses.value = response.data.map((expense) => { 
 			return {...expense, "date": new Date(expense.date)} 
 		})
+		gotExpensesFromAPI.value = true
     } catch (error) {
         console.log(error)
     }

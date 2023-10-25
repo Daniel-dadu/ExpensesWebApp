@@ -42,7 +42,7 @@
 						:initial-elem="expense.category"
 						@update:initial-elem="updateCategorySelected"
 						:index="index" 
-						:changedData="props.changedData" 
+						:updateDataInBackend="props.updateDataInBackend" 
                     />
                 </td>
                 <td>
@@ -77,7 +77,7 @@
 						:index="index"
 						:initial-data="expense"
 						:update-editable-text="updateEditableText"
-						:changed-data="props.changedData"
+						:changed-data="props.updateDataInBackend"
 						:categories-data="categoriesEdit"
 						:update-categories="updateCategories"
 						:update-category-selected="updateCategorySelected"
@@ -109,9 +109,10 @@ import { numTwoDecimals } from "../../functions/formatNumbers"
 const props = defineProps({
     expenses: Array,
     categories: Array, // Every element is {name: String, limit: Number}
-    changedData: Function,
+    updateDataInBackend: Function,
     // To only allow the user to select dates on the month from MonthSelector:
     currMonthInNum: Number, 
+    updateTotalSpent: Function,
 })
 
 const emit = defineEmits(["update:expenses", "update:categories"])
@@ -141,6 +142,9 @@ const updateCategories = (newBudget) => {
 // Called when any EditableText is updated inside the table and modal
 const updateEditableText = (newVal, idx, inputVar) => {
     emit("update:expenses", "field", idx, inputVar, newVal)
+    if(inputVar == "amount") {
+        props.updateTotalSpent()
+    }
 }
 
 const removeExpense = (idx) => {
@@ -157,7 +161,7 @@ const addExpense = () => {
         "createdAt": new Date(),
         "updatedAt": new Date(),
     }
-    props.changedData("addExpense", 0, newExpense)
+    props.updateDataInBackend("addExpense", 0, newExpense)
     emit("update:expenses", "add", null, null, newExpense)
 }
 

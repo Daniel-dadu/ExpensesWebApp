@@ -17,8 +17,9 @@
         @update:expenses="updateExpenses"
         :categories="props.categories"
         @update:categories="props.updateCategories"
-        :changed-data="changedData"
+        :update-data-in-backend="updateDataInBackend"
         :curr-month-in-num="props.currMonthInNum"
+        :update-total-spent="updateTotalSpent"
     />
 </template>
 
@@ -36,6 +37,7 @@ const props = defineProps({
     currYear: Number,
     years: Array,
     expenses: Array,
+    gotExpensesFromAPI: Boolean,
 })
 
 const emit = defineEmits(["update:curr-month-in-num", "update:curr-year", "update:expenses"])
@@ -56,15 +58,12 @@ const updateTotalSpent = () => {
 }
 
 watch(
-    () => props.expenses,
+    () => props.gotExpensesFromAPI,
     () => updateTotalSpent()
 )
 
 // Function called from the modal, executed when the data is changed
-const changedData = async (from, idx, data) => {
-    updateTotalSpent()
-    // console.log("Send a PUT here")
-    // console.log(props.expenses[idx])
+const updateDataInBackend = async (from, idx, data) => {
     if(from === "addExpense") {
         console.log("addExpense")
         console.log(data)
