@@ -57,54 +57,6 @@ app.get("/api/expenses/:email", async (req, res) => {
     res.json(expenses)
 })
 
-app.get("/api/budget/:email", async (req, res) => {
-    await client.connect()
-    const db = client.db("ExpensesCluster")
-
-    const email = req.params.email
-    const year = parseInt(req.query.year)
-    const month = parseInt(req.query.month)
-
-    let budgets = await db.collection("budgets").aggregate([
-        {
-            $lookup: {
-                from: "budget_details",
-                localField: "_id",
-                foreignField: "budgetId",
-                as: "budgetDetails"
-            }
-        },
-        {
-            $unwind: "$budgetDetails"
-        },
-        {
-            $match: {
-                "userId": email,
-                "budgetDetails.month": month,
-                "budgetDetails.year": year
-            }
-        },
-        {
-            $project: {
-                _id: 1,
-                details_id: "$budgetDetails._id",
-                name: 1,
-                limit: "$budgetDetails.limit",
-            }
-        },
-    ]).toArray()
-
-    // Renaming the _id property
-    budgets = budgets.map(budget => {
-        Object.defineProperty(budget, "budget_id",
-            Object.getOwnPropertyDescriptor(budget, "_id"))
-        delete budget["_id"]
-        return budget
-    })
-
-    res.json(budgets)
-})
-
 app.get("/api/years/:email", async (req, res) => {
     await client.connect()
     const db = client.db("ExpensesCluster")
@@ -213,6 +165,56 @@ app.put("/api/update-expense/:userId", async (req, res) => {
 
 })
 
+// ----------------- BUDGETS ----------------- //
+
+app.get("/api/budget/:email", async (req, res) => {
+    await client.connect()
+    const db = client.db("ExpensesCluster")
+
+    const email = req.params.email
+    const year = parseInt(req.query.year)
+    const month = parseInt(req.query.month)
+
+    let budgets = await db.collection("budgets").aggregate([
+        {
+            $lookup: {
+                from: "budget_details",
+                localField: "_id",
+                foreignField: "budgetId",
+                as: "budgetDetails"
+            }
+        },
+        {
+            $unwind: "$budgetDetails"
+        },
+        {
+            $match: {
+                "userId": email,
+                "budgetDetails.month": month,
+                "budgetDetails.year": year
+            }
+        },
+        {
+            $project: {
+                _id: 1,
+                details_id: "$budgetDetails._id",
+                name: 1,
+                limit: "$budgetDetails.limit",
+            }
+        },
+    ]).toArray()
+
+    // Renaming the _id property
+    budgets = budgets.map(budget => {
+        Object.defineProperty(budget, "budget_id",
+            Object.getOwnPropertyDescriptor(budget, "_id"))
+        delete budget["_id"]
+        return budget
+    })
+
+    res.json(budgets)
+})
+
 app.post("/api/add-budget/:userId", async (req, res) => {
     await client.connect()
     const db = client.db("ExpensesCluster")
@@ -222,6 +224,8 @@ app.post("/api/add-budget/:userId", async (req, res) => {
     const year = req.body.year
 
     try {
+        // TODO: First verify that the user doesn't have another budget with that name
+
         const budget = await db.collection("budgets").insertOne({
             userId: userId,
             name: name,
@@ -250,6 +254,49 @@ app.post("/api/add-budget/:userId", async (req, res) => {
         res.status(500).json(error)
     }
 })
+
+app.delete("/api/remove-budget/:userId", async (req, res) => {
+    await client.connect()
+    const db = client.db("ExpensesCluster")
+    // const userId = req.params.userId
+    const budgetId = req.body.budget_id
+    const detailsId = req.body.details_id
+
+    let couldDeteleBudget = false
+
+    try {
+        const details_result = await db.collection("budget_details").deleteOne({
+            _id: new ObjectId(detailsId)
+        })
+        if (details_result.deletedCount === 1) {
+            // Check if the budget doesn't any details (it's not used in any month)
+            const budgets = await db.collection("budget_details").find({
+                budgetId: new ObjectId(budgetId)
+            }).toArray()
+
+            // If that budget is not used in any month, delete it from budgets collection
+            if(budgets.length === 0) {
+                const del_budget = await db.collection("budgets").deleteOne({
+                    _id: new ObjectId(budgetId)
+                })
+                if(del_budget.deletedCount !== 1) {
+                    res.status(404).json("Not used budget was not deleted correctly")
+                    return
+                } else {
+                    couldDeteleBudget = true 
+                }
+            }
+
+            res.json(`Budget (of that month) deleted successfully and ${couldDeteleBudget ? "also" : "didn't"} deleted the whole budget`)
+        } else {
+            res.status(404).json("Budget not found")
+        }
+    } catch(error) {
+        res.status(500).json(error)
+    }
+})
+
+
 
 const port = 8000
 app.listen(port, () => {

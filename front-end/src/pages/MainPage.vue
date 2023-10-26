@@ -173,7 +173,22 @@ const updateCategories = async (option, newVal, idx, field) => {
             console.log(error)
         }
 	} else if(option === "remove") {
-		categoriesEdit.value.splice(idx, 1)
+		try {
+			// Setting the ids of the budget to delete
+			let ids = {
+				budget_id: categoriesEdit.value[idx].budget_id,
+				details_id: categoriesEdit.value[idx].details_id,
+			}
+
+            await axios.delete(
+				`/api/remove-budget/${window.localStorage.getItem("email")}`, 
+				{ data: ids }
+			)
+
+			categoriesEdit.value.splice(idx, 1)
+        } catch (error) {
+            console.log(error)
+        }
 	} else if(option === "update") {
 		categoriesEdit.value[idx][field] = newVal
 	}
