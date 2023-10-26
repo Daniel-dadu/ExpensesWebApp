@@ -74,7 +74,7 @@
                 <div class="modal-footer">
                     <button 
                     type="button" 
-                    class="btn btn-outline-danger delete-expense-btn"
+                    class="btn btn-outline-danger table-delete-btn"
                     data-bs-dismiss="modal" 
                     @click="removeExpense(props.index)">
                         <img src="@/assets/trash-can.svg" alt="Trash can" />
