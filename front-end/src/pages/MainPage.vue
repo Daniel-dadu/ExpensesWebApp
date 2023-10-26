@@ -138,6 +138,7 @@ const updateExpenses = (option, idx, field, data) => {
 		expenses.value.splice(idx, 1)
 	} else if (option == "sort") {
 		// Sort the table by the date
+		console.log("sorting")
 		expenses.value.sort((a, b) => a.date < b.date ? 1 : -1)
 	} else if(option == "field") {
 		expenses.value[idx][field] = data

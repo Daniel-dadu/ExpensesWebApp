@@ -34,7 +34,6 @@
                             :initial-elem="props.initialData.category"
                             @update:initial-elem="props.updateCategorySelected"
                             :index="props.index" 
-                            :update-data-in-backend="updateDataInBackend" 
                             />
                         </div>
 
@@ -87,7 +86,7 @@
 </template>
 
 <script setup>
-import { watch, defineProps, } from "vue"
+import { defineProps, } from "vue"
 // import Datepicker from "@vuepic/vue-datepicker"
 import EditableText from "../ReusableComponents/EditableText.vue"
 import DropdownSelector from "../ReusableComponents/DropdownSelector.vue"
@@ -100,34 +99,11 @@ const props = defineProps({
     },
     initialData: Object,
     updateEditableText: Function,
-    updateDataInBackend: Function,
     categoriesData: Array,
     updateCategories: Function,
     updateCategorySelected: Function,
-    onChangedDate: Function,
     removeExpense: Function,
 })
-
-// Watch for changes in data from this modal and the table
-watch(
-    () => props.initialData.date,
-    () => {
-        props.updateDataInBackend("date", props.index)
-        props.onChangedDate(props.index)
-    }
-)
-watch(
-    () => props.initialData.description,
-    () => {
-        props.updateDataInBackend("description", props.index)
-    }
-)
-watch(
-    () => props.initialData.amount,
-    () => {
-        props.updateDataInBackend("amount", props.index)
-    }
-)
 </script>
 
 

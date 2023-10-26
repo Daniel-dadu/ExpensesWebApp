@@ -20,8 +20,10 @@
         <tbody>
             <tr v-for="(expense, index) in props.expenses" :key="index">
                 <td>
+                    <!-- @closed="onDateSubmit" -->
                     <Datepicker 
 						v-model="expense.date" 
+                        @update:model-value="onDateSubmit(index)"
 						:enable-time-picker="false" 
                         :min-date="new Date(2023, props.currMonthInNum, 1)"
                         :max-date="new Date(2023, props.currMonthInNum+1, 0)"
@@ -77,13 +79,11 @@
 						:index="index"
 						:initial-data="expense"
 						:update-editable-text="updateEditableText"
-						:update-data-in-backend="props.updateDataInBackend"
 						:categories-data="categoriesEdit"
 						:update-categories="updateCategories"
 						:update-category-selected="updateCategorySelected"
-						:on-changed-date="onChangedDate"
 						:remove-expense="removeExpense"
-                    />
+                        />
                     <button 
 						type="button" 
 						class="btn btn-outline-danger table-delete-btn"  
@@ -132,7 +132,7 @@ watch(
 const updateCategorySelected = (newCat, idx) => {
     emit("update:expenses", "field", idx, "category", newCat)
     console.log(props.expenses[idx])
-    props.updateDataInBackend(3, null, {
+    props.updateDataInBackend(3, {
         id: props.expenses[idx]._id,
         field: "category",
         newValue: newCat,
@@ -149,7 +149,7 @@ const updateCategories = (newBudget) => {
 const updateEditableText = (newVal, idx, inputVar) => {
     if(inputVar === "amount") { newVal = parseFloat(newVal) }
     emit("update:expenses", "field", idx, inputVar, newVal)
-    props.updateDataInBackend(3, null, {
+    props.updateDataInBackend(3, {
         id: props.expenses[idx]._id,
         field: inputVar,
         newValue: newVal,
@@ -160,7 +160,7 @@ const removeExpense = (idx) => {
     const object_id = props.expenses[idx]._id
     emit("update:expenses", "remove", idx)
     // Pass the id of the object to know which one delete in the db
-    props.updateDataInBackend(2, null, object_id)
+    props.updateDataInBackend(2, object_id)
 }
 
 const addExpense = () => {
@@ -184,18 +184,21 @@ const addExpense = () => {
         "createdAt": new Date(),
         "updatedAt": new Date(),
     }
-    props.updateDataInBackend(1, 0, newExpense)
-    emit("update:expenses", "add", null, null, newExpense)
+    props.updateDataInBackend(1, newExpense)
 }
 
-const onChangedDate = (idx) => {
-    // Sort the table by the date
+// When date is changed manually
+const onDateSubmit = (idx) => {
+    // Save the data before it's sorted and messes up
+    const expenseId = props.expenses[idx]._id
+    const expenseNewDate = props.expenses[idx].date.toJSON()
+
     emit("update:expenses", "sort")
 
-    props.updateDataInBackend(3, null, {
-        id: props.expenses[idx]._id,
+    props.updateDataInBackend(3, {
+        id: expenseId,
         field: "date",
-        newValue: props.expenses[idx].date.toJSON(),
+        newValue: expenseNewDate,
     })
 }
 </script>

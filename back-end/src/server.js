@@ -146,7 +146,7 @@ app.post("/api/add-expense/:userId", async (req, res) => {
     try {
         const result = await db.collection("expenses").insertOne(newExpense)
         
-        if (result.acknowledged) {
+        if (result.insertedId) {
             res.json(result.insertedId)
         } else {
             res.status(404).json("Expense not found")
@@ -184,6 +184,8 @@ app.put("/api/update-expense/:userId", async (req, res) => {
     const expenseId = req.body.id
     const fieldToUpdate = req.body.field
     const newFieldVal = req.body.newValue
+
+    console.log("AAAAAAAA")
 
     try {
         const result = await db.collection("expenses").updateOne(
