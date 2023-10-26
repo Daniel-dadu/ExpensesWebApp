@@ -185,7 +185,6 @@ app.put("/api/update-expense/:userId", async (req, res) => {
     const fieldToUpdate = req.body.field
     const newFieldVal = req.body.newValue
 
-    console.log(expenseId, fieldToUpdate, newFieldVal)
     try {
         const result = await db.collection("expenses").updateOne(
             { _id: new ObjectId(expenseId) }, // ID of document to update

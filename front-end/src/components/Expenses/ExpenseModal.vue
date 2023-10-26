@@ -113,7 +113,7 @@ watch(
     () => props.initialData.date,
     () => {
         props.updateDataInBackend("date", props.index)
-        props.onChangedDate()
+        props.onChangedDate(props.index)
     }
 )
 watch(

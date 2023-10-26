@@ -19,6 +19,7 @@
         @update:categories="props.updateCategories"
         :update-data-in-backend="updateDataInBackend"
         :curr-month-in-num="props.currMonthInNum"
+        :curr-year="props.currYear"
     />
 </template>
 

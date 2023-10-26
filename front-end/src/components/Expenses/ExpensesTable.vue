@@ -30,7 +30,7 @@
                     >
 						<template #trigger>
 							<button type="button" class="btn btn-dark">
-								{{expense.date.toGMTString().substring(0, 16)}}
+								{{expense.date.toDateString()}}
 							</button>
 						</template>
 					</Datepicker>
@@ -112,6 +112,7 @@ const props = defineProps({
     updateDataInBackend: Function,
     // To only allow the user to select dates on the month from MonthSelector:
     currMonthInNum: Number, 
+    currYear: Number,
 })
 
 const emit = defineEmits(["update:expenses", "update:categories"])
@@ -146,6 +147,7 @@ const updateCategories = (newBudget) => {
 
 // Called when any EditableText is updated inside the table and modal
 const updateEditableText = (newVal, idx, inputVar) => {
+    if(inputVar === "amount") { newVal = parseFloat(newVal) }
     emit("update:expenses", "field", idx, inputVar, newVal)
     props.updateDataInBackend(3, null, {
         id: props.expenses[idx]._id,
@@ -162,12 +164,23 @@ const removeExpense = (idx) => {
 }
 
 const addExpense = () => {
+    const validDate = () => {
+        const d = new Date(
+            props.currYear, 
+            props.currMonthInNum, 
+            new Date().getDate() // Today's day
+        )
+        
+        return d.getMonth() == props.currMonthInNum ? d :
+            new Date(props.currYear, props.currMonthInNum + 1, 0)
+    }
+
     let newExpense = { 
         "userId": window.localStorage.getItem("email"),
-        "date": new Date(),
+        "date": validDate(),
         "category": null,
         "description": "Add description",
-        "amount": 0,
+        "amount": 0.0,
         "createdAt": new Date(),
         "updatedAt": new Date(),
     }
@@ -175,9 +188,15 @@ const addExpense = () => {
     emit("update:expenses", "add", null, null, newExpense)
 }
 
-const onChangedDate = () => {
+const onChangedDate = (idx) => {
     // Sort the table by the date
     emit("update:expenses", "sort")
+
+    props.updateDataInBackend(3, null, {
+        id: props.expenses[idx]._id,
+        field: "date",
+        newValue: props.expenses[idx].date.toJSON(),
+    })
 }
 </script>
 
