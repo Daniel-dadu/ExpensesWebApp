@@ -224,31 +224,45 @@ app.post("/api/add-budget/:userId", async (req, res) => {
     const year = req.body.year
 
     try {
-        // TODO: First verify that the user doesn't have another budget with that name
-
-        const budget = await db.collection("budgets").insertOne({
+        let budgetId = ""
+        
+        // First verify that the user doesn't have another budget with that name
+        const budget_exists = await db.collection("budgets").find({
             userId: userId,
             name: name,
-            createdAt: new Date().toJSON()
-        })
-        
-        if (budget.insertedId) {
-            const specificDetails = await db.collection("budget_details").insertOne({
-                budgetId: new ObjectId(budget.insertedId),
-                limit: 0,
-                month: month,
-                year: year,
+        }).toArray()
+
+        // If there is no budget with that name for that user, create it
+        if (budget_exists.length === 0) {
+            const budget = await db.collection("budgets").insertOne({
+                userId: userId,
+                name: name,
+                createdAt: new Date().toJSON()
             })
-            if(specificDetails.insertedId) {
-                res.json({
-                    budget_id: budget.insertedId,
-                    details_id: specificDetails.insertedId,
-                })
+
+            if(budget.insertedId) {
+                budgetId = budget.insertedId
             } else {
-                res.status(404).json("ERR 2: Could not insert specific budget/category")
+                res.status(404).json("ERR 1: Could not insert budget/category")
+                return
             }
         } else {
-            res.status(404).json("ERR 1: Could not insert budget/category")
+            budgetId = budget_exists[0]._id
+        }
+        
+        const specificDetails = await db.collection("budget_details").insertOne({
+            budgetId: new ObjectId(budgetId),
+            limit: 0,
+            month: month,
+            year: year,
+        })
+        if(specificDetails.insertedId) {
+            res.json({
+                budget_id: budgetId,
+                details_id: specificDetails.insertedId,
+            })
+        } else {
+            res.status(404).json("ERR 2: Could not insert specific budget/category")
         }
     } catch(error) {
         res.status(500).json(error)
