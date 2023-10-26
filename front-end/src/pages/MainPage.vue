@@ -122,7 +122,10 @@ const getAPIExpenses = async () => {
         expenses.value = response.data.map((expense) => { 
 			return {...expense, "date": new Date(expense.date)} 
 		})
+		// To update total expenses amount when the expenses are loaded
 		gotExpensesFromAPI.value = true
+		// To sort the table
+		updateExpenses("sort")
     } catch (error) {
         console.log(error)
     }
