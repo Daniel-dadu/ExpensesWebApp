@@ -108,10 +108,6 @@ const getAPIYears = async () => {
 } 
 getAPIYears() // Get years when loading component
 
-const updateCategories = (newCategories) => {
-	categoriesEdit.value = newCategories
-}
-
 const expenses = ref([])
 // To indicate the Expenses Page that the expenses were loaded
 const gotExpensesFromAPI = ref(false)
@@ -132,7 +128,7 @@ const getAPIExpenses = async () => {
 } 
 getAPIExpenses() // Get expenses when loading component
 
-const updateExpenses = (option, idx, field, data) => {
+const updateExpenses = (option, idx, field, newVal) => {
 	if (option == "remove") {
 		// To remove the expense:
 		expenses.value.splice(idx, 1)
@@ -141,14 +137,48 @@ const updateExpenses = (option, idx, field, data) => {
 		console.log("sorting")
 		expenses.value.sort((a, b) => a.date < b.date ? 1 : -1)
 	} else if(option == "field") {
-		expenses.value[idx][field] = data
+		expenses.value[idx][field] = newVal
 	} else if(option == "add") {
 		// To add the expense at the beginning
-		expenses.value.unshift(data)
+		expenses.value.unshift(newVal)
 	} else {
-		expenses.value = data
+		expenses.value = newVal
 	}
 }
+
+const updateCategories = async (option, newVal, idx, field) => {
+	if(option === "add") {
+		try {
+			// Adding the curr month and year to the category obj
+			let newCategory = {
+				month: month.value,
+				year: year.value,
+				...newVal
+			}
+
+            const response = await axios.post(
+				`/api/add-budget/${window.localStorage.getItem("email")}`, 
+				newCategory
+			)
+
+			// Got the ids from the API after inserting the budget
+            const newIds = response.data
+
+			// Setting the ids to the newCat
+            newCategory.budget_id =  newIds.budget_id
+			newCategory.details_id = newIds.details_id
+
+			categoriesEdit.value.push(newCategory)
+        } catch (error) {
+            console.log(error)
+        }
+	} else if(option === "remove") {
+		categoriesEdit.value.splice(idx, 1)
+	} else if(option === "update") {
+		categoriesEdit.value[idx][field] = newVal
+	}
+}
+
 
 const updateMonth = (newMonth) => {
 	month.value = newMonth

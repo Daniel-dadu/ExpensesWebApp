@@ -39,7 +39,7 @@
                 </td>
                 <td>
                     <DropdownSelector 
-						:elements="categoriesEdit" 
+						:elements="categoriesArrayEdit" 
 						@update:elements="updateCategories"
 						:initial-elem="expense.category"
 						@update:initial-elem="updateCategorySelected"
@@ -79,7 +79,7 @@
 						:index="index"
 						:initial-data="expense"
 						:update-editable-text="updateEditableText"
-						:categories-data="categoriesEdit"
+						:categories-data="categoriesArrayEdit"
 						:update-categories="updateCategories"
 						:update-category-selected="updateCategorySelected"
 						:remove-expense="removeExpense"
@@ -118,12 +118,12 @@ const props = defineProps({
 const emit = defineEmits(["update:expenses", "update:categories"])
 
 // This will only have the names, not the limit amount
-const categoriesEdit = ref(props.categories.map(budget => budget.name))
+const categoriesArrayEdit = ref(props.categories.map(budget => budget.name))
 
 watch(
     () => props.categories,
     (newBudget) => {
-        categoriesEdit.value = newBudget.map(budget => budget.name)
+        categoriesArrayEdit.value = newBudget.map(budget => budget.name)
     },
     { deep: true } // To watch for changes inside the budget object
 )
@@ -140,9 +140,12 @@ const updateCategorySelected = (newCat, idx) => {
 }
 
 const updateCategories = (newBudget) => {
-	categoriesEdit.value.push(newBudget)
+	categoriesArrayEdit.value.push(newBudget)
     // Adding the new as an object with its limit
-    emit("update:categories", [...props.categories, {name: newBudget, limit: 0}])
+    emit("update:categories", "add", {
+        name: newBudget,
+        limit: 0,
+    })
 }
 
 // Called when any EditableText is updated inside the table and modal

@@ -65,7 +65,7 @@ app.get("/api/budget/:email", async (req, res) => {
     const year = parseInt(req.query.year)
     const month = parseInt(req.query.month)
 
-    const budgets = await db.collection("budgets").aggregate([
+    let budgets = await db.collection("budgets").aggregate([
         {
             $lookup: {
                 from: "budget_details",
@@ -86,12 +86,21 @@ app.get("/api/budget/:email", async (req, res) => {
         },
         {
             $project: {
+                _id: 1,
+                details_id: "$budgetDetails._id",
                 name: 1,
                 limit: "$budgetDetails.limit",
-                _id: 0
             }
         },
     ]).toArray()
+
+    // Renaming the _id property
+    budgets = budgets.map(budget => {
+        Object.defineProperty(budget, "budget_id",
+            Object.getOwnPropertyDescriptor(budget, "_id"))
+        delete budget["_id"]
+        return budget
+    })
 
     res.json(budgets)
 })
@@ -185,7 +194,7 @@ app.put("/api/update-expense/:userId", async (req, res) => {
     const fieldToUpdate = req.body.field
     const newFieldVal = req.body.newValue
 
-    console.log("AAAAAAAA")
+    console.log("Updating Expense")
 
     try {
         const result = await db.collection("expenses").updateOne(
@@ -202,6 +211,44 @@ app.put("/api/update-expense/:userId", async (req, res) => {
         res.status(500).json(error)
     }
 
+})
+
+app.post("/api/add-budget/:userId", async (req, res) => {
+    await client.connect()
+    const db = client.db("ExpensesCluster")
+    const userId = req.params.userId
+    const name = req.body.name
+    const month = req.body.month
+    const year = req.body.year
+
+    try {
+        const budget = await db.collection("budgets").insertOne({
+            userId: userId,
+            name: name,
+            createdAt: new Date().toJSON()
+        })
+        
+        if (budget.insertedId) {
+            const specificDetails = await db.collection("budget_details").insertOne({
+                budgetId: new ObjectId(budget.insertedId),
+                limit: 0,
+                month: month,
+                year: year,
+            })
+            if(specificDetails.insertedId) {
+                res.json({
+                    budget_id: budget.insertedId,
+                    details_id: specificDetails.insertedId,
+                })
+            } else {
+                res.status(404).json("ERR 2: Could not insert specific budget/category")
+            }
+        } else {
+            res.status(404).json("ERR 1: Could not insert budget/category")
+        }
+    } catch(error) {
+        res.status(500).json(error)
+    }
 })
 
 const port = 8000

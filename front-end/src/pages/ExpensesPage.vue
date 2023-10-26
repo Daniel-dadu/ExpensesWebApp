@@ -65,7 +65,6 @@ watch(
 // Function called from the modal, executed when the data is changed
 const updateDataInBackend = async (from, data) => {
     if(from === 1) { // 1 - Add expense
-        console.log("GOT HERE")
         try {
             const response = await axios.post(`/api/add-expense/${window.localStorage.getItem("email")}`, data)
             const newId = response.data

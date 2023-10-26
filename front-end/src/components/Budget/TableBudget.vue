@@ -86,20 +86,14 @@ const emit = defineEmits(["update:categories"])
 const showToast = ref(false)
 
 const updateEditableText = (newVal, idx, inputVar) => {
-    // To deep copy the array
-    let newBudgets = props.categories.map(i => ({...i}))
-	newBudgets[idx][inputVar] = inputVar == "limit" ? parseFloat(newVal) : newVal
-    emit("update:categories", newBudgets)
+    emit("update:categories", "update", newVal, idx, inputVar)
 }
 
 const addBudget = () => {
-    // To deep copy the array
-    let newBudgets = props.categories.map(i => ({...i}))
-    newBudgets.push({
+    emit("update:categories", "add", {
         name: "Add a name",
         limit: 0,
     })
-    emit("update:categories", newBudgets)
 }
 
 const removeCategory = (idx) => {
@@ -113,10 +107,7 @@ const removeCategory = (idx) => {
     // If there is an active toast, close it
     showToast.value = false
 
-    // To deep copy the array
-    let newBudgets = props.categories.map(i => ({...i}))
-    newBudgets.splice(idx, 1)
-    emit("update:categories", newBudgets)
+    emit("update:categories", "remove", null, idx)
 }
 </script>
 
