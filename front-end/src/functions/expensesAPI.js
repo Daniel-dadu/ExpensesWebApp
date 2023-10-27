@@ -1,6 +1,6 @@
 import axios from "axios"
 
-export const requestExpenses = async (year, month) => {
+export const getExpenses = async (year, month) => {
     try {
         const response = await axios.get(
             `/api/expenses/${window.localStorage.getItem("email")}/?year=${year}&month=${month}`

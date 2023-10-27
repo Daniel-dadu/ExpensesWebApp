@@ -26,28 +26,28 @@
 		<div class="tab-pane fade show active pages-padding" id="pills-expenses" role="tabpanel" aria-labelledby="pills-expenses-tab" tabindex="0">
 			<!-- <ExpensesTable2 /> -->
 			<ExpensesPage
-				:categories="categoriesEdit"
+				:categories="budgetsEdit"
 				:update-categories="updateCategories"
 				:curr-month-in-num="month"
 				@update:curr-month-in-num="updateMonth"
 				:curr-year="year"
 				@update:curr-year="updateYear"
 				:years="years"
-				:expenses="expenses"
+				:expenses="expensesEdit"
 				@update:expenses="updateExpenses"
 				:got-expenses-from-API="gotExpensesFromAPI"
 			/>
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-budget" role="tabpanel" aria-labelledby="pills-budget-tab" tabindex="0">
 			<BudgetPage 
-				:categories="categoriesEdit"
+				:categories="budgetsEdit"
 				:update-categories="updateCategories"
 				:curr-month-in-num="month"
 				@update:curr-month-in-num="updateMonth"
 				:curr-year="year"
 				@update:curr-year="updateYear"
 				:years="years"
-				:expenses="expenses"
+				:expenses="expensesEdit"
 			/>
 		</div>
 		<div class="tab-pane fade" id="pills-savings" role="tabpanel" aria-labelledby="pills-savings-tab" tabindex="0">
@@ -73,7 +73,10 @@ import ExpensesPage from "@/pages/ExpensesPage.vue"
 import BudgetPage from "./BudgetPage.vue"
 import ProfilePage from "./ProfilePage.vue"
 import "@vuepic/vue-datepicker/dist/main.css"
-import { requestExpenses } from "@/functions/getExpensesAPI"
+import { getExpenses } from "@/functions/expensesAPI"
+import { getYears } from "@/functions/yearsAPI"
+import { getBudgets } from "@/functions/budgetAPI"
+
 
 // To verify if the user logged in
 onMounted(() => {
@@ -86,58 +89,47 @@ onMounted(() => {
 const month = ref(new Date().getMonth()) // Set to actual month
 const year = ref(new Date().getFullYear()) // Set to actual year
 
-const categoriesEdit = ref([])
-const getAPICategories = async () => {
-    try {
-        const response = await axios.get(`/api/budget/${window.localStorage.getItem("email")}/?year=${year.value}&month=${month.value}`)
-        categoriesEdit.value = response.data
-    } catch (error) {
-        console.log(error)
-    }
+const budgetsEdit = ref([])
+const setBudgets = async () => {
+	budgetsEdit.value = await getBudgets(year.value, month.value)
 }
-getAPICategories() // Get categories when loading component
+setBudgets() // Get budgets/categories when loading component
 
 const years = ref([])
-const getAPIYears = async () => {
-    try {
-        const response = await axios.get(`/api/years/${window.localStorage.getItem("email")}`)
-		// Turning all the date strings into Date
-        years.value = response.data
-    } catch (error) {
-        console.log(error)
-    }
+const setYears = async () => {
+	years.value = await getYears()
 } 
-getAPIYears() // Get years when loading component
+setYears() // Get years when loading component
 
-const expenses = ref([])
+const expensesEdit = ref([])
 // To indicate the Expenses Page that the expenses were loaded
 const gotExpensesFromAPI = ref(false)
-const getAPIExpenses = async () => {
-	const response = await requestExpenses(year.value, month.value)
+const setExpenses = async () => {
+	const response = await getExpenses(year.value, month.value)
 
-	expenses.value = response
+	expensesEdit.value = response
 	// To update total expenses amount
 	gotExpensesFromAPI.value = !gotExpensesFromAPI.value
 	// To sort the table
 	updateExpenses("sort")
 } 
-getAPIExpenses() // Get expenses when loading component
+setExpenses() // Get expenses when loading component
 
 const updateExpenses = (option, idx, field, newVal) => {
 	if (option == "remove") {
 		// To remove the expense:
-		expenses.value.splice(idx, 1)
+		expensesEdit.value.splice(idx, 1)
 	} else if (option == "sort") {
 		// Sort the table by the date
 		console.log("sorting")
-		expenses.value.sort((a, b) => a.date < b.date ? 1 : -1)
+		expensesEdit.value.sort((a, b) => a.date < b.date ? 1 : -1)
 	} else if(option == "field") {
-		expenses.value[idx][field] = newVal
+		expensesEdit.value[idx][field] = newVal
 	} else if(option == "add") {
 		// To add the expense at the beginning
-		expenses.value.unshift(newVal)
+		expensesEdit.value.unshift(newVal)
 	} else {
-		expenses.value = newVal
+		expensesEdit.value = newVal
 	}
 }
 
@@ -163,7 +155,7 @@ const updateCategories = async (option, newVal, idx, field) => {
             newCategory.budget_id =  newIds.budget_id
 			newCategory.details_id = newIds.details_id
 
-			categoriesEdit.value.push(newCategory)
+			budgetsEdit.value.push(newCategory)
         } catch (error) {
             console.log(error)
         }
@@ -171,8 +163,8 @@ const updateCategories = async (option, newVal, idx, field) => {
 		try {
 			// Setting the ids of the budget to delete
 			let ids = {
-				budget_id: categoriesEdit.value[idx].budget_id,
-				details_id: categoriesEdit.value[idx].details_id,
+				budget_id: budgetsEdit.value[idx].budget_id,
+				details_id: budgetsEdit.value[idx].details_id,
 			}
 
             await axios.delete(
@@ -180,26 +172,26 @@ const updateCategories = async (option, newVal, idx, field) => {
 				{ data: ids }
 			)
 
-			categoriesEdit.value.splice(idx, 1)
+			budgetsEdit.value.splice(idx, 1)
         } catch (error) {
             console.log(error)
         }
 	} else if(option === "update") {
-		categoriesEdit.value[idx][field] = newVal
+		budgetsEdit.value[idx][field] = newVal
 	}
 }
 
 
 const updateMonth = (newMonth) => {
 	month.value = newMonth
-	getAPICategories()
-	getAPIExpenses()
+	setBudgets()
+	setExpenses()
 }
 
 const updateYear = (newYear) => { 
 	year.value = newYear
-	getAPICategories()
-	getAPIExpenses()
+	setBudgets()
+	setExpenses()
 }
 </script>
 
