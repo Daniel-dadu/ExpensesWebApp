@@ -73,6 +73,7 @@ import ExpensesPage from "@/pages/ExpensesPage.vue"
 import BudgetPage from "./BudgetPage.vue"
 import ProfilePage from "./ProfilePage.vue"
 import "@vuepic/vue-datepicker/dist/main.css"
+import { requestExpenses } from "@/functions/getExpensesAPI"
 
 // To verify if the user logged in
 onMounted(() => {
@@ -112,19 +113,13 @@ const expenses = ref([])
 // To indicate the Expenses Page that the expenses were loaded
 const gotExpensesFromAPI = ref(false)
 const getAPIExpenses = async () => {
-    try {
-        const response = await axios.get(`/api/expenses/${window.localStorage.getItem("email")}/?year=${year.value}&month=${month.value}`)
-		// Turning all the date strings into Date
-        expenses.value = response.data.map((expense) => { 
-			return {...expense, "date": new Date(expense.date)} 
-		})
-		// To update total expenses amount
-		gotExpensesFromAPI.value = !gotExpensesFromAPI.value
-		// To sort the table
-		updateExpenses("sort")
-    } catch (error) {
-        console.log(error)
-    }
+	const response = await requestExpenses(year.value, month.value)
+
+	expenses.value = response
+	// To update total expenses amount
+	gotExpensesFromAPI.value = !gotExpensesFromAPI.value
+	// To sort the table
+	updateExpenses("sort")
 } 
 getAPIExpenses() // Get expenses when loading component
 
