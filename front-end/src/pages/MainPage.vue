@@ -74,7 +74,7 @@ import ExpensesPage from "@/pages/ExpensesPage.vue"
 import BudgetPage from "./BudgetPage.vue"
 import ProfilePage from "./ProfilePage.vue"
 import "@vuepic/vue-datepicker/dist/main.css"
-import { getExpenses } from "@/functions/expensesAPI"
+import { getExpenses, postExpense, putExpense, deleteExpense } from "@/functions/expensesAPI"
 import { getYears } from "@/functions/yearsAPI"
 import { getBudgets } from "@/functions/budgetAPI"
 
@@ -119,36 +119,17 @@ setExpenses() // Get expenses when loading component
 // Function called from the modal, executed when the data is changed
 const updateExpensesInBackend = async (from, data) => {
     if(from === 1) { // 1 - Add expense
-        try {
-            const response = await axios.post(`/api/add-expense/${window.localStorage.getItem("email")}`, data)
-            const newId = response.data
+		const newExpense = await postExpense(data)
 
-            data._id = newId
-            // Add the expense with the new id from db and sort it
-            updateExpenses("add", data)
-            updateExpenses("sort")
-        } catch (error) {
-            console.log(error)
-        }
+		// Add the expense with the new id from db and sort it
+		updateExpenses("add", newExpense)
+		updateExpenses("sort")
     } else if (from === 2) { // 2 - Delete expense
-        try {
-            // The data is the _id of the object that will be deleted
-            await axios.delete(`/api/remove-expense/${window.localStorage.getItem("email")}`, { data: { id: data } } )
-        } catch (error) {
-            console.log(error)
-        }
+        // The data is the _id of the object that will be deleted
+        await deleteExpense(data)
     } else if (from === 3) { // 3 - Change field
-        try {
-            // The data parameter looks like this:
-            // data: {
-            //     id: expense id, 
-            //     field: name of field, 
-            //     newValue: new value of field
-            // }
-            await axios.put(`/api/update-expense/${window.localStorage.getItem("email")}`, data )
-        } catch (error) {
-            console.log(error)
-        }
+		// The "data" contains info about the expense to update
+        await putExpense(data)
     }
 }
 
