@@ -44,7 +44,6 @@
 						:initial-elem="expense.category"
 						@update:initial-elem="updateCategorySelected"
 						:index="index" 
-						:update-data-in-backend="props.updateDataInBackend" 
                     />
                 </td>
                 <td>
@@ -109,7 +108,6 @@ import { numTwoDecimals } from "../../functions/formatNumbers"
 const props = defineProps({
     expenses: Array,
     categories: Array, // Every element is {name: String, limit: Number}
-    updateDataInBackend: Function,
     // To only allow the user to select dates on the month from MonthSelector:
     currMonthInNum: Number, 
     currYear: Number,
@@ -130,13 +128,7 @@ watch(
 
 // Called when any DropdownSelector is updated inside the table and modal
 const updateCategorySelected = (newCat, idx) => {
-    emit("update:expenses", "field", newCat, idx, "category")
-    console.log(props.expenses[idx])
-    props.updateDataInBackend(3, {
-        id: props.expenses[idx]._id,
-        field: "category",
-        newValue: newCat,
-    })
+    emit("update:expenses", "update", newCat, idx, "category")
 }
 
 const updateCategories = (newBudget) => {
@@ -151,19 +143,11 @@ const updateCategories = (newBudget) => {
 // Called when any EditableText is updated inside the table and modal
 const updateEditableText = (newVal, idx, inputVar) => {
     if(inputVar === "amount") { newVal = parseFloat(newVal) }
-    emit("update:expenses", "field", newVal, idx, inputVar)
-    props.updateDataInBackend(3, {
-        id: props.expenses[idx]._id,
-        field: inputVar,
-        newValue: newVal,
-    })
+    emit("update:expenses", "update", newVal, idx, inputVar)
 }
 
 const removeExpense = (idx) => {
-    const object_id = props.expenses[idx]._id
     emit("update:expenses", "remove", null, idx)
-    // Pass the id of the object to know which one delete in the db
-    props.updateDataInBackend(2, object_id)
 }
 
 const addExpense = () => {
@@ -187,22 +171,13 @@ const addExpense = () => {
         "createdAt": new Date(),
         "updatedAt": new Date(),
     }
-    props.updateDataInBackend(1, newExpense)
+    emit("update:expenses", "add", newExpense)
 }
 
 // When date is changed manually
 const onDateSubmit = (idx) => {
-    // Save the data before it's sorted and messes up
-    const expenseId = props.expenses[idx]._id
-    const expenseNewDate = props.expenses[idx].date.toJSON()
-
+    emit("update:expenses", "update", props.expenses[idx].date, idx, "date")
     emit("update:expenses", "sort")
-
-    props.updateDataInBackend(3, {
-        id: expenseId,
-        field: "date",
-        newValue: expenseNewDate,
-    })
 }
 </script>
 

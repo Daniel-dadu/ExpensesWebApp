@@ -36,7 +36,6 @@
 				:expenses="expensesEdit"
 				@update:expenses="updateExpenses"
 				:got-expenses-from-API="gotExpensesFromAPI"
-				:update-expenses-in-backend="updateExpensesInBackend"
 			/>
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-budget" role="tabpanel" aria-labelledby="pills-budget-tab" tabindex="0">
@@ -117,39 +116,41 @@ const setExpenses = async () => {
 } 
 setExpenses() // Get expenses when loading component
 
-// Function called from the modal, executed when the data is changed
-const updateExpensesInBackend = async (from, data) => {
-    if(from === 1) { // 1 - Add expense
-		const newExpense = await postExpense(data)
+const updateExpenses = async (option, newVal, idx, field) => {
+	if (option == "update") {
+		expensesEdit.value[idx][field] = newVal
+		// Update expense in backend
+		await putExpense({
+			id: expensesEdit.value[idx]._id,
+			field: field,
+			newValue: newVal,
+		})
+	}
 
-		// Add the expense with the new id from db and sort it
-		updateExpenses("add", newExpense)
-		updateExpenses("sort")
-    } else if (from === 2) { // 2 - Delete expense
-        // The data is the _id of the object that will be deleted
-        await deleteExpense(data)
-    } else if (from === 3) { // 3 - Change field
-		// The "data" contains info about the expense to update
-        await putExpense(data)
-    }
-}
-
-const updateExpenses = (option, newVal, idx, field) => {
-	if (option == "remove") {
-		// To remove the expense:
-		expensesEdit.value.splice(idx, 1)
-	} else if (option == "sort") {
+	else if (option == "sort") {
 		// Sort the table by the date
 		console.log("sorting")
 		expensesEdit.value.sort((a, b) => a.date < b.date ? 1 : -1)
-	} else if(option == "field") {
-		expensesEdit.value[idx][field] = newVal
-	} else if(option == "add") {
+	} 
+
+	else if (option == "add") {
+		// Add expense in backend
+		const newExpense = await postExpense(newVal)
 		// To add the expense at the beginning
-		expensesEdit.value.unshift(newVal)
-	} else {
-		expensesEdit.value = newVal
+		expensesEdit.value.unshift(newExpense)
+		updateExpenses("sort")
 	}
+
+	else if (option == "remove") {
+		// Save the id before deleting it
+		const object_id = expensesEdit.value[idx]._id
+
+		expensesEdit.value.splice(idx, 1)
+
+		// Remove the expense in backend
+		await deleteExpense(object_id)
+	} 
+	
 }
 
 const updateCategories = async (option, newVal, idx, field) => {

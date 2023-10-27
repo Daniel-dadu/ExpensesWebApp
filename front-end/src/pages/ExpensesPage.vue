@@ -17,7 +17,6 @@
         @update:expenses="updateExpenses"
         :categories="props.categories"
         @update:categories="props.updateCategories"
-        :update-data-in-backend="props.updateExpensesInBackend"
         :curr-month-in-num="props.currMonthInNum"
         :curr-year="props.currYear"
     />
@@ -37,7 +36,6 @@ const props = defineProps({
     years: Array,
     expenses: Array,
     gotExpensesFromAPI: Boolean,
-    updateExpensesInBackend: Function,
 })
 
 const emit = defineEmits(["update:curr-month-in-num", "update:curr-year", "update:expenses"])
@@ -64,6 +62,12 @@ const updateTotalSpent = () => {
 
 watch(
     () => props.gotExpensesFromAPI,
+    () => updateTotalSpent()
+)
+
+// To update totalSpent when a expense is deleted 
+watch(
+    () => props.expenses.length,
     () => updateTotalSpent()
 )
 </script>
