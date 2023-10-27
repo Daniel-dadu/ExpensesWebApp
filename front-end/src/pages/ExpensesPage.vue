@@ -16,7 +16,7 @@
         :expenses="props.expenses"
         @update:expenses="updateExpenses"
         :categories="props.categories"
-        @update:categories="props.updateCategories"
+        @update:categories="updateCategories"
         :curr-month-in-num="props.currMonthInNum"
         :curr-year="props.currYear"
     />
@@ -30,7 +30,6 @@ import ExpensesTable from "../components/Expenses/ExpensesTable.vue"
 
 const props = defineProps({
     categories: Array,
-    updateCategories: Function,
     currMonthInNum: Number,
     currYear: Number,
     years: Array,
@@ -38,10 +37,11 @@ const props = defineProps({
     gotExpensesFromAPI: Boolean,
 })
 
-const emit = defineEmits(["update:curr-month-in-num", "update:curr-year", "update:expenses"])
+const emit = defineEmits(["update:categories", "update:curr-month-in-num", "update:curr-year", "update:expenses"])
 
 const totalSpent = ref(0)
 
+const updateCategories = (option, newVal, idx, field) => emit("update:categories", option, newVal, idx, field)
 const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
 const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
 const updateExpenses = (option, newVal, idx, field) => {

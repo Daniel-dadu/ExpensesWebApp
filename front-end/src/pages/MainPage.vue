@@ -24,10 +24,9 @@
 	</div>
     <div class="tab-content" id="pills-tabContent">
 		<div class="tab-pane fade show active pages-padding" id="pills-expenses" role="tabpanel" aria-labelledby="pills-expenses-tab" tabindex="0">
-			<!-- <ExpensesTable2 /> -->
 			<ExpensesPage
 				:categories="budgetsEdit"
-				:update-categories="updateCategories"
+				@update:categories="updateBudgets"
 				:curr-month-in-num="month"
 				@update:curr-month-in-num="updateMonth"
 				:curr-year="year"
@@ -40,14 +39,15 @@
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-budget" role="tabpanel" aria-labelledby="pills-budget-tab" tabindex="0">
 			<BudgetPage 
-				:categories="budgetsEdit"
-				:update-categories="updateCategories"
+				:budgets="budgetsEdit"
+				@update:budgets="updateBudgets"
 				:curr-month-in-num="month"
 				@update:curr-month-in-num="updateMonth"
 				:curr-year="year"
 				@update:curr-year="updateYear"
 				:years="years"
 				:expenses="expensesEdit"
+				@update:expenses="updateExpenses"
 			/>
 		</div>
 		<div class="tab-pane fade" id="pills-savings" role="tabpanel" aria-labelledby="pills-savings-tab" tabindex="0">
@@ -87,35 +87,46 @@ onMounted(() => {
 	}
 })
 
+// Month and Year used in the Selector
 const month = ref(new Date().getMonth()) // Set to actual month
 const year = ref(new Date().getFullYear()) // Set to actual year
 
+
+// -------- GETTING BUDGETS FROM API -------- //
 const budgetsEdit = ref([])
 const setBudgets = async () => {
 	budgetsEdit.value = await getBudgets(year.value, month.value)
 }
 setBudgets() // Get budgets/categories when loading component
+// ------------------------------------------ //
 
+
+
+// -------- GETTING YEARS FROM API -------- //
 const years = ref([])
 const setYears = async () => {
 	years.value = await getYears()
 } 
 setYears() // Get years when loading component
+// --------------------------------------- //
 
+
+// -------- GETTING EXPENSES FROM API -------- //
 const expensesEdit = ref([])
 // To indicate the Expenses Page that the expenses were loaded
 const gotExpensesFromAPI = ref(false)
 const setExpenses = async () => {
-	const response = await getExpenses(year.value, month.value)
-
-	expensesEdit.value = response
+	expensesEdit.value = await getExpenses(year.value, month.value)
 	// To update total expenses amount
 	gotExpensesFromAPI.value = !gotExpensesFromAPI.value
 	// To sort the table
 	updateExpenses("sort")
 } 
 setExpenses() // Get expenses when loading component
+// ------------------------------------------ //
 
+
+// UPDATING EXPENSES IN FRONT AND BACK
 const updateExpenses = async (option, newVal, idx, field) => {
 	if (option == "update") {
 		expensesEdit.value[idx][field] = newVal
@@ -150,14 +161,20 @@ const updateExpenses = async (option, newVal, idx, field) => {
 		// Remove the expense in backend
 		await deleteExpense(object_id)
 	} 
-	
 }
 
-const updateCategories = async (option, newVal, idx, field) => {
+// UPDATING BUDGETS IN FRONT AND BACK
+const updateBudgets = async (option, newVal, idx, field) => {
 	if(option === "add") {
 		const newBudget = await postBudget(newVal, year.value, month.value)
 		budgetsEdit.value.push(newBudget)
-	} else if(option === "remove") {
+	} 
+
+	else if(option === "update") {
+		budgetsEdit.value[idx][field] = newVal
+	}
+	
+	else if(option === "remove") {
 		let ids = {
 			budget_id: budgetsEdit.value[idx].budget_id,
 			details_id: budgetsEdit.value[idx].details_id,
@@ -165,9 +182,7 @@ const updateCategories = async (option, newVal, idx, field) => {
 		await deleteBudget(ids)
 
 		budgetsEdit.value.splice(idx, 1)
-	} else if(option === "update") {
-		budgetsEdit.value[idx][field] = newVal
-	}
+	} 
 }
 
 

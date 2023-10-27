@@ -18,10 +18,10 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(category, index) in props.categories" :key="index">
+            <tr v-for="(budget, index) in props.budgets" :key="index">
                 <td>
                     <EditableText 
-						:initial-text="category.name" 
+						:initial-text="budget.name" 
 						:index="index"
 						:input-var="'name'" 
 						@update:initial-text="updateEditableText"
@@ -29,7 +29,7 @@
                 </td>
                 <td>
                     $ <EditableText 
-						:initial-text="category.limit" 
+						:initial-text="budget.limit" 
 						:index="index"
 						:input-var="'limit'" 
 						@update:initial-text="updateEditableText"
@@ -39,13 +39,13 @@
                     $ {{ props.amountsSpentInBudgets[index] }}
                 </td>
                 <td>
-                    $ {{ category.limit - props.amountsSpentInBudgets[index] }}
+                    $ {{ budget.limit - props.amountsSpentInBudgets[index] }}
                 </td>
                 <td>
                     <button 
 						type="button" 
 						class="btn btn-outline-danger table-delete-btn"  
-						@click="removeCategory(index)"
+						@click="removeBudget(index)"
                     >
                         <img src="@/assets/trash-can.svg" alt="Trash can" />
                     </button>
@@ -76,38 +76,37 @@ import { defineProps, defineEmits, ref, } from "vue"
 import EditableText from "../ReusableComponents/EditableText.vue"
 
 const props = defineProps({
-    categories: Array,
+    budgets: Array,
     expenses: Array,
     amountsSpentInBudgets: Array,
 })
 
-const emit = defineEmits(["update:categories"])
+const emit = defineEmits(["update:budgets", "update:expenses"])
 
 const showToast = ref(false)
 
 const updateEditableText = (newVal, idx, inputVar, prevVal) => {
-    emit("update:categories", "update", newVal, idx, inputVar)
+    emit("update:budgets", "update", newVal, idx, inputVar)
     if(inputVar === "name") {
-        console.log(prevVal)
+        // Update the name of the category/budget in the expenses     
         for (let i = 0; i < props.expenses.length; i++) {
             if(prevVal === props.expenses[i].category) {
-                // Emit update to expenses
+                emit("update:expenses", "update", newVal, i, "category")
             }
-            
         }
     }
 }
 
 const addBudget = () => {
-    emit("update:categories", "add", {
+    emit("update:budgets", "add", {
         name: "Add a name",
         limit: 0,
     })
 }
 
-const removeCategory = (idx) => {
+const removeBudget = (idx) => {
     for (const exp of props.expenses) {
-        if(exp.category == props.categories[idx].name) {
+        if(exp.category == props.budgets[idx].name) {
             showToast.value = true
             return
         }
@@ -116,7 +115,7 @@ const removeCategory = (idx) => {
     // If there is an active toast, close it
     showToast.value = false
 
-    emit("update:categories", "remove", null, idx)
+    emit("update:budgets", "remove", null, idx)
 }
 </script>
 

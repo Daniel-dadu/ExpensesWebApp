@@ -11,14 +11,15 @@
     <TotalTitle 
         :title="'Total left'"
         :amount="
-            props.categories.reduce((acc, curr) => acc + curr.limit, 0) - 
+            props.budgets.reduce((acc, curr) => acc + curr.limit, 0) - 
             amountsSpentInBudgets.reduce((acc, curr) => acc + curr, 0)
         "
     />
     <TableBudget
-        :categories="props.categories"
-        @update:categories="props.updateCategories"
+        :budgets="props.budgets"
+        @update:budgets="updateBudgets"
         :expenses="props.expenses"
+        @update:expenses="updateExpenses"
         :amounts-spent-in-budgets="amountsSpentInBudgets"
     />
 </template>
@@ -30,25 +31,26 @@ import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
 import TableBudget from "@/components/Budget/TableBudget.vue"
 
 const props = defineProps({
-    categories: Array,
-    updateCategories: Function,
+    budgets: Array,
     currMonthInNum: Number,
     currYear: Number,
     years: Array,
     expenses: Array,
 })
 
-const emit = defineEmits(["update:curr-month-in-num", "update:curr-year"])
+const emit = defineEmits(["update:budgets", "update:curr-month-in-num", "update:curr-year", "update:expenses"])
 
+const updateBudgets = (option, newVal, idx, field) => emit("update:budgets", option, newVal, idx, field)
 const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
 const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
+const updateExpenses = (option, newVal, idx, field) => emit("update:expenses", option, newVal, idx, field)
 
 const amountsSpentInBudgets = ref([])
 
 watch(
-    () => [props.expenses, props.categories],
-    ([newExpenses, newCategories]) => {
-        amountsSpentInBudgets.value = newCategories.map((cat) => {
+    () => [props.expenses, props.budgets],
+    ([newExpenses, newBudgets]) => {
+        amountsSpentInBudgets.value = newBudgets.map((cat) => {
             let cont = 0
             return newExpenses.reduce(
                 (acc, currExp) => currExp.category == cat.name ? 
