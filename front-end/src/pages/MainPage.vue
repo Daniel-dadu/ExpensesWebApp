@@ -69,14 +69,15 @@
 <script setup>
 import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
-import axios from "axios"
 import ExpensesPage from "@/pages/ExpensesPage.vue"
 import BudgetPage from "./BudgetPage.vue"
 import ProfilePage from "./ProfilePage.vue"
 import "@vuepic/vue-datepicker/dist/main.css"
-import { getExpenses, postExpense, putExpense, deleteExpense } from "@/functions/expensesAPI"
+
+// Functions that manages data in the Backend
 import { getYears } from "@/functions/yearsAPI"
-import { getBudgets } from "@/functions/budgetAPI"
+import { getExpenses, postExpense, putExpense, deleteExpense } from "@/functions/expensesAPI"
+import { getBudgets, postBudget, deleteBudget } from "@/functions/budgetAPI"
 
 
 // To verify if the user logged in
@@ -133,7 +134,6 @@ const updateExpensesInBackend = async (from, data) => {
     }
 }
 
-
 const updateExpenses = (option, newVal, idx, field) => {
 	if (option == "remove") {
 		// To remove the expense:
@@ -154,47 +154,16 @@ const updateExpenses = (option, newVal, idx, field) => {
 
 const updateCategories = async (option, newVal, idx, field) => {
 	if(option === "add") {
-		try {
-			// Adding the curr month and year to the category obj
-			let newCategory = {
-				month: month.value,
-				year: year.value,
-				...newVal
-			}
-
-            const response = await axios.post(
-				`/api/add-budget/${window.localStorage.getItem("email")}`, 
-				newCategory
-			)
-
-			// Got the ids from the API after inserting the budget
-            const newIds = response.data
-
-			// Setting the ids to the newCat
-            newCategory.budget_id =  newIds.budget_id
-			newCategory.details_id = newIds.details_id
-
-			budgetsEdit.value.push(newCategory)
-        } catch (error) {
-            console.log(error)
-        }
+		const newBudget = await postBudget(newVal, year.value, month.value)
+		budgetsEdit.value.push(newBudget)
 	} else if(option === "remove") {
-		try {
-			// Setting the ids of the budget to delete
-			let ids = {
-				budget_id: budgetsEdit.value[idx].budget_id,
-				details_id: budgetsEdit.value[idx].details_id,
-			}
+		let ids = {
+			budget_id: budgetsEdit.value[idx].budget_id,
+			details_id: budgetsEdit.value[idx].details_id,
+		}
+		await deleteBudget(ids)
 
-            await axios.delete(
-				`/api/remove-budget/${window.localStorage.getItem("email")}`, 
-				{ data: ids }
-			)
-
-			budgetsEdit.value.splice(idx, 1)
-        } catch (error) {
-            console.log(error)
-        }
+		budgetsEdit.value.splice(idx, 1)
 	} else if(option === "update") {
 		budgetsEdit.value[idx][field] = newVal
 	}
