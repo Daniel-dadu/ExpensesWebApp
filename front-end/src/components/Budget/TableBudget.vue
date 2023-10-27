@@ -85,8 +85,17 @@ const emit = defineEmits(["update:categories"])
 
 const showToast = ref(false)
 
-const updateEditableText = (newVal, idx, inputVar) => {
+const updateEditableText = (newVal, idx, inputVar, prevVal) => {
     emit("update:categories", "update", newVal, idx, inputVar)
+    if(inputVar === "name") {
+        console.log(prevVal)
+        for (let i = 0; i < props.expenses.length; i++) {
+            if(prevVal === props.expenses[i].category) {
+                // Emit update to expenses
+            }
+            
+        }
+    }
 }
 
 const addBudget = () => {
