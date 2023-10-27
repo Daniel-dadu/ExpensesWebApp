@@ -36,6 +36,7 @@
 				:expenses="expensesEdit"
 				@update:expenses="updateExpenses"
 				:got-expenses-from-API="gotExpensesFromAPI"
+				:update-expenses-in-backend="updateExpensesInBackend"
 			/>
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-budget" role="tabpanel" aria-labelledby="pills-budget-tab" tabindex="0">
@@ -115,7 +116,44 @@ const setExpenses = async () => {
 } 
 setExpenses() // Get expenses when loading component
 
-const updateExpenses = (option, idx, field, newVal) => {
+// Function called from the modal, executed when the data is changed
+const updateExpensesInBackend = async (from, data) => {
+    if(from === 1) { // 1 - Add expense
+        try {
+            const response = await axios.post(`/api/add-expense/${window.localStorage.getItem("email")}`, data)
+            const newId = response.data
+
+            data._id = newId
+            // Add the expense with the new id from db and sort it
+            updateExpenses("add", data)
+            updateExpenses("sort")
+        } catch (error) {
+            console.log(error)
+        }
+    } else if (from === 2) { // 2 - Delete expense
+        try {
+            // The data is the _id of the object that will be deleted
+            await axios.delete(`/api/remove-expense/${window.localStorage.getItem("email")}`, { data: { id: data } } )
+        } catch (error) {
+            console.log(error)
+        }
+    } else if (from === 3) { // 3 - Change field
+        try {
+            // The data parameter looks like this:
+            // data: {
+            //     id: expense id, 
+            //     field: name of field, 
+            //     newValue: new value of field
+            // }
+            await axios.put(`/api/update-expense/${window.localStorage.getItem("email")}`, data )
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+
+
+const updateExpenses = (option, newVal, idx, field) => {
 	if (option == "remove") {
 		// To remove the expense:
 		expensesEdit.value.splice(idx, 1)

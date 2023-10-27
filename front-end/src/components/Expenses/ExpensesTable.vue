@@ -83,7 +83,7 @@
 						:update-categories="updateCategories"
 						:update-category-selected="updateCategorySelected"
 						:remove-expense="removeExpense"
-                        />
+                    />
                     <button 
 						type="button" 
 						class="btn btn-outline-danger table-delete-btn"  
@@ -130,7 +130,7 @@ watch(
 
 // Called when any DropdownSelector is updated inside the table and modal
 const updateCategorySelected = (newCat, idx) => {
-    emit("update:expenses", "field", idx, "category", newCat)
+    emit("update:expenses", "field", newCat, idx, "category")
     console.log(props.expenses[idx])
     props.updateDataInBackend(3, {
         id: props.expenses[idx]._id,
@@ -151,7 +151,7 @@ const updateCategories = (newBudget) => {
 // Called when any EditableText is updated inside the table and modal
 const updateEditableText = (newVal, idx, inputVar) => {
     if(inputVar === "amount") { newVal = parseFloat(newVal) }
-    emit("update:expenses", "field", idx, inputVar, newVal)
+    emit("update:expenses", "field", newVal, idx, inputVar)
     props.updateDataInBackend(3, {
         id: props.expenses[idx]._id,
         field: inputVar,
@@ -161,7 +161,7 @@ const updateEditableText = (newVal, idx, inputVar) => {
 
 const removeExpense = (idx) => {
     const object_id = props.expenses[idx]._id
-    emit("update:expenses", "remove", idx)
+    emit("update:expenses", "remove", null, idx)
     // Pass the id of the object to know which one delete in the db
     props.updateDataInBackend(2, object_id)
 }

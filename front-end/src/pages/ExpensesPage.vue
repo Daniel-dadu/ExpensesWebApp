@@ -17,7 +17,7 @@
         @update:expenses="updateExpenses"
         :categories="props.categories"
         @update:categories="props.updateCategories"
-        :update-data-in-backend="updateDataInBackend"
+        :update-data-in-backend="props.updateExpensesInBackend"
         :curr-month-in-num="props.currMonthInNum"
         :curr-year="props.currYear"
     />
@@ -25,7 +25,6 @@
 
 <script setup>
 import { ref, defineProps, defineEmits, watch, } from "vue"
-import axios from "axios"
 import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
 import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
 import ExpensesTable from "../components/Expenses/ExpensesTable.vue"
@@ -38,6 +37,7 @@ const props = defineProps({
     years: Array,
     expenses: Array,
     gotExpensesFromAPI: Boolean,
+    updateExpensesInBackend: Function,
 })
 
 const emit = defineEmits(["update:curr-month-in-num", "update:curr-year", "update:expenses"])
@@ -46,7 +46,12 @@ const totalSpent = ref(0)
 
 const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
 const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
-const updateExpenses = (option, idx, field, data) => emit("update:expenses", option, idx, field, data)
+const updateExpenses = (option, newVal, idx, field) => {
+    emit("update:expenses", option, newVal, idx, field)
+    if(field === "amount") {
+        updateTotalSpent()
+    }
+}
 
 const updateTotalSpent = () => {
     console.log("Updating total spent in Expenses Page")
@@ -61,45 +66,6 @@ watch(
     () => props.gotExpensesFromAPI,
     () => updateTotalSpent()
 )
-
-// Function called from the modal, executed when the data is changed
-const updateDataInBackend = async (from, data) => {
-    if(from === 1) { // 1 - Add expense
-        try {
-            const response = await axios.post(`/api/add-expense/${window.localStorage.getItem("email")}`, data)
-            const newId = response.data
-
-            data._id = newId
-            // Add the expense with the new id from db and sort it
-            emit("update:expenses", "add", null, null, data)
-            emit("update:expenses", "sort")
-        } catch (error) {
-            console.log(error)
-        }
-    } else if (from === 2) { // 2 - Delete expense
-        try {
-            // The data is the _id of the object that will be deleted
-            await axios.delete(`/api/remove-expense/${window.localStorage.getItem("email")}`, { data: { id: data } } )
-        } catch (error) {
-            console.log(error)
-        }
-    } else if (from === 3) { // 3 - Change field
-        try {
-            if(data.field === "amount") {
-                updateTotalSpent()
-            }
-            // The data parameter looks like this:
-            // data: {
-            //     id: expense id, 
-            //     field: name of field, 
-            //     newValue: new value of field
-            // }
-            await axios.put(`/api/update-expense/${window.localStorage.getItem("email")}`, data )
-        } catch (error) {
-            console.log(error)
-        }
-    }
-}
 </script>
 
 <style>
