@@ -151,7 +151,10 @@ app.put("/api/update-expense/:userId", async (req, res) => {
     try {
         const result = await db.collection("expenses").updateOne(
             { _id: new ObjectId(expenseId) }, // ID of document to update
-            { $set: { [fieldToUpdate]: newFieldVal } } // changing new value
+            { $set: { 
+                [fieldToUpdate]: newFieldVal, // changing new value
+                updatedAt: new Date().toJSON(), // Update the date
+            } } 
         )
 
         if (result.matchedCount === 1) {
