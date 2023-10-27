@@ -86,7 +86,12 @@ const emit = defineEmits(["update:budgets", "update:expenses"])
 const showToast = ref(false)
 
 const updateEditableText = (newVal, idx, inputVar, prevVal) => {
+    if (inputVar === "limit") {
+        newVal = parseFloat(newVal)
+    }
+
     emit("update:budgets", "update", newVal, idx, inputVar)
+    
     if(inputVar === "name") {
         // Update the name of the category/budget in the expenses     
         for (let i = 0; i < props.expenses.length; i++) {
