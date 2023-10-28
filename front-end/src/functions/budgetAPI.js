@@ -14,7 +14,7 @@ export const getBudgets = async (year, month) => {
 export const getPrevBudgets = async (year, month) => {
     try {
         const response = await axios.get(
-            `/api/pre-budget/${window.localStorage.getItem("email")}/?year=${year}&month=${month}`
+            `/api/prev-budget/${window.localStorage.getItem("email")}/?year=${year}&month=${month}`
         )
         return response.data
     } catch (error) {

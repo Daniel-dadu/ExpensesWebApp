@@ -218,6 +218,83 @@ app.get("/api/budget/:email", async (req, res) => {
     res.json(budgets)
 })
 
+app.get("/api/prev-budget/:userId", async (req, res) => {
+    await client.connect()
+    const db = client.db("ExpensesCluster")
+
+    const userId = req.params.userId
+    let year = parseInt(req.query.year)
+    let month = parseInt(req.query.month)-1
+
+    if(month === -1) {
+        month = 11
+        --year
+    }
+
+    // Get the array of budgets
+    let budgets = await db.collection('budgets').aggregate([
+        {
+            $match: {
+                userId: userId,
+            },
+        },
+        {
+            $lookup: {
+                from: 'budget_details',
+                localField: '_id',
+                foreignField: 'budgetId',
+                as: 'budgetDetails',
+            },
+        },
+        {
+            $unwind: '$budgetDetails',
+        },
+        {
+            $match: {
+                'budgetDetails.month': month,
+                'budgetDetails.year': year,
+            },
+        },
+        {
+            $project: {
+                _id: 1,
+                name: 1,
+                limit: '$budgetDetails.limit',
+            },
+        },
+    ]).toArray()
+
+    month++
+
+    if(month === 12) {
+        month = 0
+        ++year
+    }
+
+    budgets.map(async (budget) => {
+        const specificDetails = await db.collection("budget_details").insertOne({
+            budgetId: new ObjectId(budget._id),
+            limit: budget.limit,
+            month: month,
+            year: year,
+        })
+        if(specificDetails.insertedId) {
+            budget.details_id = specificDetails.insertedId
+        } else {
+            res.status(404).json("Could not insert specific budget/category")
+        }
+
+        // Renaming the _id property
+        Object.defineProperty(budget, "budget_id",
+            Object.getOwnPropertyDescriptor(budget, "_id"))
+        delete budget["_id"]
+
+        return budget
+    })
+
+    res.json(budgets)
+})
+
 app.post("/api/add-budget/:userId", async (req, res) => {
     await client.connect()
     const db = client.db("ExpensesCluster")
