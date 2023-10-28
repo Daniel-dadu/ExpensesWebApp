@@ -53,6 +53,13 @@
             </tr>
         </tbody>
     </table>
+    <div v-if="props.budgets.length === 0">
+        <button
+            @click="props.importPrevBudgets"
+        >
+            Import budgets from last month
+        </button>
+    </div>
     <div 
         v-if="showToast"
         class="toast align-items-center text-bg-danger bottom-left-toast" 
@@ -79,6 +86,7 @@ const props = defineProps({
     budgets: Array,
     expenses: Array,
     amountsSpentInBudgets: Array,
+    importPrevBudgets: Function,
 })
 
 const emit = defineEmits(["update:budgets", "update:expenses"])
@@ -91,7 +99,7 @@ const updateEditableText = (newVal, idx, inputVar, prevVal) => {
     }
 
     emit("update:budgets", "update", newVal, idx, inputVar)
-    
+
     if(inputVar === "name") {
         // Update the name of the category/budget in the expenses     
         for (let i = 0; i < props.expenses.length; i++) {

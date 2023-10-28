@@ -21,6 +21,7 @@
         :expenses="props.expenses"
         @update:expenses="updateExpenses"
         :amounts-spent-in-budgets="amountsSpentInBudgets"
+        :import-prev-budgets="props.importPrevBudgets"
     />
 </template>
 
@@ -36,6 +37,7 @@ const props = defineProps({
     currYear: Number,
     years: Array,
     expenses: Array,
+    importPrevBudgets: Function,
 })
 
 const emit = defineEmits(["update:budgets", "update:curr-month-in-num", "update:curr-year", "update:expenses"])

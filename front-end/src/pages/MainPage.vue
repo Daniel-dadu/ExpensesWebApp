@@ -48,6 +48,7 @@
 				:years="years"
 				:expenses="expensesEdit"
 				@update:expenses="updateExpenses"
+				:import-prev-budgets="importPrevBudgets"
 			/>
 		</div>
 		<div class="tab-pane fade" id="pills-savings" role="tabpanel" aria-labelledby="pills-savings-tab" tabindex="0">
@@ -76,7 +77,7 @@ import "@vuepic/vue-datepicker/dist/main.css"
 // Functions that manages data in the Backend
 import { getYears } from "@/functions/yearsAPI"
 import { getExpenses, postExpense, putExpense, deleteExpense } from "@/functions/expensesAPI"
-import { getBudgets, postBudget, deleteBudget } from "@/functions/budgetAPI"
+import { getBudgets, postBudget, deleteBudget, getPrevBudgets } from "@/functions/budgetAPI"
 
 
 // To verify if the user logged in
@@ -99,7 +100,6 @@ const setBudgets = async () => {
 }
 setBudgets() // Get budgets/categories when loading component
 // ------------------------------------------ //
-
 
 
 // -------- GETTING YEARS FROM API -------- //
@@ -196,6 +196,10 @@ const updateYear = (newYear) => {
 	year.value = newYear
 	setBudgets()
 	setExpenses()
+}
+
+const importPrevBudgets = async () => {
+	budgetsEdit.value = await getPrevBudgets(year.value, month.value)
 }
 </script>
 

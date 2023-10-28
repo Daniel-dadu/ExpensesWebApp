@@ -11,6 +11,17 @@ export const getBudgets = async (year, month) => {
     }
 }
 
+export const getPrevBudgets = async (year, month) => {
+    try {
+        const response = await axios.get(
+            `/api/pre-budget/${window.localStorage.getItem("email")}/?year=${year}&month=${month}`
+        )
+        return response.data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const postBudget = async (newBudget, year, month) => {
     try {
         // Adding the curr month and year to the category obj
