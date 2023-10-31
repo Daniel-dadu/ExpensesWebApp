@@ -53,8 +53,13 @@
             </tr>
         </tbody>
     </table>
-    <div v-if="props.budgets.length === 0">
+    <div 
+        v-if="props.budgets.length === 0" 
+        class="import-budgets-btn"
+    >
         <button
+            type="button"
+            class="btn btn-outline-secondary"
             @click="props.importPrevBudgets"
         >
             Import budgets from last month
@@ -139,5 +144,11 @@ const removeBudget = (idx) => {
     bottom: 20px; /* Adjust this value to control the distance from the bottom */
     right: 20px; /* Adjust this value to control the distance from the right */
     z-index: 999; /* Adjust the z-index as needed */
+}
+
+.import-budgets-btn {
+    width: fit-content;
+    margin: auto;
+    margin-top: 2rem;
 }
 </style>
