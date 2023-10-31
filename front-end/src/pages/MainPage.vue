@@ -52,8 +52,20 @@
 				@update:expenses="updateExpenses"
 			/>
 		</div>
-		<div class="tab-pane fade" id="pills-savings" role="tabpanel" aria-labelledby="pills-savings-tab" tabindex="0">
-			SAVINGS
+		<div class="tab-pane fade pages-padding" id="pills-savings" role="tabpanel" aria-labelledby="pills-savings-tab" tabindex="0">
+			<CategoriesPage 
+				:data-type="'savings'"
+				:data="savingsEdit"
+				@update:data="updateSavings"
+				:import-prev="importPrevSavings"
+				:curr-month-in-num="month"
+				@update:curr-month-in-num="updateMonth"
+				:curr-year="year"
+				@update:curr-year="updateYear"
+				:years="years"
+				:expenses="expensesEdit"
+				@update:expenses="updateExpenses"
+			/>
 		</div>
 		<div class="tab-pane fade" id="pills-payments" role="tabpanel" aria-labelledby="pills-budget-tab" tabindex="0">
 			PAYMENTS COMPONENT
@@ -202,9 +214,9 @@ const updateBudgets = async (option, newVal, idx, field) => {
 	} 
 }
 
-// const updateSavings = async (option, newVal, idx, field) => {
-// 	console.log("TODO: updateSavings", option, newVal, idx, field)
-// }
+const updateSavings = async (option, newVal, idx, field) => {
+	console.log("TODO: updateSavings", option, newVal, idx, field)
+}
 
 const updateMonth = (newMonth) => {
 	month.value = newMonth
@@ -223,9 +235,9 @@ const importPrevBudgets = async () => {
 	console.log(budgetsEdit.value)
 }
 
-// const importPrevSavings = async () => {
-// 	console.log("TODO: importPrevSavings")
-// }
+const importPrevSavings = async () => {
+	console.log("TODO: importPrevSavings")
+}
 </script>
 
 <style>
