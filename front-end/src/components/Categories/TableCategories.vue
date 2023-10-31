@@ -4,7 +4,12 @@
         type="button" 
         class="btn btn-outline-success" 
         @click="addCategory">
-            Add Budget
+            Add {{ 
+                props.dataType === "budgets" ? "budget" 
+                : props.dataType === "savings" ? "saving"
+                : props.dataType === "bills" ? "bill" :
+                "Error"
+            }}
         </button>
     </div>
     <table class="table table-hover align-middle my-table">
@@ -62,7 +67,7 @@
             class="btn btn-outline-secondary"
             @click="props.importPrev"
         >
-            Import budgets from last month
+            Import from last month
         </button>
     </div>
     <div 
@@ -72,7 +77,7 @@
     >
         <div class="d-flex">
             <div class="toast-body">
-                Remove the expenses that use this budget category or change their budget category to be able to remove it.
+                Remove the expenses that use this category or change their category to be able to remove it.
             </div>
             <button 
                 type="button" 
@@ -88,8 +93,8 @@ import { defineProps, defineEmits, ref, } from "vue"
 import EditableText from "../ReusableComponents/EditableText.vue"
 
 const props = defineProps({
-    data: Array,
     dataType: String,
+    data: Array,
     expenses: Array,
     amountsUsed: Array,
     importPrev: Function,

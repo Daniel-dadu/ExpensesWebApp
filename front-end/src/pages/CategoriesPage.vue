@@ -9,7 +9,7 @@
         />
     </div>
     <TotalTitle 
-        :title="'Total left'"
+        :title="title"
         :amount="
             props.data.reduce((acc, curr) => acc + curr.limit, 0) - 
             amountsUsed.reduce((acc, curr) => acc + curr, 0)
@@ -17,6 +17,7 @@
     />
     <TableCategories
         :data="props.data"
+        :data-type="props.dataType"
         @update:data="updateData"
         :expenses="props.expenses"
         @update:expenses="updateExpenses"
@@ -47,6 +48,11 @@ const updateData = (option, newVal, idx, field) => emit("update:data", option, n
 const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
 const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
 const updateExpenses = (option, newVal, idx, field) => emit("update:expenses", option, newVal, idx, field)
+
+const title = props.dataType === "budgets" ? "Total left" 
+            : props.dataType === "savings" ? "Total saved"
+            : props.dataType === "bills" ? "Total paid" :
+            "Error"
 
 const amountsUsed = ref([])
 
