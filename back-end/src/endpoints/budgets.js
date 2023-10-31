@@ -108,7 +108,9 @@ const getPrevBudgets = async (req, res) => {
         ++year
     }
 
-    budgets.map(async (budget) => {
+    for (let i = 0; i < budgets.length; i++) {
+        let budget = budgets[i]
+
         const specificDetails = await db.collection("budget_details").insertOne({
             budgetId: new ObjectId(budget._id),
             limit: budget.limit,
@@ -117,6 +119,7 @@ const getPrevBudgets = async (req, res) => {
         })
         if(specificDetails.insertedId) {
             budget.details_id = specificDetails.insertedId
+            console.log("Nice")
         } else {
             res.status(404).json("Could not insert specific budget/category")
         }
@@ -126,9 +129,9 @@ const getPrevBudgets = async (req, res) => {
             Object.getOwnPropertyDescriptor(budget, "_id"))
         delete budget["_id"]
 
-        return budget
-    })
-
+    }
+    
+    console.log("done")
     res.json(budgets)
 }
 

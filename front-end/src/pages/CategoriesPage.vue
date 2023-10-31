@@ -11,17 +11,17 @@
     <TotalTitle 
         :title="'Total left'"
         :amount="
-            props.budgets.reduce((acc, curr) => acc + curr.limit, 0) - 
-            amountsSpentInBudgets.reduce((acc, curr) => acc + curr, 0)
+            props.data.reduce((acc, curr) => acc + curr.limit, 0) - 
+            amountsUsed.reduce((acc, curr) => acc + curr, 0)
         "
     />
-    <TableBudget
-        :budgets="props.budgets"
-        @update:budgets="updateBudgets"
+    <TableCategories
+        :data="props.data"
+        @update:data="updateData"
         :expenses="props.expenses"
         @update:expenses="updateExpenses"
-        :amounts-spent-in-budgets="amountsSpentInBudgets"
-        :import-prev-budgets="props.importPrevBudgets"
+        :amounts-used="amountsUsed"
+        :import-prev="props.importPrev"
     />
 </template>
 
@@ -29,30 +29,31 @@
 import { defineProps, defineEmits, ref, watch, } from "vue"
 import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
 import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
-import TableBudget from "@/components/Budget/TableBudget.vue"
+import TableCategories from "@/components/Categories/TableCategories.vue"
 
 const props = defineProps({
-    budgets: Array,
+    dataType: String,
+    data: Array,
+    importPrev: Function,
     currMonthInNum: Number,
     currYear: Number,
     years: Array,
     expenses: Array,
-    importPrevBudgets: Function,
 })
 
-const emit = defineEmits(["update:budgets", "update:curr-month-in-num", "update:curr-year", "update:expenses"])
+const emit = defineEmits(["update:data", "update:curr-month-in-num", "update:curr-year", "update:expenses"])
 
-const updateBudgets = (option, newVal, idx, field) => emit("update:budgets", option, newVal, idx, field)
+const updateData = (option, newVal, idx, field) => emit("update:data", option, newVal, idx, field)
 const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
 const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
 const updateExpenses = (option, newVal, idx, field) => emit("update:expenses", option, newVal, idx, field)
 
-const amountsSpentInBudgets = ref([])
+const amountsUsed = ref([])
 
 watch(
-    () => [props.expenses, props.budgets],
-    ([newExpenses, newBudgets]) => {
-        amountsSpentInBudgets.value = newBudgets.map((cat) => {
+    () => [props.expenses, props.data],
+    ([newExpenses, newData]) => {
+        amountsUsed.value = newData.map((cat) => {
             let cont = 0
             return newExpenses.reduce(
                 (acc, currExp) => currExp.category == cat.name ? 

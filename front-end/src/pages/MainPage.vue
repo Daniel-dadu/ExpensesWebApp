@@ -38,9 +38,11 @@
 			/>
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-budget" role="tabpanel" aria-labelledby="pills-budget-tab" tabindex="0">
-			<BudgetPage 
-				:budgets="budgetsEdit"
-				@update:budgets="updateBudgets"
+			<CategoriesPage 
+				:data-type="'budgets'"
+				:data="budgetsEdit"
+				@update:data="updateBudgets"
+				:import-prev="importPrevBudgets"
 				:curr-month-in-num="month"
 				@update:curr-month-in-num="updateMonth"
 				:curr-year="year"
@@ -48,11 +50,10 @@
 				:years="years"
 				:expenses="expensesEdit"
 				@update:expenses="updateExpenses"
-				:import-prev-budgets="importPrevBudgets"
 			/>
 		</div>
 		<div class="tab-pane fade" id="pills-savings" role="tabpanel" aria-labelledby="pills-savings-tab" tabindex="0">
-			SAVINGS COMPONENT
+			SAVINGS
 		</div>
 		<div class="tab-pane fade" id="pills-payments" role="tabpanel" aria-labelledby="pills-budget-tab" tabindex="0">
 			PAYMENTS COMPONENT
@@ -69,15 +70,17 @@
 <script setup>
 import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
-import ExpensesPage from "@/pages/ExpensesPage.vue"
-import BudgetPage from "./BudgetPage.vue"
-import ProfilePage from "./ProfilePage.vue"
 import "@vuepic/vue-datepicker/dist/main.css"
+
+import ExpensesPage from "@/pages/ExpensesPage.vue"
+import CategoriesPage from "./CategoriesPage.vue"
+import ProfilePage from "./ProfilePage.vue"
 
 // Functions that manages data in the Backend
 import { getYears } from "@/functions/yearsAPI"
 import { getExpenses, postExpense, putExpense, deleteExpense } from "@/functions/expensesAPI"
 import { getBudgets, postBudget, deleteBudget, getPrevBudgets, putBudget } from "@/functions/budgetAPI"
+import { getSavings } from "@/functions/savingsAPI"
 
 
 // To verify if the user logged in
@@ -123,6 +126,15 @@ const setExpenses = async () => {
 	updateExpenses("sort")
 } 
 setExpenses() // Get expenses when loading component
+// ------------------------------------------ //
+
+
+// -------- GETTING SAVINGS FROM API -------- //
+const savingsEdit = ref([])
+const setSavings = async () => {
+	savingsEdit.value = await getSavings(year.value, month.value)
+}
+setSavings()
 // ------------------------------------------ //
 
 
@@ -183,12 +195,16 @@ const updateBudgets = async (option, newVal, idx, field) => {
 			budget_id: budgetsEdit.value[idx].budget_id,
 			details_id: budgetsEdit.value[idx].details_id,
 		}
+		console.log(ids)
 		await deleteBudget(ids)
 
 		budgetsEdit.value.splice(idx, 1)
 	} 
 }
 
+// const updateSavings = async (option, newVal, idx, field) => {
+// 	console.log("TODO: updateSavings", option, newVal, idx, field)
+// }
 
 const updateMonth = (newMonth) => {
 	month.value = newMonth
@@ -204,7 +220,12 @@ const updateYear = (newYear) => {
 
 const importPrevBudgets = async () => {
 	budgetsEdit.value = await getPrevBudgets(year.value, month.value)
+	console.log(budgetsEdit.value)
 }
+
+// const importPrevSavings = async () => {
+// 	console.log("TODO: importPrevSavings")
+// }
 </script>
 
 <style>

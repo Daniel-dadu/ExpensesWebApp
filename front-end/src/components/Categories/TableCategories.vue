@@ -3,7 +3,7 @@
         <button 
         type="button" 
         class="btn btn-outline-success" 
-        @click="addBudget">
+        @click="addCategory">
             Add Budget
         </button>
     </div>
@@ -18,10 +18,10 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(budget, index) in props.budgets" :key="index">
+            <tr v-for="(category, index) in props.data" :key="index">
                 <td>
                     <EditableText 
-						:initial-text="budget.name" 
+						:initial-text="category.name" 
 						:index="index"
 						:input-var="'name'" 
 						@update:initial-text="updateEditableText"
@@ -29,23 +29,23 @@
                 </td>
                 <td>
                     $ <EditableText 
-						:initial-text="budget.limit" 
+						:initial-text="category.limit" 
 						:index="index"
 						:input-var="'limit'" 
 						@update:initial-text="updateEditableText"
                     />
                 </td>
                 <td>
-                    $ {{ props.amountsSpentInBudgets[index] }}
+                    $ {{ props.amountsUsed[index] }}
                 </td>
                 <td>
-                    $ {{ budget.limit - props.amountsSpentInBudgets[index] }}
+                    $ {{ category.limit - props.amountsUsed[index] }}
                 </td>
                 <td>
                     <button 
 						type="button" 
 						class="btn btn-outline-danger table-delete-btn"  
-						@click="removeBudget(index)"
+						@click="removeCategory(index)"
                     >
                         <img src="@/assets/trash-can.svg" alt="Trash can" />
                     </button>
@@ -54,13 +54,13 @@
         </tbody>
     </table>
     <div 
-        v-if="props.budgets.length === 0" 
-        class="import-budgets-btn"
+        v-if="props.data.length === 0" 
+        class="import-btn"
     >
         <button
             type="button"
             class="btn btn-outline-secondary"
-            @click="props.importPrevBudgets"
+            @click="props.importPrev"
         >
             Import budgets from last month
         </button>
@@ -88,13 +88,14 @@ import { defineProps, defineEmits, ref, } from "vue"
 import EditableText from "../ReusableComponents/EditableText.vue"
 
 const props = defineProps({
-    budgets: Array,
+    data: Array,
+    dataType: String,
     expenses: Array,
-    amountsSpentInBudgets: Array,
-    importPrevBudgets: Function,
+    amountsUsed: Array,
+    importPrev: Function,
 })
 
-const emit = defineEmits(["update:budgets", "update:expenses"])
+const emit = defineEmits(["update:data", "update:expenses"])
 
 const showToast = ref(false)
 
@@ -103,10 +104,10 @@ const updateEditableText = (newVal, idx, inputVar, prevVal) => {
         newVal = parseFloat(newVal)
     }
 
-    emit("update:budgets", "update", newVal, idx, inputVar)
+    emit("update:data", "update", newVal, idx, inputVar)
 
     if(inputVar === "name") {
-        // Update the name of the category/budget in the expenses     
+        // Update the name of the category in the expenses     
         for (let i = 0; i < props.expenses.length; i++) {
             if(prevVal === props.expenses[i].category) {
                 emit("update:expenses", "update", newVal, i, "category")
@@ -115,16 +116,16 @@ const updateEditableText = (newVal, idx, inputVar, prevVal) => {
     }
 }
 
-const addBudget = () => {
-    emit("update:budgets", "add", {
+const addCategory = () => {
+    emit("update:data", "add", {
         name: "Add a name",
         limit: 0,
     })
 }
 
-const removeBudget = (idx) => {
+const removeCategory = (idx) => {
     for (const exp of props.expenses) {
-        if(exp.category == props.budgets[idx].name) {
+        if(exp.category == props.data[idx].name) {
             showToast.value = true
             return
         }
@@ -133,7 +134,7 @@ const removeBudget = (idx) => {
     // If there is an active toast, close it
     showToast.value = false
 
-    emit("update:budgets", "remove", null, idx)
+    emit("update:data", "remove", null, idx)
 }
 </script>
 
@@ -146,7 +147,7 @@ const removeBudget = (idx) => {
     z-index: 999; /* Adjust the z-index as needed */
 }
 
-.import-budgets-btn {
+.import-btn {
     width: fit-content;
     margin: auto;
     margin-top: 2rem;

@@ -16,6 +16,7 @@ export const getPrevBudgets = async (year, month) => {
         const response = await axios.get(
             `/api/prev-budget/${window.localStorage.getItem("email")}/?year=${year}&month=${month}`
         )
+        console.log("From budget request: ",response.data)
         return response.data
     } catch (error) {
         console.log(error)

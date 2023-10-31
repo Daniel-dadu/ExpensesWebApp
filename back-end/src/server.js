@@ -18,6 +18,11 @@ app.post("/api/add-budget/:userId", budgetsAPI.addBudget)
 app.put("/api/update-budget/:userId", budgetsAPI.updateBudget)
 app.delete("/api/remove-budget/:userId", budgetsAPI.deleteBudget)
 
+// ----------------- SAVINGS ----------------- //
+const savingsAPI = require("./endpoints/savings.js")
+app.get("/api/savings/:email", savingsAPI.getSavings)
+
+
 // ----------------- GENERAL ----------------- //
 const generalAPI = require("./endpoints/general.js")
 app.get("/api/years/:email", generalAPI.getYears)
