@@ -349,6 +349,72 @@ app.post("/api/add-budget/:userId", async (req, res) => {
     }
 })
 
+app.put("/api/update-budget/:userId", async (req, res) => {
+    await client.connect()
+    const db = client.db("ExpensesCluster")
+    const userId = req.params.userId
+    let budgetId = req.body.budget_id
+    const budgetDetailsId = req.body.details_id
+    const fieldToUpdate = req.body.field
+    const newFieldVal = req.body.newValue
+
+    console.log("Updating Budget")
+
+    if(fieldToUpdate === "limit") {
+        try {
+            const result = await db.collection("budget_details").updateOne(
+                { _id: new ObjectId(budgetDetailsId) }, // ID of document to update
+                { $set: { 
+                    [fieldToUpdate]: newFieldVal, // changing new value
+                } } 
+            )
+    
+            if (result.matchedCount === 1) {
+                res.json("Expense updated successfully")
+            } else {
+                res.status(404).json("Expense not found")
+            }
+        } catch(error) {
+            res.status(500).json(error)
+        }
+    }
+
+    else if (fieldToUpdate === "name") {
+        try {
+            const budget = await db.collection("budgets").insertOne({
+                userId: userId,
+                name: newFieldVal,
+                createdAt: new Date().toJSON()
+            })
+
+            if(budget.insertedId) {
+                budgetId = budget.insertedId
+
+                const result = await db.collection("budget_details").updateOne(
+                    { _id: new ObjectId(budgetDetailsId) }, // ID of document to update
+                    { $set: { 
+                        ["budgetId"]: budgetId, // changing new value
+                    } } 
+                )
+        
+                if (result.matchedCount === 1) {
+                    res.json(budgetId) // Returning the new budget_id for that budget
+                } else {
+                    res.status(404).json("Expense not found")
+                }
+
+            } else {
+                res.status(404).json("Could not insert budget/category")
+                return
+            }
+
+        } catch(error) {
+            res.status(500).json(error)
+        }
+    }
+
+})
+
 app.delete("/api/remove-budget/:userId", async (req, res) => {
     await client.connect()
     const db = client.db("ExpensesCluster")

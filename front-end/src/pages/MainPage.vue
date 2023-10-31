@@ -77,7 +77,7 @@ import "@vuepic/vue-datepicker/dist/main.css"
 // Functions that manages data in the Backend
 import { getYears } from "@/functions/yearsAPI"
 import { getExpenses, postExpense, putExpense, deleteExpense } from "@/functions/expensesAPI"
-import { getBudgets, postBudget, deleteBudget, getPrevBudgets } from "@/functions/budgetAPI"
+import { getBudgets, postBudget, deleteBudget, getPrevBudgets, putBudget } from "@/functions/budgetAPI"
 
 
 // To verify if the user logged in
@@ -172,6 +172,10 @@ const updateBudgets = async (option, newVal, idx, field) => {
 
 	else if(option === "update") {
 		budgetsEdit.value[idx][field] = newVal
+		const newBudgetId = await putBudget(budgetsEdit.value[idx], field, newVal)
+		if (newBudgetId) {
+			budgetsEdit.value[idx]["budget_id"] = newBudgetId
+		}
 	}
 	
 	else if(option === "remove") {

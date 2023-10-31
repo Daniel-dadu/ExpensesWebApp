@@ -46,6 +46,30 @@ export const postBudget = async (newBudget, year, month) => {
     }
 }
 
+export const putBudget = async (budget, field, newVal) => {
+    try {
+        // Adding the curr month and year to the category obj
+        let data = {
+            budget_id: budget.budget_id,
+            details_id: budget.details_id,
+            field: field,
+            newValue: newVal,
+        }
+
+        const response = await axios.put(
+            `/api/update-budget/${window.localStorage.getItem("email")}`, 
+            data
+        )
+
+        // Got the ids from the API after inserting the budget
+        const newId = response.data
+
+        return field === "name" ? newId : null
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const deleteBudget = async (ids) => {
     try {
         await axios.delete(
