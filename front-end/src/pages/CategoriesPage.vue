@@ -11,7 +11,7 @@
     <TotalTitle 
         :title="title"
         :amount="
-            props.data.reduce((acc, curr) => acc + curr.limit, 0) - 
+            props.data.reduce((acc, curr) => acc + curr.threshold, 0) - 
             amountsUsed.reduce((acc, curr) => acc + curr, 0)
         "
     />

@@ -3,7 +3,7 @@ import axios from "axios"
 export const getBudgets = async (year, month) => {
     try {
         const response = await axios.get(
-            `/api/budget/${window.localStorage.getItem("email")}/?year=${year}&month=${month}`
+            `/api/budget/${window.localStorage.getItem("email")}/?datatype=budget&year=${year}&month=${month}`
         )
         return response.data
     } catch (error) {
@@ -14,7 +14,7 @@ export const getBudgets = async (year, month) => {
 export const getPrevBudgets = async (year, month) => {
     try {
         const response = await axios.get(
-            `/api/prev-budget/${window.localStorage.getItem("email")}/?year=${year}&month=${month}`
+            `/api/prev-budget/${window.localStorage.getItem("email")}/?datatype=budget&year=${year}&month=${month}`
         )
         console.log("From budget request: ",response.data)
         return response.data
@@ -30,9 +30,11 @@ export const postBudget = async (newBudget, year, month) => {
         newBudget.year = year
 
         const response = await axios.post(
-            `/api/add-budget/${window.localStorage.getItem("email")}`, 
+            `/api/add-budget/${window.localStorage.getItem("email")}/?datatype=budget`, 
             newBudget
         )
+
+        console.log(response.data)
 
         // Got the ids from the API after inserting the budget
         const newIds = response.data
@@ -51,14 +53,14 @@ export const putBudget = async (budget, field, newVal) => {
     try {
         // Adding the curr month and year to the category obj
         let data = {
-            budget_id: budget.budget_id,
+            obj_id: budget.budget_id,
             details_id: budget.details_id,
             field: field,
             newValue: newVal,
         }
 
         const response = await axios.put(
-            `/api/update-budget/${window.localStorage.getItem("email")}`, 
+            `/api/update-budget/${window.localStorage.getItem("email")}/?datatype=budget`, 
             data
         )
 
@@ -74,7 +76,7 @@ export const putBudget = async (budget, field, newVal) => {
 export const deleteBudget = async (ids) => {
     try {
         await axios.delete(
-            `/api/remove-budget/${window.localStorage.getItem("email")}`, 
+            `/api/remove-budget/${window.localStorage.getItem("email")}/?datatype=budget`, 
             { data: ids }
         )
     } catch (error) {

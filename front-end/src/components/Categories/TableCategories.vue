@@ -34,9 +34,9 @@
                 </td>
                 <td>
                     $ <EditableText 
-						:initial-text="category.limit" 
+						:initial-text="category.threshold" 
 						:index="index"
-						:input-var="'limit'" 
+						:input-var="'threshold'" 
 						@update:initial-text="updateEditableText"
                     />
                 </td>
@@ -44,7 +44,7 @@
                     $ {{ props.amountsUsed[index] }}
                 </td>
                 <td>
-                    $ {{ category.limit - props.amountsUsed[index] }}
+                    $ {{ category.threshold - props.amountsUsed[index] }}
                 </td>
                 <td>
                     <button 
@@ -105,7 +105,7 @@ const emit = defineEmits(["update:data", "update:expenses"])
 const showToast = ref(false)
 
 const updateEditableText = (newVal, idx, inputVar, prevVal) => {
-    if (inputVar === "limit") {
+    if (inputVar === "threshold") {
         newVal = parseFloat(newVal)
     }
 
@@ -124,7 +124,7 @@ const updateEditableText = (newVal, idx, inputVar, prevVal) => {
 const addCategory = () => {
     emit("update:data", "add", {
         name: "Add a name",
-        limit: 0,
+        threshold: 0,
     })
 }
 

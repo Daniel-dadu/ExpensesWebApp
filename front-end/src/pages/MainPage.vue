@@ -195,6 +195,13 @@ const updateBudgets = async (option, newVal, idx, field) => {
 	} 
 
 	else if(option === "update") {
+		// Verify that the user doesn't try to use a name already in the table
+		if (field === "name") {
+			for(const budget of budgetsEdit.value) {
+				if (budget.name === newVal) { return }
+			}
+		}
+
 		budgetsEdit.value[idx][field] = newVal
 		const newBudgetId = await putBudget(budgetsEdit.value[idx], field, newVal)
 		if (newBudgetId) {
@@ -204,7 +211,7 @@ const updateBudgets = async (option, newVal, idx, field) => {
 	
 	else if(option === "remove") {
 		let ids = {
-			budget_id: budgetsEdit.value[idx].budget_id,
+			obj_id: budgetsEdit.value[idx].budget_id,
 			details_id: budgetsEdit.value[idx].details_id,
 		}
 		console.log(ids)
