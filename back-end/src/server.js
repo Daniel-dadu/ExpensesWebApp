@@ -11,6 +11,7 @@ app.put("/api/update-expense/:userId", expensesAPI.updateExpense)
 app.delete("/api/remove-expense/:userId", expensesAPI.removeExpense)
 
 const categoriesAPI = require("./endpoints/categories.js")
+
 // ----------------- BUDGETS ----------------- //
 app.get("/api/budgets/:email", categoriesAPI.getData)
 app.get("/api/prev-budgets/:userId", categoriesAPI.getPrevData)
@@ -24,6 +25,13 @@ app.get("/api/prev-savings/:userId", categoriesAPI.getPrevData)
 app.post("/api/add-saving/:userId", categoriesAPI.addData)
 app.put("/api/update-saving/:userId", categoriesAPI.updateData)
 app.delete("/api/remove-saving/:userId", categoriesAPI.deleteData)
+
+// ----------------- BILLS ----------------- //
+app.get("/api/bills/:email", categoriesAPI.getData)
+app.get("/api/prev-bills/:userId", categoriesAPI.getPrevData)
+app.post("/api/add-bill/:userId", categoriesAPI.addData)
+app.put("/api/update-bill/:userId", categoriesAPI.updateData)
+app.delete("/api/remove-bill/:userId", categoriesAPI.deleteData)
 
 // ----------------- GENERAL ----------------- //
 const generalAPI = require("./endpoints/general.js")
