@@ -91,8 +91,8 @@ import ProfilePage from "./ProfilePage.vue"
 // Functions that manages data in the Backend
 import { getYears } from "@/functions/yearsAPI"
 import { getExpenses, postExpense, putExpense, deleteExpense } from "@/functions/expensesAPI"
-import { getBudgets, postBudget, deleteBudget, getPrevBudgets, putBudget } from "@/functions/budgetAPI"
-import { getSavings } from "@/functions/savingsAPI"
+import { getBudgets, getPrevBudgets, postBudget, putBudget, deleteBudget, } from "@/functions/budgetAPI"
+import { getSavings, getPrevSavings, postSaving, putSaving, deleteSaving, } from "@/functions/savingsAPI"
 
 
 // To verify if the user logged in
@@ -221,20 +221,52 @@ const updateBudgets = async (option, newVal, idx, field) => {
 	} 
 }
 
+// UPDATING SAVINGS IN FRONT AND BACK
 const updateSavings = async (option, newVal, idx, field) => {
-	console.log("TODO: updateSavings", option, newVal, idx, field)
+	if(option === "add") {
+		const newSaving = await postSaving(newVal, year.value, month.value)
+		savingsEdit.value.push(newSaving)
+	} 
+
+	else if(option === "update") {
+		// Verify that the user doesn't try to use a name already in the table
+		if (field === "name") {
+			for(const saving of savingsEdit.value) {
+				if (saving.name === newVal) { return }
+			}
+		}
+
+		savingsEdit.value[idx][field] = newVal
+		const newSavingId = await putSaving(savingsEdit.value[idx], field, newVal)
+		if (newSavingId) {
+			savingsEdit.value[idx]["saving_id"] = newSavingId
+		}
+	}
+	
+	else if(option === "remove") {
+		let ids = {
+			obj_id: savingsEdit.value[idx].saving_id,
+			details_id: savingsEdit.value[idx].details_id,
+		}
+		console.log(ids)
+		await deleteSaving(ids)
+
+		savingsEdit.value.splice(idx, 1)
+	} 
 }
 
 const updateMonth = (newMonth) => {
 	month.value = newMonth
 	setBudgets()
 	setExpenses()
+	setSavings()
 }
 
 const updateYear = (newYear) => { 
 	year.value = newYear
 	setBudgets()
 	setExpenses()
+	setSavings()
 }
 
 const importPrevBudgets = async () => {
@@ -243,7 +275,7 @@ const importPrevBudgets = async () => {
 }
 
 const importPrevSavings = async () => {
-	console.log("TODO: importPrevSavings")
+	savingsEdit.value = await getPrevSavings(year.value, month.value)
 }
 </script>
 

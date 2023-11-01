@@ -20,7 +20,10 @@ app.delete("/api/remove-budget/:userId", categoriesAPI.deleteData)
 
 // ----------------- SAVINGS ----------------- //
 app.get("/api/savings/:email", categoriesAPI.getData)
-
+app.get("/api/prev-savings/:userId", categoriesAPI.getPrevData)
+app.post("/api/add-saving/:userId", categoriesAPI.addData)
+app.put("/api/update-saving/:userId", categoriesAPI.updateData)
+app.delete("/api/remove-saving/:userId", categoriesAPI.deleteData)
 
 // ----------------- GENERAL ----------------- //
 const generalAPI = require("./endpoints/general.js")
