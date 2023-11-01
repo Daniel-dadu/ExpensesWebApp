@@ -65,7 +65,7 @@
         <button
             type="button"
             class="btn btn-outline-secondary"
-            @click="props.importPrev"
+            @click="props.importPrev(props.categType)"
         >
             Import from last month
         </button>

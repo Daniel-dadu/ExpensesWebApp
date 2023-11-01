@@ -5,13 +5,13 @@
 			<button class="nav-link active" id="pills-expenses-tab" data-bs-toggle="pill" data-bs-target="#pills-expenses" type="button" role="tab" aria-controls="pills-expenses" aria-selected="true">Expenses</button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="pills-budget-tab" data-bs-toggle="pill" data-bs-target="#pills-budget" type="button" role="tab" aria-controls="pills-budget" aria-selected="false">Budget</button>
+			<button class="nav-link" id="pills-budget-tab" data-bs-toggle="pill" data-bs-target="#pills-budget" type="button" role="tab" aria-controls="pills-budget" aria-selected="false">Budgets</button>
 		</li>
 		<li class="nav-item" role="presentation">
 			<button class="nav-link" id="pills-savings-tab" data-bs-toggle="pill" data-bs-target="#pills-savings" type="button" role="tab" aria-controls="pills-savings" aria-selected="false">Savings</button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="pills-budget-tab" data-bs-toggle="pill" data-bs-target="#pills-payments" type="button" role="tab" aria-controls="pills-budget" aria-selected="false">Payments</button>
+			<button class="nav-link" id="pills-budget-tab" data-bs-toggle="pill" data-bs-target="#pills-bills" type="button" role="tab" aria-controls="pills-budget" aria-selected="false">Bills</button>
 		</li>
 		<li class="nav-item" role="presentation">
 			<button class="nav-link" id="pills-summary-tab" data-bs-toggle="pill" data-bs-target="#pills-summary" type="button" role="tab" aria-controls="pills-summary" aria-selected="false">Summary</button>
@@ -42,7 +42,7 @@
 				:categ-type="'budget'"
 				:categories="budgetsEdit"
 				@update:categories="updateCategories"
-				:import-prev="importPrevBudgets"
+				:import-prev="importPrev"
 				:curr-month-in-num="month"
 				@update:curr-month-in-num="updateMonth"
 				:curr-year="year"
@@ -57,7 +57,7 @@
 				:categ-type="'saving'"
 				:categories="savingsEdit"
 				@update:categories="updateCategories"
-				:import-prev="importPrevSavings"
+				:import-prev="importPrev"
 				:curr-month-in-num="month"
 				@update:curr-month-in-num="updateMonth"
 				:curr-year="year"
@@ -67,13 +67,25 @@
 				@update:expenses="updateExpenses"
 			/>
 		</div>
-		<div class="tab-pane fade" id="pills-payments" role="tabpanel" aria-labelledby="pills-payments-tab" tabindex="0">
-			PAYMENTS COMPONENT
+		<div class="tab-pane fade pages-padding" id="pills-bills" role="tabpanel" aria-labelledby="pills-bills-tab" tabindex="0">
+			<CategoriesPage 
+				:categ-type="'bill'"
+				:categories="billsEdit"
+				@update:categories="updateCategories"
+				:import-prev="importPrev"
+				:curr-month-in-num="month"
+				@update:curr-month-in-num="updateMonth"
+				:curr-year="year"
+				@update:curr-year="updateYear"
+				:years="years"
+				:expenses="expensesEdit"
+				@update:expenses="updateExpenses"
+			/>
 		</div>
-		<div class="tab-pane fade" id="pills-summary" role="tabpanel" aria-labelledby="pills-summary-tab" tabindex="0">
+		<div class="tab-pane fade pages-padding" id="pills-summary" role="tabpanel" aria-labelledby="pills-summary-tab" tabindex="0">
 			SUMMARY COMPONENT
 		</div>
-		<div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+		<div class="tab-pane fade pages-padding" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
 			<ProfilePage />
 		</div>
     </div>
@@ -150,10 +162,10 @@ setSavings()
 
 // -------- GETTING BILLS FROM API -------- //
 const billsEdit = ref([])
-// const setBills = async () => {
-// 	billsEdit.value = await getCategories("bill", year.value, month.value)
-// }
-// setBills()
+const setBills = async () => {
+	billsEdit.value = await getCategories("bill", year.value, month.value)
+}
+setBills()
 // ------------------------------------------ //
 
 
@@ -257,6 +269,7 @@ const updateMonth = (newMonth) => {
 	setBudgets()
 	setExpenses()
 	setSavings()
+	setBills()
 }
 
 const updateYear = (newYear) => { 
@@ -264,15 +277,17 @@ const updateYear = (newYear) => {
 	setBudgets()
 	setExpenses()
 	setSavings()
+	setBills()
 }
 
-const importPrevBudgets = async () => {
-	budgetsEdit.value = await getPrevCategories("budget", year.value, month.value)
-	console.log(budgetsEdit.value)
-}
-
-const importPrevSavings = async () => {
-	savingsEdit.value = await getPrevCategories("saving", year.value, month.value)
+const importPrev = async (categType) => {
+	if (categType === "budget") {
+		budgetsEdit.value = await getPrevCategories(categType, year.value, month.value)
+	} else if (categType === "saving") {
+		savingsEdit.value = await getPrevCategories(categType, year.value, month.value)
+	} else if (categType === "bill") {
+		billsEdit.value = await getPrevCategories(categType, year.value, month.value)
+	}
 }
 </script>
 
