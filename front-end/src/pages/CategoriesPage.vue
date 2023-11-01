@@ -11,6 +11,8 @@
     <TotalTitle 
         :title="title"
         :amount="
+            props.categType === 'bill' ? 
+            amountsUsed.reduce((acc, curr) => acc + curr, 0) :
             props.categories.reduce((acc, curr) => acc + curr.threshold, 0) - 
             amountsUsed.reduce((acc, curr) => acc + curr, 0)
         "

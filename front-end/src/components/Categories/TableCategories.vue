@@ -16,9 +16,19 @@
         <thead>
             <tr>
                 <th>Category</th>
-                <th>Limit</th>
-                <th>Spent</th>
-                <th>Left</th>
+                <th>{{ 
+                props.categType === "budget" ? "Limit" 
+                : props.categType === "saving" ? "Target"
+                : props.categType === "bill" ? "Amount" :
+                "Error" 
+                }}</th>
+                <th>{{ props.categType === "bill" ? "Paid" : "Spent" }}</th>
+                <th>{{ 
+                props.categType === "budget" ? "Left" 
+                : props.categType === "saving" ? "Saved"
+                : props.categType === "bill" ? "Missing" :
+                "Error" 
+                }}</th>
                 <th></th>
             </tr>
         </thead>
