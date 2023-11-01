@@ -91,7 +91,7 @@ import ProfilePage from "./ProfilePage.vue"
 // Functions that manages data in the Backend
 import { getYears } from "@/functions/yearsAPI"
 import { getExpenses, postExpense, putExpense, deleteExpense } from "@/functions/expensesAPI"
-import { getBudgets, getPrevBudgets, postBudget, putBudget, deleteBudget, } from "@/functions/budgetAPI"
+import { getCategories, getPrevCategories, postCategory, putCategory, deleteCategory, } from "@/functions/categoryAPI"
 import { getSavings, getPrevSavings, postSaving, putSaving, deleteSaving, } from "@/functions/savingsAPI"
 
 
@@ -111,7 +111,7 @@ const year = ref(new Date().getFullYear()) // Set to actual year
 // -------- GETTING BUDGETS FROM API -------- //
 const budgetsEdit = ref([])
 const setBudgets = async () => {
-	budgetsEdit.value = await getBudgets(year.value, month.value)
+	budgetsEdit.value = await getCategories(year.value, month.value)
 }
 setBudgets() // Get budgets/categories when loading component
 // ------------------------------------------ //
@@ -190,7 +190,7 @@ const updateExpenses = async (option, newVal, idx, field) => {
 // UPDATING BUDGETS IN FRONT AND BACK
 const updateBudgets = async (option, newVal, idx, field) => {
 	if(option === "add") {
-		const newBudget = await postBudget(newVal, year.value, month.value)
+		const newBudget = await postCategory(newVal, year.value, month.value)
 		budgetsEdit.value.push(newBudget)
 	} 
 
@@ -203,19 +203,19 @@ const updateBudgets = async (option, newVal, idx, field) => {
 		}
 
 		budgetsEdit.value[idx][field] = newVal
-		const newBudgetId = await putBudget(budgetsEdit.value[idx], field, newVal)
+		const newBudgetId = await putCategory(budgetsEdit.value[idx], field, newVal)
 		if (newBudgetId) {
-			budgetsEdit.value[idx]["budget_id"] = newBudgetId
+			budgetsEdit.value[idx]["category_id"] = newBudgetId
 		}
 	}
 	
 	else if(option === "remove") {
 		let ids = {
-			obj_id: budgetsEdit.value[idx].budget_id,
+			category_id: budgetsEdit.value[idx].category_id,
 			details_id: budgetsEdit.value[idx].details_id,
 		}
 		console.log(ids)
-		await deleteBudget(ids)
+		await deleteCategory(ids)
 
 		budgetsEdit.value.splice(idx, 1)
 	} 
@@ -239,13 +239,13 @@ const updateSavings = async (option, newVal, idx, field) => {
 		savingsEdit.value[idx][field] = newVal
 		const newSavingId = await putSaving(savingsEdit.value[idx], field, newVal)
 		if (newSavingId) {
-			savingsEdit.value[idx]["saving_id"] = newSavingId
+			savingsEdit.value[idx]["category_id"] = newSavingId
 		}
 	}
 	
 	else if(option === "remove") {
 		let ids = {
-			obj_id: savingsEdit.value[idx].saving_id,
+			category_id: savingsEdit.value[idx].category_id,
 			details_id: savingsEdit.value[idx].details_id,
 		}
 		console.log(ids)
@@ -270,7 +270,7 @@ const updateYear = (newYear) => {
 }
 
 const importPrevBudgets = async () => {
-	budgetsEdit.value = await getPrevBudgets(year.value, month.value)
+	budgetsEdit.value = await getPrevCategories(year.value, month.value)
 	console.log(budgetsEdit.value)
 }
 

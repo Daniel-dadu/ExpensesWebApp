@@ -49,11 +49,11 @@ const getData = async (req, res) => {
     ]).toArray()
 
     // Renaming the _id property
-    data = data.map(obj => {
-        Object.defineProperty(obj, `${dataType}_id`,
-            Object.getOwnPropertyDescriptor(obj, "_id"))
-        delete obj["_id"]
-        return obj
+    data = data.map(cat => {
+        Object.defineProperty(cat, `category_id`,
+            Object.getOwnPropertyDescriptor(cat, "_id"))
+        delete cat["_id"]
+        return cat
     })
 
     res.json(data)
@@ -116,25 +116,25 @@ const getPrevData = async (req, res) => {
     }
 
     for (let i = 0; i < data.length; i++) {
-        let obj = data[i]
+        let category = data[i]
 
         const specificDetails = await db.collection(`${dataType}_details`).insertOne({
-            [`${dataType}Id`]: new ObjectId(obj._id),
-            threshold: obj.threshold,
+            [`${dataType}Id`]: new ObjectId(category._id),
+            threshold: category.threshold,
             month: month,
             year: year,
         })
         if(specificDetails.insertedId) {
-            obj.details_id = specificDetails.insertedId
+            category.details_id = specificDetails.insertedId
             console.log("Nice")
         } else {
             res.status(404).json("Could not insert specific category")
         }
 
         // Renaming the _id property
-        Object.defineProperty(obj, `${dataType}_id`,
-            Object.getOwnPropertyDescriptor(obj, "_id"))
-        delete obj["_id"]
+        Object.defineProperty(category, `category_id`,
+            Object.getOwnPropertyDescriptor(category, "_id"))
+        delete category["_id"]
 
     }
     
@@ -157,41 +157,41 @@ const addData = async (req, res) => {
     const year = req.body.year
 
     try {
-        let objId = ""
+        let categoryId = ""
         
-        // First verify that the user doesn't have another obj with that name
-        const obj_exists = await db.collection(`${dataType}s`).find({
+        // First verify that the user doesn't have another category with that name
+        const category_exists = await db.collection(`${dataType}s`).find({
             userId: userId,
             name: name,
         }).toArray()
 
-        // If there is no obj with that name for that user, create it
-        if (obj_exists.length === 0) {
-            const obj = await db.collection(`${dataType}s`).insertOne({
+        // If there is no category with that name for that user, create it
+        if (category_exists.length === 0) {
+            const category = await db.collection(`${dataType}s`).insertOne({
                 userId: userId,
                 name: name,
                 createdAt: new Date().toJSON()
             })
 
-            if(obj.insertedId) {
-                objId = obj.insertedId
+            if(category.insertedId) {
+                categoryId = category.insertedId
             } else {
                 res.status(404).json("ERR 1: Could not insert category")
                 return
             }
         } else {
-            objId = obj_exists[0]._id.toString()
+            categoryId = category_exists[0]._id.toString()
         }
         
         const specificDetails = await db.collection(`${dataType}_details`).insertOne({
-            [`${dataType}Id`]: new ObjectId(objId),
+            [`${dataType}Id`]: new ObjectId(categoryId),
             threshold: 0,
             month: month,
             year: year,
         })
         if(specificDetails.insertedId) {
             res.json({
-                [`${dataType}_id`]: objId,
+                category_id: categoryId,
                 details_id: specificDetails.insertedId,
             })
         } else {
@@ -212,15 +212,15 @@ const updateData = async (req, res) => {
 
     console.log("Updating Data", dataType)
 
-    let objId = req.body.obj_id
-    const objDetailsId = req.body.details_id
+    let categoryId = req.body.category_id
+    const categoryDetailsId = req.body.details_id
     const fieldToUpdate = req.body.field
     const newFieldVal = req.body.newValue
 
     if(fieldToUpdate === "threshold") {
         try {
             const result = await db.collection(`${dataType}_details`).updateOne(
-                { _id: new ObjectId(objDetailsId) }, // ID of document to update
+                { _id: new ObjectId(categoryDetailsId) }, // ID of document to update
                 { $set: { 
                     [fieldToUpdate]: newFieldVal, // changing new value
                 } } 
@@ -239,74 +239,59 @@ const updateData = async (req, res) => {
     else if (fieldToUpdate === "name") {
         try {
 
-            let prevObjId = objId
+            let prevObjId = categoryId
         
-            // First verify that the user doesn't have another obj with that name
-            const obj_exists = await db.collection(`${dataType}s`).find({
+            // First verify that the user doesn't have another category with that name
+            const category_exists = await db.collection(`${dataType}s`).find({
                 userId: userId,
                 name: newFieldVal,
             }).toArray()
 
-            // If there is no obj with that name for that user, create it
-            if (obj_exists.length === 0) {
+            // If there is no category with that name for that user, create it
+            if (category_exists.length === 0) {
 
                 // Inserting the new category
-                const obj = await db.collection(`${dataType}s`).insertOne({
+                const category = await db.collection(`${dataType}s`).insertOne({
                     userId: userId,
                     name: newFieldVal,
                     createdAt: new Date().toJSON()
                 })
 
-                if(obj.insertedId) {
-                    objId = obj.insertedId
+                if(category.insertedId) {
+                    categoryId = category.insertedId
                 } else {
                     res.status(404).json("ERR 1: Could not insert category")
                     return
                 }
 
-                // Updating the category details id to the new category
-                const obj_details = await db.collection(`${dataType}_details`).updateOne(
-                    { _id: new ObjectId(objDetailsId) }, // ID of document to update
-                    { $set: { 
-                        [`${dataType}Id`]: objId, // changing new value
-                    } } 
-                )
-        
-                if (obj_details.matchedCount === 1) {
-                    res.json(objId) // Returning the new obj_id for that object
-                } else {
-                    res.status(404).json("Category details not found")
-                }
-
-                // Check if the previous category is used in any other month
-                const prevCategoryUse = await db.collection(`${dataType}_details`).find({
-                    [`${dataType}Id`]: new ObjectId(prevObjId)
-                }).toArray()
-                // If it's not used, delete that category
-                if(prevCategoryUse.length === 0) {
-                    db.collection(`${dataType}s`).deleteOne({
-                        _id: new ObjectId(prevObjId)
-                    })
-                }
-
             } else {
-                // If the category already exists, update it
-                objId = obj_exists[0]._id
+                // If the category already exists, use it
+                categoryId = category_exists[0]._id
+            }
 
-                // Update the name of the existing category
-                const updateName = await db.collection(`${dataType}s`).updateOne(
-                    { _id: objId }, // ID of document to update
-                    { $set: { 
-                        name: newFieldVal, // changing new value
-                    } } 
-                )
-                if (updateName.matchedCount === 1) {
-                    res.json(objId) // Returning the new obj_id for that object
-                } else {
-                    res.status(404).json("Category (update) not found")
-                    return
-                }
+            // Updating the category details id to the new category
+            const category_details = await db.collection(`${dataType}_details`).updateOne(
+                { _id: new ObjectId(categoryDetailsId) }, // ID of document to update
+                { $set: { 
+                    [`${dataType}Id`]: categoryId, // changing new value
+                } } 
+            )
+    
+            if (category_details.matchedCount === 1) {
+                res.json(categoryId) // Returning the new category_id for that category
+            } else {
+                res.status(404).json("Category details not found")
+            }
 
+            // Check if the previous category is used in any other month
+            const prevCategoryUse = await db.collection(`${dataType}_details`).find({
+                [`${dataType}Id`]: new ObjectId(prevObjId)
+            }).toArray()
+            // If it's not used, delete that category
+            if(prevCategoryUse.length === 0) {
+                db.collection(`${dataType}s`).deleteOne({
+                    _id: new ObjectId(prevObjId)
+                })
             }
 
         } catch(error) {
@@ -325,7 +310,7 @@ const deleteData = async (req, res) => {
     
     console.log("Deleting Data", dataType)
 
-    const objId = req.body.obj_id
+    const categoryId = req.body.category_id
     const detailsId = req.body.details_id
 
     let couldDeteleData = false
@@ -335,26 +320,26 @@ const deleteData = async (req, res) => {
             _id: new ObjectId(detailsId)
         })
         if (details_result.deletedCount === 1) {
-            // Check if the object doesn't any details (it's not used in any month)
-            const objects = await db.collection(`${dataType}_details`).find({
-                [`${dataType}Id`]: new ObjectId(objId)
+            // Check if the category doesn't any details (it's not used in any month)
+            const categoryects = await db.collection(`${dataType}_details`).find({
+                [`${dataType}Id`]: new ObjectId(categoryId)
             }).toArray()
 
-            // If that object is not used in any month, delete it from that collection
-            if(objects.length === 0) {
-                console.log(objId)
+            // If that category is not used in any month, delete it from that collection
+            if(categoryects.length === 0) {
+                console.log(categoryId)
                 const del_budget = await db.collection(`${dataType}s`).deleteOne({
-                    _id: new ObjectId(objId)
+                    _id: new ObjectId(categoryId)
                 })
                 if(del_budget.deletedCount !== 1) {
-                    res.status(404).json("Unused object was not deleted correctly")
+                    res.status(404).json("Unused category was not deleted correctly")
                     return
                 } else {
                     couldDeteleData = true 
                 }
             }
 
-            res.json(`Data (of that month) deleted successfully and ${couldDeteleData ? "also" : "didn't"} deleted the whole object`)
+            res.json(`Data (of that month) deleted successfully and ${couldDeteleData ? "also" : "didn't"} deleted the whole category`)
         } else {
             res.status(404).json("Data not found")
         }
