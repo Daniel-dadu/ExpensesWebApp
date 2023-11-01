@@ -1,9 +1,9 @@
 import axios from "axios"
 
-export const getCategories = async (year, month) => {
+export const getCategories = async (categType, year, month) => {
     try {
         const response = await axios.get(
-            `/api/budget/${window.localStorage.getItem("email")}/?datatype=budget&year=${year}&month=${month}`
+            `/api/${categType}s/${window.localStorage.getItem("email")}/?datatype=${categType}&year=${year}&month=${month}`
         )
         return response.data
     } catch (error) {
@@ -11,32 +11,32 @@ export const getCategories = async (year, month) => {
     }
 }
 
-export const getPrevCategories = async (year, month) => {
+export const getPrevCategories = async (categType, year, month) => {
     try {
         const response = await axios.get(
-            `/api/prev-budget/${window.localStorage.getItem("email")}/?datatype=budget&year=${year}&month=${month}`
+            `/api/prev-${categType}s/${window.localStorage.getItem("email")}/?datatype=${categType}&year=${year}&month=${month}`
         )
-        console.log("From budget request: ",response.data)
+        console.log("From ${categType} request: ",response.data)
         return response.data
     } catch (error) {
         console.log(error)
     }
 }
 
-export const postCategory = async (newCategory, year, month) => {
+export const postCategory = async (categType, newCategory, year, month) => {
     try {
         // Adding the curr month and year to the category obj
         newCategory.month = month
         newCategory.year = year
 
         const response = await axios.post(
-            `/api/add-budget/${window.localStorage.getItem("email")}/?datatype=budget`, 
+            `/api/add-${categType}/${window.localStorage.getItem("email")}/?datatype=${categType}`, 
             newCategory
         )
 
         console.log(response.data)
 
-        // Got the ids from the API after inserting the budget
+        // Got the ids from the API after inserting the category
         const newIds = response.data
 
         // Setting the ids to the newCat
@@ -49,22 +49,22 @@ export const postCategory = async (newCategory, year, month) => {
     }
 }
 
-export const putCategory = async (budget, field, newVal) => {
+export const putCategory = async (categType, category, field, newVal) => {
     try {
         // Adding the curr month and year to the category obj
         let data = {
-            category_id: budget.category_id,
-            details_id: budget.details_id,
+            category_id: category.category_id,
+            details_id: category.details_id,
             field: field,
             newValue: newVal,
         }
 
         const response = await axios.put(
-            `/api/update-budget/${window.localStorage.getItem("email")}/?datatype=budget`, 
+            `/api/update-${categType}/${window.localStorage.getItem("email")}/?datatype=${categType}`, 
             data
         )
 
-        // Got the ids from the API after inserting the budget
+        // Got the ids from the API after inserting the category
         const newId = response.data
 
         return field === "name" ? newId : null
@@ -73,10 +73,10 @@ export const putCategory = async (budget, field, newVal) => {
     }
 }
 
-export const deleteCategory = async (ids) => {
+export const deleteCategory = async (categType, ids) => {
     try {
         await axios.delete(
-            `/api/remove-budget/${window.localStorage.getItem("email")}/?datatype=budget`, 
+            `/api/remove-${categType}/${window.localStorage.getItem("email")}/?datatype=${categType}`, 
             { data: ids }
         )
     } catch (error) {

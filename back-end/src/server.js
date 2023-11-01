@@ -12,8 +12,8 @@ app.delete("/api/remove-expense/:userId", expensesAPI.removeExpense)
 
 const categoriesAPI = require("./endpoints/categories.js")
 // ----------------- BUDGETS ----------------- //
-app.get("/api/budget/:email", categoriesAPI.getData)
-app.get("/api/prev-budget/:userId", categoriesAPI.getPrevData)
+app.get("/api/budgets/:email", categoriesAPI.getData)
+app.get("/api/prev-budgets/:userId", categoriesAPI.getPrevData)
 app.post("/api/add-budget/:userId", categoriesAPI.addData)
 app.put("/api/update-budget/:userId", categoriesAPI.updateData)
 app.delete("/api/remove-budget/:userId", categoriesAPI.deleteData)

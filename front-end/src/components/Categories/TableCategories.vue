@@ -5,9 +5,9 @@
         class="btn btn-outline-success" 
         @click="addCategory">
             Add {{ 
-                props.dataType === "budgets" ? "budget" 
-                : props.dataType === "savings" ? "saving"
-                : props.dataType === "bills" ? "bill" :
+                props.categType === "budget" ? "budget" 
+                : props.categType === "saving" ? "saving"
+                : props.categType === "bill" ? "bill" :
                 "Error"
             }}
         </button>
@@ -23,7 +23,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(category, index) in props.data" :key="index">
+            <tr v-for="(category, index) in props.categories" :key="index">
                 <td>
                     <EditableText 
 						:initial-text="category.name" 
@@ -59,7 +59,7 @@
         </tbody>
     </table>
     <div 
-        v-if="props.data.length === 0" 
+        v-if="props.categories.length === 0" 
         class="import-btn"
     >
         <button
@@ -93,14 +93,14 @@ import { defineProps, defineEmits, ref, } from "vue"
 import EditableText from "../ReusableComponents/EditableText.vue"
 
 const props = defineProps({
-    dataType: String,
-    data: Array,
+    categType: String,
+    categories: Array,
     expenses: Array,
     amountsUsed: Array,
     importPrev: Function,
 })
 
-const emit = defineEmits(["update:data", "update:expenses"])
+const emit = defineEmits(["update:categories", "update:expenses"])
 
 const showToast = ref(false)
 
@@ -109,7 +109,7 @@ const updateEditableText = (newVal, idx, inputVar, prevVal) => {
         newVal = parseFloat(newVal)
     }
 
-    emit("update:data", "update", newVal, idx, inputVar)
+    emit("update:categories", "update", newVal, idx, inputVar)
 
     if(inputVar === "name") {
         // Update the name of the category in the expenses     
@@ -122,7 +122,7 @@ const updateEditableText = (newVal, idx, inputVar, prevVal) => {
 }
 
 const addCategory = () => {
-    emit("update:data", "add", {
+    emit("update:categories", "add", {
         name: "Add a name",
         threshold: 0,
     })
@@ -130,7 +130,7 @@ const addCategory = () => {
 
 const removeCategory = (idx) => {
     for (const exp of props.expenses) {
-        if(exp.category == props.data[idx].name) {
+        if(exp.category == props.categories[idx].name) {
             showToast.value = true
             return
         }
@@ -139,7 +139,7 @@ const removeCategory = (idx) => {
     // If there is an active toast, close it
     showToast.value = false
 
-    emit("update:data", "remove", null, idx)
+    emit("update:categories", "remove", null, idx)
 }
 </script>
 

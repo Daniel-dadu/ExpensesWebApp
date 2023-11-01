@@ -25,23 +25,23 @@
     <div class="tab-content" id="pills-tabContent">
 		<div class="tab-pane fade show active pages-padding" id="pills-expenses" role="tabpanel" aria-labelledby="pills-expenses-tab" tabindex="0">
 			<ExpensesPage
+				:expenses="expensesEdit"
+				@update:expenses="updateExpenses"
 				:categories="budgetsEdit"
-				@update:categories="updateBudgets"
+				@update:categories="updateCategories"
 				:curr-month-in-num="month"
 				@update:curr-month-in-num="updateMonth"
 				:curr-year="year"
 				@update:curr-year="updateYear"
 				:years="years"
-				:expenses="expensesEdit"
-				@update:expenses="updateExpenses"
 				:got-expenses-from-API="gotExpensesFromAPI"
 			/>
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-budget" role="tabpanel" aria-labelledby="pills-budget-tab" tabindex="0">
 			<CategoriesPage 
-				:data-type="'budgets'"
-				:data="budgetsEdit"
-				@update:data="updateBudgets"
+				:categ-type="'budget'"
+				:categories="budgetsEdit"
+				@update:categories="updateCategories"
 				:import-prev="importPrevBudgets"
 				:curr-month-in-num="month"
 				@update:curr-month-in-num="updateMonth"
@@ -54,9 +54,9 @@
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-savings" role="tabpanel" aria-labelledby="pills-savings-tab" tabindex="0">
 			<CategoriesPage 
-				:data-type="'savings'"
-				:data="savingsEdit"
-				@update:data="updateSavings"
+				:categ-type="'saving'"
+				:categories="savingsEdit"
+				@update:categories="updateCategories"
 				:import-prev="importPrevSavings"
 				:curr-month-in-num="month"
 				@update:curr-month-in-num="updateMonth"
@@ -67,7 +67,7 @@
 				@update:expenses="updateExpenses"
 			/>
 		</div>
-		<div class="tab-pane fade" id="pills-payments" role="tabpanel" aria-labelledby="pills-budget-tab" tabindex="0">
+		<div class="tab-pane fade" id="pills-payments" role="tabpanel" aria-labelledby="pills-payments-tab" tabindex="0">
 			PAYMENTS COMPONENT
 		</div>
 		<div class="tab-pane fade" id="pills-summary" role="tabpanel" aria-labelledby="pills-summary-tab" tabindex="0">
@@ -92,7 +92,6 @@ import ProfilePage from "./ProfilePage.vue"
 import { getYears } from "@/functions/yearsAPI"
 import { getExpenses, postExpense, putExpense, deleteExpense } from "@/functions/expensesAPI"
 import { getCategories, getPrevCategories, postCategory, putCategory, deleteCategory, } from "@/functions/categoryAPI"
-import { getSavings, getPrevSavings, postSaving, putSaving, deleteSaving, } from "@/functions/savingsAPI"
 
 
 // To verify if the user logged in
@@ -111,7 +110,7 @@ const year = ref(new Date().getFullYear()) // Set to actual year
 // -------- GETTING BUDGETS FROM API -------- //
 const budgetsEdit = ref([])
 const setBudgets = async () => {
-	budgetsEdit.value = await getCategories(year.value, month.value)
+	budgetsEdit.value = await getCategories("budget", year.value, month.value)
 }
 setBudgets() // Get budgets/categories when loading component
 // ------------------------------------------ //
@@ -144,9 +143,17 @@ setExpenses() // Get expenses when loading component
 // -------- GETTING SAVINGS FROM API -------- //
 const savingsEdit = ref([])
 const setSavings = async () => {
-	savingsEdit.value = await getSavings(year.value, month.value)
+	savingsEdit.value = await getCategories("saving", year.value, month.value)
 }
 setSavings()
+// ------------------------------------------ //
+
+// -------- GETTING BILLS FROM API -------- //
+const billsEdit = ref([])
+// const setBills = async () => {
+// 	billsEdit.value = await getCategories("bill", year.value, month.value)
+// }
+// setBills()
 // ------------------------------------------ //
 
 
@@ -187,71 +194,61 @@ const updateExpenses = async (option, newVal, idx, field) => {
 	} 
 }
 
-// UPDATING BUDGETS IN FRONT AND BACK
-const updateBudgets = async (option, newVal, idx, field) => {
+// UPDATING CATEGORIES IN FRONT AND BACK
+const updateCategories = async (categType, option, newVal, idx, field) => {
+	// The categType should be in singular [budget|saving|bill] 
+
 	if(option === "add") {
-		const newBudget = await postCategory(newVal, year.value, month.value)
-		budgetsEdit.value.push(newBudget)
+		const newCategory = await postCategory(categType, newVal, year.value, month.value)
+		if (categType === "budget") { budgetsEdit.value.push(newCategory) } 
+		else if (categType === "saving") { savingsEdit.value.push(newCategory) } 
+		else if (categType === "bill") { billsEdit.value.push(newCategory) }
 	} 
 
 	else if(option === "update") {
+		const allCategories = [
+			...budgetsEdit.value,
+			...savingsEdit.value,
+			...billsEdit.value,
+		]
 		// Verify that the user doesn't try to use a name already in the table
 		if (field === "name") {
-			for(const budget of budgetsEdit.value) {
+			for(const budget of allCategories) {
 				if (budget.name === newVal) { return }
 			}
 		}
 
-		budgetsEdit.value[idx][field] = newVal
-		const newBudgetId = await putCategory(budgetsEdit.value[idx], field, newVal)
-		if (newBudgetId) {
-			budgetsEdit.value[idx]["category_id"] = newBudgetId
+		if (categType === "budget") {
+			budgetsEdit.value[idx][field] = newVal
+			const newId = await putCategory(categType, budgetsEdit.value[idx], field, newVal)
+			if (newId) { budgetsEdit.value[idx]["category_id"] = newId }
+		} else if (categType === "saving") {
+			savingsEdit.value[idx][field] = newVal
+			const newId = await putCategory(categType, savingsEdit.value[idx], field, newVal)
+			if (newId) { savingsEdit.value[idx]["category_id"] = newId }
+		} else if (categType === "bill") {
+			billsEdit.value[idx][field] = newVal
+			const newId = await putCategory(categType, billsEdit.value[idx], field, newVal)
+			if (newId) { billsEdit.value[idx]["category_id"] = newId }
 		}
 	}
 	
 	else if(option === "remove") {
+		let currCateg
+
+		if (categType === "budget") { currCateg = budgetsEdit.value } 
+		else if (categType === "saving") { currCateg = savingsEdit.value } 
+		else if (categType === "bill") { currCateg = billsEdit.value }
+
 		let ids = {
-			category_id: budgetsEdit.value[idx].category_id,
-			details_id: budgetsEdit.value[idx].details_id,
+			category_id: currCateg[idx].category_id,
+			details_id: currCateg[idx].details_id,
 		}
-		console.log(ids)
-		await deleteCategory(ids)
+		await deleteCategory(categType, ids)
 
-		budgetsEdit.value.splice(idx, 1)
-	} 
-}
-
-// UPDATING SAVINGS IN FRONT AND BACK
-const updateSavings = async (option, newVal, idx, field) => {
-	if(option === "add") {
-		const newSaving = await postSaving(newVal, year.value, month.value)
-		savingsEdit.value.push(newSaving)
-	} 
-
-	else if(option === "update") {
-		// Verify that the user doesn't try to use a name already in the table
-		if (field === "name") {
-			for(const saving of savingsEdit.value) {
-				if (saving.name === newVal) { return }
-			}
-		}
-
-		savingsEdit.value[idx][field] = newVal
-		const newSavingId = await putSaving(savingsEdit.value[idx], field, newVal)
-		if (newSavingId) {
-			savingsEdit.value[idx]["category_id"] = newSavingId
-		}
-	}
-	
-	else if(option === "remove") {
-		let ids = {
-			category_id: savingsEdit.value[idx].category_id,
-			details_id: savingsEdit.value[idx].details_id,
-		}
-		console.log(ids)
-		await deleteSaving(ids)
-
-		savingsEdit.value.splice(idx, 1)
+		if (categType === "budget") { budgetsEdit.value.splice(idx, 1) } 
+		else if (categType === "saving") { savingsEdit.value.splice(idx, 1) } 
+		else if (categType === "bill") { billsEdit.value.splice(idx, 1) }
 	} 
 }
 
@@ -270,12 +267,12 @@ const updateYear = (newYear) => {
 }
 
 const importPrevBudgets = async () => {
-	budgetsEdit.value = await getPrevCategories(year.value, month.value)
+	budgetsEdit.value = await getPrevCategories("budget", year.value, month.value)
 	console.log(budgetsEdit.value)
 }
 
 const importPrevSavings = async () => {
-	savingsEdit.value = await getPrevSavings(year.value, month.value)
+	savingsEdit.value = await getPrevCategories("saving", year.value, month.value)
 }
 </script>
 

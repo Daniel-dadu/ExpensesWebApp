@@ -11,14 +11,14 @@
     <TotalTitle 
         :title="title"
         :amount="
-            props.data.reduce((acc, curr) => acc + curr.threshold, 0) - 
+            props.categories.reduce((acc, curr) => acc + curr.threshold, 0) - 
             amountsUsed.reduce((acc, curr) => acc + curr, 0)
         "
     />
     <TableCategories
-        :data="props.data"
-        :data-type="props.dataType"
-        @update:data="updateData"
+        :categ-type="props.categType"
+        :categories="props.categories"
+        @update:categories="updateCategories"
         :expenses="props.expenses"
         @update:expenses="updateExpenses"
         :amounts-used="amountsUsed"
@@ -33,8 +33,8 @@ import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
 import TableCategories from "@/components/Categories/TableCategories.vue"
 
 const props = defineProps({
-    dataType: String,
-    data: Array,
+    categType: String,
+    categories: Array,
     importPrev: Function,
     currMonthInNum: Number,
     currYear: Number,
@@ -42,22 +42,22 @@ const props = defineProps({
     expenses: Array,
 })
 
-const emit = defineEmits(["update:data", "update:curr-month-in-num", "update:curr-year", "update:expenses"])
+const emit = defineEmits(["update:categories", "update:curr-month-in-num", "update:curr-year", "update:expenses"])
 
-const updateData = (option, newVal, idx, field) => emit("update:data", option, newVal, idx, field)
+const updateCategories = (option, newVal, idx, field) => emit("update:categories", props.categType, option, newVal, idx, field)
 const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
 const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
 const updateExpenses = (option, newVal, idx, field) => emit("update:expenses", option, newVal, idx, field)
 
-const title = props.dataType === "budgets" ? "Total left" 
-            : props.dataType === "savings" ? "Total saved"
-            : props.dataType === "bills" ? "Total paid" :
+const title = props.categType === "budget" ? "Total left" 
+            : props.categType === "saving" ? "Total saved"
+            : props.categType === "bill" ? "Total paid" :
             "Error"
 
 const amountsUsed = ref([])
 
 watch(
-    () => [props.expenses, props.data],
+    () => [props.expenses, props.categories],
     ([newExpenses, newData]) => {
         amountsUsed.value = newData.map((cat) => {
             let cont = 0
