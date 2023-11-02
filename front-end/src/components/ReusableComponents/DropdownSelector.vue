@@ -11,7 +11,8 @@
         <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"></button>
         <ul class="dropdown-menu dropdown-menu-end">
             <li v-for="(element, idx) in props.elements" :key="idx">
-                <a class="dropdown-item" @click="selectOtherElem(element)" style="cursor: pointer;">
+                <hr v-if="element === ''" class="dropdown-divider">
+                <a v-else class="dropdown-item" @click="selectOtherElem(element)" style="cursor: pointer;">
                     {{ element }}
                 </a>
             </li>

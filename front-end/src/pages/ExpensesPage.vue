@@ -29,11 +29,11 @@ import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
 import ExpensesTable from "../components/Expenses/ExpensesTable.vue"
 
 const props = defineProps({
+    expenses: Array,
     categories: Array,
     currMonthInNum: Number,
     currYear: Number,
     years: Array,
-    expenses: Array,
     gotExpensesFromAPI: Boolean,
 })
 
@@ -41,7 +41,7 @@ const emit = defineEmits(["update:categories", "update:curr-month-in-num", "upda
 
 const totalSpent = ref(0)
 
-const updateCategories = (option, newVal, idx, field) => emit("update:categories", option, newVal, idx, field)
+const updateCategories = (categType, option, newVal, idx, field) => emit("update:categories", categType, option, newVal, idx, field)
 const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
 const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
 const updateExpenses = (option, newVal, idx, field) => {

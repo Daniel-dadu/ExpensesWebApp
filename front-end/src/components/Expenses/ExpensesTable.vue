@@ -20,7 +20,6 @@
         <tbody>
             <tr v-for="(expense, index) in props.expenses" :key="index">
                 <td>
-                    <!-- @closed="onDateSubmit" -->
                     <Datepicker 
 						v-model="expense.date" 
                         @update:model-value="onDateSubmit(index)"
@@ -132,11 +131,32 @@ const updateCategorySelected = (newCat, idx) => {
 }
 
 const updateCategories = (newBudget) => {
-	categoriesArrayEdit.value.push(newBudget)
-    // Adding the new as an object with its limit
-    emit("update:categories", "add", {
+    let categType
+
+    if (!window.confirm("Is this a budget category?")) {
+        if (!window.confirm("Is this a saving category?")) {
+            categType = "bill"
+        } else {
+            categType = "saving"
+        }
+    } else {
+        categType = "budget"
+    }
+
+    if (categType === "budget") {
+        const idxFirstSeparator = categoriesArrayEdit.value.indexOf("")
+        categoriesArrayEdit.value.splice(idxFirstSeparator, 0, newBudget)
+    } else if (categType === "saving") {
+        const idxLastSeparator = categoriesArrayEdit.value.lastIndexOf("")
+        categoriesArrayEdit.value.splice(idxLastSeparator, 0, newBudget)
+    } else {
+        categoriesArrayEdit.value.push(newBudget)
+    }
+
+    // Adding the new as an object with its threshold
+    emit("update:categories", categType, "add", {
         name: newBudget,
-        limit: 0,
+        threshold: 0,
     })
 }
 

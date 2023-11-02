@@ -27,7 +27,13 @@
 			<ExpensesPage
 				:expenses="expensesEdit"
 				@update:expenses="updateExpenses"
-				:categories="budgetsEdit"
+				:categories="[
+						...budgetsEdit, 
+						{name: ''}, // Separator for DropdownSelector
+						...savingsEdit, 
+						{name: ''}, // Separator for DropdownSelector
+						...billsEdit
+				]"
 				@update:categories="updateCategories"
 				:curr-month-in-num="month"
 				@update:curr-month-in-num="updateMonth"
