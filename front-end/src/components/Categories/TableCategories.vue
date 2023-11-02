@@ -43,12 +43,15 @@
                     />
                 </td>
                 <td>
-                    $ <EditableText 
-						:initial-text="category.threshold" 
-						:index="index"
-						:input-var="'threshold'" 
-						@update:initial-text="updateEditableText"
-                    />
+                    <div class="div-amount-text">
+                        <span>$</span>
+                        <EditableText 
+                            :initial-text="category.threshold" 
+                            :index="index"
+                            :input-var="'threshold'" 
+                            @update:initial-text="updateEditableText"
+                        />
+                    </div>
                 </td>
                 <td>
                     $ {{ props.amountsUsed[index] }}

@@ -347,4 +347,18 @@ const importPrev = async (categType) => {
     /* To turn the svg to a lighter color */
     filter:invert(82%) sepia(3%) saturate(473%) hue-rotate(179deg) brightness(93%) contrast(88%);
 }
+
+.add-table-elem-div {
+    display: flex; 
+    justify-content: flex-end;
+}
+
+.div-amount-text {
+	display: flex;
+    align-items: center;
+}
+.div-amount-text button, .div-amount-text input {
+	padding-left: 0.2rem;
+	padding-right: 0.2rem;
+}
 </style>

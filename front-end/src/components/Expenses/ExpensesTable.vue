@@ -54,7 +54,7 @@
                     />
                 </td>
                 <td>
-                    <div class="expenses-amount-text">
+                    <div class="div-amount-text">
                         <span>$</span>
                         <EditableText 
 							:initial-text="numTwoDecimals(expense.amount)" 
@@ -206,19 +206,5 @@ const onDateSubmit = (idx) => {
 #expenses-table tr td:first-child {
     width: 1%;
     white-space: nowrap;
-}
-
-.add-table-elem-div {
-    display: flex; 
-    justify-content: flex-end;
-}
-
-.expenses-amount-text {
-	display: flex;
-    align-items: center;
-}
-.expenses-amount-text button, .expenses-amount-text input {
-	padding-left: 0.2rem;
-	padding-right: 0.2rem;
 }
 </style>
