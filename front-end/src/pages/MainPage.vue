@@ -14,6 +14,9 @@
 			<button class="nav-link" id="pills-budget-tab" data-bs-toggle="pill" data-bs-target="#pills-bills" type="button" role="tab" aria-controls="pills-budget" aria-selected="false">Bills</button>
 		</li>
 		<li class="nav-item" role="presentation">
+			<button class="nav-link" id="pills-income-tab" data-bs-toggle="pill" data-bs-target="#pills-income" type="button" role="tab" aria-controls="pills-income" aria-selected="false">Incomes</button>
+		</li>
+		<li class="nav-item" role="presentation">
 			<button class="nav-link" id="pills-summary-tab" data-bs-toggle="pill" data-bs-target="#pills-summary" type="button" role="tab" aria-controls="pills-summary" aria-selected="false">Summary</button>
 		</li>
 		<li class="nav-item" role="presentation">
@@ -88,6 +91,16 @@
 				@update:expenses="updateExpenses"
 			/>
 		</div>
+		<div class="tab-pane fade pages-padding" id="pills-income" role="tabpanel" aria-labelledby="pills-income-tab" tabindex="0">
+			<IncomesPage 
+				:incomes="incomesEdit"
+				:curr-month-in-num="month"
+				@update:curr-month-in-num="updateMonth"
+				:curr-year="year"
+				@update:curr-year="updateYear"
+				:years="years"
+			/>
+		</div>
 		<div class="tab-pane fade pages-padding" id="pills-summary" role="tabpanel" aria-labelledby="pills-summary-tab" tabindex="0">
 			SUMMARY COMPONENT
 		</div>
@@ -104,6 +117,7 @@ import "@vuepic/vue-datepicker/dist/main.css"
 
 import ExpensesPage from "@/pages/ExpensesPage.vue"
 import CategoriesPage from "./CategoriesPage.vue"
+import IncomesPage from "./IncomesPage.vue"
 import ProfilePage from "./ProfilePage.vue"
 
 // Functions that manages data in the Backend
@@ -123,15 +137,6 @@ onMounted(() => {
 // Month and Year used in the Selector
 const month = ref(new Date().getMonth()) // Set to actual month
 const year = ref(new Date().getFullYear()) // Set to actual year
-
-
-// -------- GETTING BUDGETS FROM API -------- //
-const budgetsEdit = ref([])
-const setBudgets = async () => {
-	budgetsEdit.value = await getCategories("budget", year.value, month.value)
-}
-setBudgets() // Get budgets/categories when loading component
-// ------------------------------------------ //
 
 
 // -------- GETTING YEARS FROM API -------- //
@@ -157,6 +162,13 @@ const setExpenses = async () => {
 setExpenses() // Get expenses when loading component
 // ------------------------------------------ //
 
+// -------- GETTING BUDGETS FROM API -------- //
+const budgetsEdit = ref([])
+const setBudgets = async () => {
+	budgetsEdit.value = await getCategories("budget", year.value, month.value)
+}
+setBudgets() // Get budgets/categories when loading component
+// ------------------------------------------ //
 
 // -------- GETTING SAVINGS FROM API -------- //
 const savingsEdit = ref([])
@@ -174,6 +186,17 @@ const setBills = async () => {
 setBills()
 // ------------------------------------------ //
 
+// -------- GETTING INCOMES FROM API -------- //
+const incomesEdit = ref([])
+const setIncomes = async () => {
+	incomesEdit.value = [
+		{ date: new Date(), source: "Salary half month", amount: 1000},
+		{ date: new Date(), source: "Despensa", amount: 500},
+		{ date: new Date(), source: "2nd Salary half month", amount: 1000},
+	]
+}
+setIncomes()
+// ------------------------------------------ //
 
 // UPDATING EXPENSES IN FRONT AND BACK
 const updateExpenses = async (option, newVal, idx, field) => {

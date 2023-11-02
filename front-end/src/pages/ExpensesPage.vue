@@ -37,19 +37,24 @@ const props = defineProps({
     gotExpensesFromAPI: Boolean,
 })
 
-const emit = defineEmits(["update:categories", "update:curr-month-in-num", "update:curr-year", "update:expenses"])
+const emit = defineEmits([
+    "update:expenses",
+    "update:categories", 
+    "update:curr-month-in-num", 
+    "update:curr-year", 
+])
 
 const totalSpent = ref(0)
 
-const updateCategories = (categType, option, newVal, idx, field) => emit("update:categories", categType, option, newVal, idx, field)
-const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
-const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
 const updateExpenses = (option, newVal, idx, field) => {
     emit("update:expenses", option, newVal, idx, field)
     if(field === "amount") {
         updateTotalSpent()
     }
 }
+const updateCategories = (categType, option, newVal, idx, field) => emit("update:categories", categType, option, newVal, idx, field)
+const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
+const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
 
 const updateTotalSpent = () => {
     console.log("Updating total spent in Expenses Page")
