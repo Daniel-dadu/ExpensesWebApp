@@ -33,6 +33,13 @@ app.post("/api/add-bill/:userId", categoriesAPI.addData)
 app.put("/api/update-bill/:userId", categoriesAPI.updateData)
 app.delete("/api/remove-bill/:userId", categoriesAPI.deleteData)
 
+// ----------------- INCOMES ----------------- //
+const incomesAPI = require("./endpoints/incomes.js")
+app.get("/api/incomes/:email", incomesAPI.getIncomes)
+app.post("/api/add-income/:userId", incomesAPI.addIncome)
+app.put("/api/update-income/:userId", incomesAPI.updateIncome)
+app.delete("/api/remove-income/:userId", incomesAPI.removeIncome)
+
 // ----------------- GENERAL ----------------- //
 const generalAPI = require("./endpoints/general.js")
 app.get("/api/years/:email", generalAPI.getYears)
