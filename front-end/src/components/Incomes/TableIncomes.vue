@@ -58,7 +58,7 @@
                     <button 
 						type="button" 
 						class="btn btn-outline-danger table-delete-btn"  
-						@click="null"
+						@click="removeIncome(index)"
                     >
                         <img src="@/assets/trash-can.svg" alt="Trash can" />
                     </button>
@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-import { defineProps, } from "vue"
+import { defineProps, defineEmits, } from "vue"
 import EditableText from "../ReusableComponents/EditableText.vue"
 import Datepicker from "@vuepic/vue-datepicker"
 import { numTwoDecimals } from "../../functions/formatNumbers"
@@ -80,41 +80,43 @@ const props = defineProps({
     currYear: Number,
 })
 
-const addIncome = () => {
-    
-    // const validDate = () => {
-    //     const d = new Date(
-    //         props.currYear, 
-    //         props.currMonthInNum, 
-    //         new Date().getDate() // Today's day
-    //     )
-        
-    //     return d.getMonth() == props.currMonthInNum ? d :
-    //         new Date(props.currYear, props.currMonthInNum + 1, 0)
-    // }
+const emit = defineEmits(["update:incomes"])
 
-    // let newExpense = { 
-    //     "userId": window.localStorage.getItem("email"),
-    //     "date": validDate(),
-    //     "category": null,
-    //     "description": "Add description",
-    //     "amount": 0.0,
-    //     "createdAt": new Date(),
-    //     "updatedAt": new Date(),
-    // }
-    // emit("update:expenses", "add", newExpense)
+const addIncome = () => {
+    const validDate = () => {
+        const d = new Date(
+            props.currYear, 
+            props.currMonthInNum, 
+            new Date().getDate() // Today's day
+        )
+        
+        return d.getMonth() == props.currMonthInNum ? d :
+            new Date(props.currYear, props.currMonthInNum + 1, 0)
+    }
+
+    let newIncome = { 
+        "userId": window.localStorage.getItem("email"),
+        "date": validDate(),
+        "source": "Add a source",
+        "amount": 0.0,
+    }
+    emit("update:incomes", "add", newIncome)
 }
 
 const updateEditableText = (newVal, idx, inputVar) => {
     console.log(newVal, idx, inputVar)
-    // if(inputVar === "amount") { newVal = parseFloat(newVal) }
-    // emit("update:expenses", "update", newVal, idx, inputVar)
+    if(inputVar === "amount") { newVal = parseFloat(newVal) }
+    emit("update:incomes", "update", newVal, idx, inputVar)
+}
+
+const removeIncome = (idx) => {
+    emit("update:incomes", "remove", null, idx)
 }
 
 // When date is changed manually
 const onDateSubmit = (idx) => {
     console.log(idx)
-    // emit("update:expenses", "update", props.expenses[idx].date, idx, "date")
-    // emit("update:expenses", "sort")
+    emit("update:incomes", "update", props.incomes[idx].date, idx, "date")
+    emit("update:incomes", "sort")
 }
 </script>

@@ -14,6 +14,7 @@
     />
     <TableIncomes
         :incomes="props.incomes"
+        @update:incomes="updateIncomes"
         :curr-month-in-num="props.currMonthInNum"
         :curr-year="props.currYear"
     />
@@ -32,10 +33,16 @@ const props = defineProps({
     years: Array,
 })
 
-const emit = defineEmits(["update:curr-month-in-num", "update:curr-year",])
+const emit = defineEmits(["update:incomes", "update:curr-month-in-num", "update:curr-year", ])
 
 const totalIncome = ref(0)
 
+const updateIncomes = (option, newVal, idx, field) => {
+    emit("update:incomes", option, newVal, idx, field)
+    if(field === "amount") {
+        updateTotalIncome()
+    }
+} 
 const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
 const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
 

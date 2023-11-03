@@ -94,6 +94,7 @@
 		<div class="tab-pane fade pages-padding" id="pills-income" role="tabpanel" aria-labelledby="pills-income-tab" tabindex="0">
 			<IncomesPage 
 				:incomes="incomesEdit"
+				@update:incomes="updateIncomes"
 				:curr-month-in-num="month"
 				@update:curr-month-in-num="updateMonth"
 				:curr-year="year"
@@ -291,6 +292,10 @@ const updateCategories = async (categType, option, newVal, idx, field) => {
 		else if (categType === "saving") { savingsEdit.value.splice(idx, 1) } 
 		else if (categType === "bill") { billsEdit.value.splice(idx, 1) }
 	} 
+}
+
+const updateIncomes = async (option, newVal, idx, field) => {
+	console.log(option, newVal, idx, field)
 }
 
 const updateMonth = (newMonth) => {
