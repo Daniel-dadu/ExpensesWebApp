@@ -103,7 +103,8 @@
 			/>
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-summary" role="tabpanel" aria-labelledby="pills-summary-tab" tabindex="0">
-			SUMMARY COMPONENT
+			<SummaryPage 
+			/>
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
 			<ProfilePage />
@@ -120,6 +121,7 @@ import ExpensesPage from "@/pages/ExpensesPage.vue"
 import CategoriesPage from "./CategoriesPage.vue"
 import IncomesPage from "./IncomesPage.vue"
 import ProfilePage from "./ProfilePage.vue"
+import SummaryPage from "./SummaryPage.vue"
 
 // Functions that manages data in the Backend
 import { getYears } from "@/functions/yearsAPI"
