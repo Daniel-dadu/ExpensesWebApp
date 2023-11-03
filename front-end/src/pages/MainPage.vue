@@ -104,6 +104,11 @@
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-summary" role="tabpanel" aria-labelledby="pills-summary-tab" tabindex="0">
 			<SummaryPage 
+				:curr-month-in-num="month"
+				@update:curr-month-in-num="updateMonth"
+				:curr-year="year"
+				@update:curr-year="updateYear"
+				:years="years"
 			/>
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
