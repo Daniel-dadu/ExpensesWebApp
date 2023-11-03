@@ -125,6 +125,7 @@ import ProfilePage from "./ProfilePage.vue"
 import { getYears } from "@/functions/yearsAPI"
 import { getExpenses, postExpense, putExpense, deleteExpense } from "@/functions/expensesAPI"
 import { getCategories, getPrevCategories, postCategory, putCategory, deleteCategory, } from "@/functions/categoryAPI"
+import { getIncomes, postIncome, putIncome, deleteIncome } from "@/functions/incomesAPI"
 
 
 // To verify if the user logged in
@@ -189,12 +190,11 @@ setBills()
 
 // -------- GETTING INCOMES FROM API -------- //
 const incomesEdit = ref([])
+const gotIncomesFromAPI = ref(false)
 const setIncomes = async () => {
-	incomesEdit.value = [
-		{ date: new Date(), source: "Salary half month", amount: 1000},
-		{ date: new Date(), source: "Despensa", amount: 500},
-		{ date: new Date(), source: "2nd Salary half month", amount: 1000},
-	]
+	incomesEdit.value = await getIncomes(year.value, month.value)
+	gotIncomesFromAPI.value = !gotIncomesFromAPI.value
+	updateIncomes("sort")
 }
 setIncomes()
 // ------------------------------------------ //
@@ -213,7 +213,7 @@ const updateExpenses = async (option, newVal, idx, field) => {
 
 	else if (option == "sort") {
 		// Sort the table by the date
-		console.log("sorting")
+		console.log("sorting expenses")
 		expensesEdit.value.sort((a, b) => a.date < b.date ? 1 : -1)
 	} 
 
@@ -294,24 +294,59 @@ const updateCategories = async (categType, option, newVal, idx, field) => {
 	} 
 }
 
+// UPDATING INCOMES IN FRONT AND BACK
 const updateIncomes = async (option, newVal, idx, field) => {
-	console.log(option, newVal, idx, field)
+	if (option == "update") {
+		incomesEdit.value[idx][field] = newVal
+		// Update income in backend
+		await putIncome({
+			id: incomesEdit.value[idx]._id,
+			field: field,
+			newValue: newVal,
+		})
+	}
+
+	else if (option == "sort") {
+		// Sort the table by the date
+		console.log("sorting incomes")
+		incomesEdit.value.sort((a, b) => a.date > b.date ? 1 : -1)
+	} 
+
+	else if (option == "add") {
+		// Add income in backend
+		const newIncome = await postIncome(newVal)
+		// To add the income at the beginning
+		incomesEdit.value.unshift(newIncome)
+		updateIncomes("sort")
+	}
+
+	else if (option == "remove") {
+		// Save the id before deleting it
+		const object_id = incomesEdit.value[idx]._id
+
+		incomesEdit.value.splice(idx, 1)
+
+		// Remove the income in backend
+		await deleteIncome(object_id)
+	} 
 }
 
 const updateMonth = (newMonth) => {
 	month.value = newMonth
 	setBudgets()
-	setExpenses()
 	setSavings()
 	setBills()
+	setExpenses()
+	setIncomes()
 }
 
 const updateYear = (newYear) => { 
 	year.value = newYear
 	setBudgets()
-	setExpenses()
 	setSavings()
 	setBills()
+	setExpenses()
+	setIncomes()
 }
 
 const importPrev = async (categType) => {
