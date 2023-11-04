@@ -4,7 +4,7 @@
             <div class="card border-success mb-3 card-size">
                 <div class="card-header card-header-text">Total Income</div>
                 <div class="card-body">
-                    <h5 class="card-title card-title-text">$27,000</h5>
+                    <h5 class="card-title card-title-text">${{ props.totalIncome }}</h5>
                     <p class="card-text">Same as last month</p>
                 </div>
             </div>
@@ -13,8 +13,8 @@
             <div class="card border-light mb-3 card-size">
                 <div class="card-header card-header-text">Total spent</div>
                 <div class="card-body">
-                    <h5 class="card-title card-title-text">$10,500</h5>
-                    <p class="card-text"><b>Goal:</b> $10,000 (3% over)</p>
+                    <h5 class="card-title card-title-text">${{ props.spent }}</h5>
+                    <p class="card-text"><b>Goal:</b> ${{ props.goalExpenses }} (3% over)</p>
                     <p class="second-card-text">2% more than last month</p>
                 </div>
             </div>
@@ -23,8 +23,8 @@
             <div class="card border-warning mb-3 card-size">
                 <div class="card-header card-header-text">Total saved</div>
                 <div class="card-body">
-                    <h5 class="card-title card-title-text">$5,500</h5>
-                    <p class="card-text"><b>Goal:</b> $5,000 (5% over)</p>
+                    <h5 class="card-title card-title-text">${{ props.saved }}</h5>
+                    <p class="card-text"><b>Goal:</b> ${{ props.goalSavings }} (5% over)</p>
                     <p class="second-card-text">3% less than last month</p>
                 </div>
             </div>
@@ -33,8 +33,8 @@
             <div class="card border-warning mb-3 card-size">
                 <div class="card-header card-header-text">Total paid</div>
                 <div class="card-body">
-                    <h5 class="card-title card-title-text">$7,000</h5>
-                    <p class="card-text"><b>Goal:</b> $7,500 (3% under)</p>
+                    <h5 class="card-title card-title-text">${{ props.paid }}</h5>
+                    <p class="card-text"><b>Goal:</b> ${{ props.goalBills }} (3% under)</p>
                     <p class="second-card-text">5% more than last month</p>
                 </div>
             </div>
@@ -52,6 +52,20 @@
 </template>
 
 <script setup>
+import { defineProps } from "vue"
+
+const props = defineProps({
+    currMonthInNum: Number,
+    currYear: Number,
+
+    totalIncome: Number,
+    spent: Number,
+    goalExpenses: Number,
+    saved: Number,
+    goalSavings: Number,
+    paid: Number,
+    goalBills: Number,
+})
 
 </script>
 

@@ -47,11 +47,20 @@
     </div>
 
     <CardList 
+        :curr-month-in-num="props.currMonthInNum"
+        :curr-year="props.currYear"
+        :total-income="props.totalIncome"
+        :spent="props.spent"
+        :goal-expenses="props.goalExpenses"
+        :saved="props.saved"
+        :goal-savings="props.goalSavings"
+        :paid="props.paid"
+        :goal-bills="props.goalBills"
     />
 </template>
 
 <script setup>
-import { defineProps, ref } from "vue"
+import { defineProps, defineEmits, ref, } from "vue"
 
 import CardList from "@/components/Summary/CardList.vue"
 import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
@@ -62,10 +71,25 @@ const props = defineProps({
     years: Array,
     currMonthInNum: Number,
     currYear: Number,
+    
+    totalIncome: Number,
+    spent: Number,
+    goalExpenses: Number,
+    saved: Number,
+    goalSavings: Number,
+    paid: Number,
+    goalBills: Number,
 })
 
-const updateCurrMonth = () => {}
-const updateCurrYear = () => {}
+const emit = defineEmits([
+    "update:expenses",
+    "update:categories", 
+    "update:curr-month-in-num", 
+    "update:curr-year", 
+])
+
+const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
+const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
 
 const fromMonth = ref(0)
 const toMonth = ref(11)

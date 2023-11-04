@@ -109,6 +109,13 @@
 				:curr-year="year"
 				@update:curr-year="updateYear"
 				:years="years"
+				:total-income="calcTotal(incomesEdit, 'amount')"
+				:spent="calcTotal(expensesEdit, 'amount')"
+				:goal-expenses="calcTotal(budgetsEdit, 'threshold')"
+				:saved="1"
+				:goal-savings="calcTotal(savingsEdit, 'threshold')"
+				:paid="1"
+				:goal-bills="calcTotal(billsEdit, 'threshold')"
 			/>
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
@@ -365,6 +372,10 @@ const importPrev = async (categType) => {
 		billsEdit.value = await getPrevCategories(categType, year.value, month.value)
 	}
 }
+
+const calcTotal = (objects, field) => {
+	return objects.reduce((acc, curr) => curr[field] + acc, 0)
+} 
 </script>
 
 <style>
