@@ -1,7 +1,7 @@
 <template>
     <div class="row row-cols-auto justify-content-md-center">
         <div class="col">
-            <div class="card border-success mb-3 card-size">
+            <div class="card border-light mb-3 card-size">
                 <div class="card-header card-header-text">Total Income</div>
                 <div class="card-body">
                     <h5 class="card-title card-title-text">${{ props.totalIncome }}</h5>
@@ -10,7 +10,11 @@
             </div>
         </div>
         <div class="col">
-            <div class="card border-light mb-3 card-size">
+            <div class="card mb-3 card-size" :class="{ 
+                'border-success': props.spent < props.goalExpenses,
+                'border-light': props.spent == props.goalExpenses,
+                'border-warning': props.spent > props.goalExpenses,
+            }">
                 <div class="card-header card-header-text">Total spent</div>
                 <div class="card-body">
                     <h5 class="card-title card-title-text">${{ props.spent }}</h5>
@@ -22,7 +26,11 @@
             </div>
         </div>
         <div class="col">
-            <div class="card border-warning mb-3 card-size">
+            <div class="card mb-3 card-size" :class="{ 
+                'border-success': props.saved < props.goalSavings,
+                'border-light': props.saved == props.goalSavings,
+                'border-warning': props.saved > props.goalSavings,
+            }">
                 <div class="card-header card-header-text">Total saved</div>
                 <div class="card-body">
                     <h5 class="card-title card-title-text">${{ props.saved }}</h5>
@@ -34,7 +42,11 @@
             </div>
         </div>
         <div class="col">
-            <div class="card border-warning mb-3 card-size">
+            <div class="card mb-3 card-size" :class="{ 
+                'border-success': props.paid < props.goalBills,
+                'border-light': props.paid == props.goalBills,
+                'border-warning': props.paid > props.goalBills,
+            }">
                 <div class="card-header card-header-text">Total paid</div>
                 <div class="card-body">
                     <h5 class="card-title card-title-text">${{ props.paid }}</h5>
