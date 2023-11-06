@@ -14,7 +14,9 @@
                 <div class="card-header card-header-text">Total spent</div>
                 <div class="card-body">
                     <h5 class="card-title card-title-text">${{ props.spent }}</h5>
-                    <p class="card-text"><b>Goal:</b> ${{ props.goalExpenses }} (3% over)</p>
+                    <p class="card-text">
+                        <b>Goal:</b> ${{ props.goalExpenses }} ({{ getPercetage(props.spent, props.goalExpenses) }})
+                    </p>
                     <p class="second-card-text">2% more than last month</p>
                 </div>
             </div>
@@ -24,7 +26,9 @@
                 <div class="card-header card-header-text">Total saved</div>
                 <div class="card-body">
                     <h5 class="card-title card-title-text">${{ props.saved }}</h5>
-                    <p class="card-text"><b>Goal:</b> ${{ props.goalSavings }} (5% over)</p>
+                    <p class="card-text">
+                        <b>Goal:</b> ${{ props.goalSavings }} ({{ getPercetage(props.saved, props.goalSavings) }})
+                    </p>
                     <p class="second-card-text">3% less than last month</p>
                 </div>
             </div>
@@ -34,7 +38,7 @@
                 <div class="card-header card-header-text">Total paid</div>
                 <div class="card-body">
                     <h5 class="card-title card-title-text">${{ props.paid }}</h5>
-                    <p class="card-text"><b>Goal:</b> ${{ props.goalBills }} (3% under)</p>
+                    <p class="card-text"><b>Goal:</b> ${{ props.goalBills }} ({{ getPercetage(props.paid, props.goalBills) }})</p>
                     <p class="second-card-text">5% more than last month</p>
                 </div>
             </div>
@@ -43,7 +47,10 @@
             <div class="card border-warning mb-3 card-size">
                 <div class="card-header card-header-text">Total left</div>
                 <div class="card-body">
-                    <h5 class="card-title card-title-text">$1,500</h5>
+                    <h5 class="card-title card-title-text">$ {{ 
+                        // Bills are not added because they are included in spent
+                        props.totalIncome - props.spent - props.saved
+                    }}</h5>
                     <p class="card-text">2% more than last month</p>
                 </div>
             </div>
@@ -66,6 +73,10 @@ const props = defineProps({
     paid: Number,
     goalBills: Number,
 })
+
+const getPercetage = (total, goal) => 
+    total < goal ? (100 - parseInt(total/goal * 100)) + "% under" : 
+    total > goal ? (parseInt(total/goal * 100) - 100) + "% over" : "Achieved"
 
 </script>
 
