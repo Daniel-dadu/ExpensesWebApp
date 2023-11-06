@@ -112,9 +112,9 @@
 				:total-income="calcTotal(incomesEdit, 'amount')"
 				:spent="calcTotal(expensesEdit, 'amount')"
 				:goal-expenses="calcTotal(budgetsEdit, 'threshold')"
-				:saved="1"
+				:saved="calcSaved(expensesEdit, savingsEdit)"
 				:goal-savings="calcTotal(savingsEdit, 'threshold')"
-				:paid="1"
+				:paid="calcPaid(expensesEdit)"
 				:goal-bills="calcTotal(billsEdit, 'threshold')"
 			/>
 		</div>
@@ -373,9 +373,33 @@ const importPrev = async (categType) => {
 	}
 }
 
-const calcTotal = (objects, field) => {
-	return objects.reduce((acc, curr) => curr[field] + acc, 0)
-} 
+const calcTotal = (objects, field) => 
+	objects.reduce((acc, curr) => curr[field] + acc, 0)
+
+const calcPaid = (expenses) => {
+	let billsNames = new Set()
+	for (let bill of billsEdit.value) {
+		billsNames.add(bill.name)
+	}
+	return expenses.reduce((acc, curr) => 
+		(billsNames.has(curr.category) ? curr.amount : 0) + acc,
+		0
+	)
+}
+
+const calcSaved = (expenses, savings) => {
+	let countTotalSaving = 0
+	let savingNames = new Set()
+	for (let saving of savings) {
+		countTotalSaving += saving.threshold
+		savingNames.add(saving.name)
+	}
+
+	return countTotalSaving - expenses.reduce((acc, curr) => 
+		(savingNames.has(curr.category) ? curr.amount : 0) + acc,
+		0
+	)
+}
 </script>
 
 <style>
