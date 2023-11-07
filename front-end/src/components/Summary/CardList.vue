@@ -56,7 +56,10 @@
             </div>
         </div>
         <div class="col">
-            <div class="card border-warning mb-3 card-size">
+            <div class="card mb-3 card-size" :class="{ 
+                'border-success': props.totalIncome - props.spent - props.saved >= 0,
+                'border-warning': props.totalIncome - props.spent - props.saved < 0,
+            }">
                 <div class="card-header card-header-text">Total left</div>
                 <div class="card-body">
                     <h5 class="card-title card-title-text">$ {{ 
