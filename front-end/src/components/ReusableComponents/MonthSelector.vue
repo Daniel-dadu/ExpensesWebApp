@@ -1,15 +1,17 @@
 <template>
     <div class="input-group mb-3 no-arrow">
         <button 
+            :disabled="props.disable"
             class="btn btn-outline-secondary arrows-icons-btn" type="button"
             @click="arrowClick(true)"
         >
-            <img src="@/assets/caret-left-fill.svg" alt="Trash can" />
+            <img src="@/assets/caret-left-fill.svg" alt="Go left" />
         </button>
         <select 
             class="form-select" 
             @change="setSelectedMonth($event)"
             v-model="monthEdit"
+            :disabled="props.disable"
         >
             <option 
                 v-for="(month, index) in months"
@@ -24,6 +26,7 @@
             class="form-select no-arrow"
             @change="setSelectedYear($event)"
             v-model="yearEdit"
+            :disabled="props.disable"
         >
             <option 
                 v-for="(year, index) in props.years"
@@ -35,6 +38,7 @@
             </option>
         </select>
         <button 
+            :disabled="props.disable"
             class="btn btn-outline-secondary arrows-icons-btn" type="button"
             @click="arrowClick(false)"
         >
@@ -53,6 +57,7 @@ const props = defineProps({
         type: Number,
         required: true,
     },
+    disable: Boolean,
 })
 
 const emit = defineEmits(["update:curr-month-in-num", "update:curr-year"])
@@ -147,5 +152,8 @@ watch(
 }
 .no-arrow select option {
     text-align: center;
+}
+.selector-disabled {
+    cursor: progress;
 }
 </style>

@@ -5,8 +5,20 @@
                 {{ selectByMonth ? "By month" : "By range of months" }}
             </button>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" @click="() => selectByMonth = true">By month</a></li>
-                <li><a class="dropdown-item" @click="() => selectByMonth = false">By range of months</a></li>
+                <li>
+                    <a 
+                        class="dropdown-item" 
+                        @click="() => selectByMonth = true"
+                        style="cursor: pointer;"
+                    >By month</a>
+                </li>
+                <li>
+                    <a 
+                        class="dropdown-item" 
+                        @click="() => selectByMonth = false"
+                        style="cursor: pointer;"
+                    >By range of months</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -32,6 +44,7 @@
                 @update:curr-month-in-num="updateFromMonth"
                 :curr-year="fromYear"
                 @update:curr-year="updateFromYear"
+                :disable="true"
             />
         </div>
         <p class="date-range-title">To:</p>
@@ -42,6 +55,7 @@
                 @update:curr-month-in-num="updateToMonth"
                 :curr-year="toYear"
                 @update:curr-year="updateToYear"
+                :disable="true"
             />
         </div>
     </div>
