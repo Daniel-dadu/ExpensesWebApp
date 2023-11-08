@@ -40,6 +40,10 @@ app.post("/api/add-income/:userId", incomesAPI.addIncome)
 app.put("/api/update-income/:userId", incomesAPI.updateIncome)
 app.delete("/api/remove-income/:userId", incomesAPI.removeIncome)
 
+// ----------------- SUMMARY ----------------- //
+const summaryAPI = require("./endpoints/summary.js")
+app.get("/api/summary-prev-expenses/:email", summaryAPI.getPrevExpenses)
+
 // ----------------- GENERAL ----------------- //
 const generalAPI = require("./endpoints/general.js")
 app.get("/api/years/:email", generalAPI.getYears)

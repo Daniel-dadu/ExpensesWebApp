@@ -74,7 +74,8 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue"
+import { defineProps, ref } from "vue"
+import { getPrevExpensesTotal } from "@/functions/summaryAPI";
 
 const props = defineProps({
     currMonthInNum: Number,
@@ -93,6 +94,12 @@ const getPercetage = (total, goal) =>
     total < goal ? (100 - parseInt(total/goal * 100)) + "% under" : 
     total > goal ? (parseInt(total/goal * 100) - 100) + "% over" : "Achieved"
 
+const prevExpensesTotal = ref(0)
+
+const setPrevExpensesTotal = async () => {
+    prevExpensesTotal.value = await getPrevExpensesTotal(props.currMonthInNum, props.currYear)
+} 
+setPrevExpensesTotal()
 </script>
 
 <style>
