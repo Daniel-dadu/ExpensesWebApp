@@ -17,7 +17,7 @@
 			<button class="nav-link" id="pills-income-tab" data-bs-toggle="pill" data-bs-target="#pills-income" type="button" role="tab" aria-controls="pills-income" aria-selected="false">Incomes</button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="pills-summary-tab" data-bs-toggle="pill" data-bs-target="#pills-summary" type="button" role="tab" aria-controls="pills-summary" aria-selected="false">Summary</button>
+			<button class="nav-link" id="pills-summary-tab" data-bs-toggle="pill" data-bs-target="#pills-summary" type="button" role="tab" aria-controls="pills-summary" aria-selected="false" @click="goSummary">Summary</button>
 		</li>
 		<li class="nav-item" role="presentation">
 			<button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Profile</button>
@@ -116,6 +116,7 @@
 				:goal-savings="calcTotal(savingsEdit, 'threshold')"
 				:paid="calcPaid(expensesEdit)"
 				:goal-bills="calcTotal(billsEdit, 'threshold')"
+				:activate-summary="activateSummaryEdit"
 			/>
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
@@ -399,6 +400,12 @@ const calcSaved = (expenses, savings) => {
 		(savingNames.has(curr.category) ? curr.amount : 0) + acc,
 		0
 	)
+}
+
+const activateSummaryEdit = ref(false)
+// When summary tab is selected
+const goSummary = () => {
+	activateSummaryEdit.value = !activateSummaryEdit.value
 }
 </script>
 

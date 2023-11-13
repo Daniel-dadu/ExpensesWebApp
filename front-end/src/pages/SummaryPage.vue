@@ -73,12 +73,10 @@
 
         :prev-expenses-total="prevExpensesTotal"
     />
-
-    <button @click="setPrevExpensesTotal">hola</button>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, } from "vue"
+import { defineProps, defineEmits, ref, watch, } from "vue"
 
 import CardList from "@/components/Summary/CardList.vue"
 import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
@@ -98,6 +96,8 @@ const props = defineProps({
     goalSavings: Number,
     paid: Number,
     goalBills: Number,
+
+    activateSummary: Boolean,
 })
 
 const emit = defineEmits([
@@ -125,10 +125,15 @@ const updateToYear = () => {}
 const prevExpensesTotal = ref(0)
 
 const setPrevExpensesTotal = async () => {
-    console.log("hello")
     prevExpensesTotal.value = await getPrevExpensesTotal(props.currYear, props.currMonthInNum)
 } 
-setPrevExpensesTotal()
+
+watch(
+    () => props.activateSummary,
+    () => {
+        setPrevExpensesTotal()
+    }
+)
 </script>
 
 <style>
