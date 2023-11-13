@@ -21,7 +21,7 @@
                     <p class="card-text">
                         <b>Goal:</b> ${{ props.goalExpenses }} ({{ getPercetage(props.spent, props.goalExpenses) }})
                     </p>
-                    <p class="second-card-text">2% more than last month</p>
+                    <p class="second-card-text">{{ getPrevPercentage(props.prevExpensesTotal, props.spent) }}</p>
                 </div>
             </div>
         </div>
@@ -74,8 +74,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from "vue"
-import { getPrevExpensesTotal } from "@/functions/summaryAPI";
+import { defineProps, } from "vue"
 
 const props = defineProps({
     currMonthInNum: Number,
@@ -88,18 +87,27 @@ const props = defineProps({
     goalSavings: Number,
     paid: Number,
     goalBills: Number,
+
+    prevExpensesTotal: Number,
 })
 
 const getPercetage = (total, goal) => 
     total < goal ? (100 - parseInt(total/goal * 100)) + "% under" : 
     total > goal ? (parseInt(total/goal * 100) - 100) + "% over" : "Achieved"
 
-const prevExpensesTotal = ref(0)
+const getPrevPercentage = (prev, curr) => {
+    const percentageDifference = ((curr - prev) / prev) * 100
+    const absPercentageDifference = Math.abs(percentageDifference)
 
-const setPrevExpensesTotal = async () => {
-    prevExpensesTotal.value = await getPrevExpensesTotal(props.currMonthInNum, props.currYear)
-} 
-setPrevExpensesTotal()
+    if (percentageDifference > 0) {
+        return `${absPercentageDifference.toFixed(2)}% more than last month`
+    } else if (percentageDifference < 0) {
+        return `${absPercentageDifference.toFixed(2)}% less than last month`
+    } else {
+        return "The same as last month"
+    }
+}
+
 </script>
 
 <style>
