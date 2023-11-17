@@ -45,6 +45,8 @@ const getYears = async (req, res) => {
         years.push(currYear)
     }
 
+    years.sort()
+
     res.json(years)
 }
 
