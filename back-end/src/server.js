@@ -43,6 +43,7 @@ app.delete("/api/remove-income/:userId", incomesAPI.removeIncome)
 // ----------------- SUMMARY ----------------- //
 const summaryAPI = require("./endpoints/summary.js")
 app.get("/api/summary-prev-expenses/:email", summaryAPI.getPrevExpenses)
+app.get("/api/summary-prev-saved/:email", summaryAPI.getPrevSaved)
 
 // ----------------- GENERAL ----------------- //
 const generalAPI = require("./endpoints/general.js")

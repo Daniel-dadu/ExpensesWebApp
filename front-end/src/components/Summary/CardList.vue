@@ -37,7 +37,7 @@
                     <p class="card-text">
                         <b>Goal:</b> ${{ props.goalSavings }} ({{ getPercetage(props.saved, props.goalSavings) }})
                     </p>
-                    <p class="second-card-text">3% less than last month</p>
+                    <p class="second-card-text">{{ getPrevPercentage(props.prevSavedTotal, props.saved) }}</p>
                 </div>
             </div>
         </div>
@@ -89,6 +89,7 @@ const props = defineProps({
     goalBills: Number,
 
     prevExpensesTotal: Number,
+    prevSavedTotal: Number,
 })
 
 const getPercetage = (total, goal) => 

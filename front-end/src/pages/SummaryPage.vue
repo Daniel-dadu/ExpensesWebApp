@@ -72,6 +72,7 @@
         :goal-bills="props.goalBills"
 
         :prev-expenses-total="prevExpensesTotal"
+        :prev-saved-total="prevSavedTotal"
     />
 </template>
 
@@ -80,7 +81,7 @@ import { defineProps, defineEmits, ref, watch, } from "vue"
 
 import CardList from "@/components/Summary/CardList.vue"
 import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
-import { getPrevExpensesTotal } from "@/functions/summaryAPI";
+import { getPrevExpensesTotal, getPrevSavedTotal, } from "@/functions/summaryAPI";
 
 const selectByMonth = ref(true)
 
@@ -123,15 +124,21 @@ const updateFromYear = () => {}
 const updateToYear = () => {}
 
 const prevExpensesTotal = ref(0)
+const prevSavedTotal = ref(0)
 
 const setPrevExpensesTotal = async () => {
     prevExpensesTotal.value = await getPrevExpensesTotal(props.currYear, props.currMonthInNum)
 } 
 
+const setPrevSavedTotal = async () => {
+    prevSavedTotal.value = await getPrevSavedTotal(props.currYear, props.currMonthInNum)
+}
+
 watch(
     () => props.activateSummary,
     () => {
         setPrevExpensesTotal()
+        setPrevSavedTotal()
     }
 )
 </script>
