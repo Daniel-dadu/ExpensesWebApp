@@ -17,7 +17,7 @@ const getData = async (req, res) => {
     const dataType = req.query.datatype
 
     const year = parseInt(req.query.year)
-    const month = parseInt(req.query.month)+1
+    const month = parseInt(req.query.month)
 
     let data = await db.collection(`${dataType}s`).aggregate([
         {
@@ -69,7 +69,7 @@ const getPrevData = async (req, res) => {
     const dataType = req.query.datatype
     
     let year = parseInt(req.query.year)
-    let month = parseInt(req.query.month) // Don't add 'cause we want to use the prev month 
+    let month = parseInt(req.query.month) // Using the prev month 
 
     if(month === 0) {
         month = 12
@@ -110,7 +110,7 @@ const getPrevData = async (req, res) => {
 
     month++
 
-    if(month === 12) {
+    if(month === 13) {
         month = 1
         ++year
     }
@@ -138,7 +138,6 @@ const getPrevData = async (req, res) => {
 
     }
     
-    console.log("done")
     res.json(data)
 }
 
@@ -154,7 +153,7 @@ const addData = async (req, res) => {
 
     const name = req.body.name
     const year = parseInt(req.body.year)
-    const month = parseInt(req.body.month) + 1
+    const month = parseInt(req.body.month)
 
     try {
         let categoryId = ""

@@ -170,7 +170,7 @@ const expensesEdit = ref([])
 // To indicate the Expenses Page that the expenses were loaded
 const gotExpensesFromAPI = ref(false)
 const setExpenses = async () => {
-	expensesEdit.value = await getExpenses(year.value, month.value)
+	expensesEdit.value = await getExpenses(year.value, month.value+1)
 	// To update total expenses amount
 	gotExpensesFromAPI.value = !gotExpensesFromAPI.value
 	// To sort the table
@@ -182,7 +182,7 @@ setExpenses() // Get expenses when loading component
 // -------- GETTING BUDGETS FROM API -------- //
 const budgetsEdit = ref([])
 const setBudgets = async () => {
-	budgetsEdit.value = await getCategories("budget", year.value, month.value)
+	budgetsEdit.value = await getCategories("budget", year.value, month.value+1)
 }
 setBudgets() // Get budgets/categories when loading component
 // ------------------------------------------ //
@@ -190,7 +190,7 @@ setBudgets() // Get budgets/categories when loading component
 // -------- GETTING SAVINGS FROM API -------- //
 const savingsEdit = ref([])
 const setSavings = async () => {
-	savingsEdit.value = await getCategories("saving", year.value, month.value)
+	savingsEdit.value = await getCategories("saving", year.value, month.value+1)
 }
 setSavings()
 // ------------------------------------------ //
@@ -198,7 +198,7 @@ setSavings()
 // -------- GETTING BILLS FROM API -------- //
 const billsEdit = ref([])
 const setBills = async () => {
-	billsEdit.value = await getCategories("bill", year.value, month.value)
+	billsEdit.value = await getCategories("bill", year.value, month.value+1)
 }
 setBills()
 // ------------------------------------------ //
@@ -207,7 +207,7 @@ setBills()
 const incomesEdit = ref([])
 const gotIncomesFromAPI = ref(false)
 const setIncomes = async () => {
-	incomesEdit.value = await getIncomes(year.value, month.value)
+	incomesEdit.value = await getIncomes(year.value, month.value+1)
 	gotIncomesFromAPI.value = !gotIncomesFromAPI.value
 	updateIncomes("sort")
 }
@@ -256,7 +256,7 @@ const updateCategories = async (categType, option, newVal, idx, field) => {
 	// The categType should be in singular [budget|saving|bill] 
 
 	if(option === "add") {
-		const newCategory = await postCategory(categType, newVal, year.value, month.value)
+		const newCategory = await postCategory(categType, newVal, year.value, month.value+1)
 		if (categType === "budget") { budgetsEdit.value.push(newCategory) } 
 		else if (categType === "saving") { savingsEdit.value.push(newCategory) } 
 		else if (categType === "bill") { billsEdit.value.push(newCategory) }
@@ -366,11 +366,11 @@ const updateYear = (newYear) => {
 
 const importPrev = async (categType) => {
 	if (categType === "budget") {
-		budgetsEdit.value = await getPrevCategories(categType, year.value, month.value)
+		budgetsEdit.value = await getPrevCategories(categType, year.value, month.value+1)
 	} else if (categType === "saving") {
-		savingsEdit.value = await getPrevCategories(categType, year.value, month.value)
+		savingsEdit.value = await getPrevCategories(categType, year.value, month.value+1)
 	} else if (categType === "bill") {
-		billsEdit.value = await getPrevCategories(categType, year.value, month.value)
+		billsEdit.value = await getPrevCategories(categType, year.value, month.value+1)
 	}
 }
 

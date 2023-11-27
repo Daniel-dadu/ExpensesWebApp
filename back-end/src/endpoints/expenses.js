@@ -13,7 +13,7 @@ const getExpenses = async (req, res) => {
     
     const email = req.params.email
     const year = parseInt(req.query.year)
-    const month = parseInt(req.query.month)+1
+    const month = parseInt(req.query.month)
 
     const expenses = await db.collection("expenses").aggregate([
         {

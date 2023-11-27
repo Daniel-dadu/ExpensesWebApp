@@ -127,11 +127,11 @@ const prevExpensesTotal = ref(0)
 const prevSavedTotal = ref(0)
 
 const setPrevExpensesTotal = async () => {
-    prevExpensesTotal.value = await getPrevExpensesTotal(props.currYear, props.currMonthInNum)
+    prevExpensesTotal.value = await getPrevExpensesTotal(props.currYear, props.currMonthInNum+1)
 } 
 
 const setPrevSavedTotal = async () => {
-    prevSavedTotal.value = await getPrevSavedTotal(props.currYear, props.currMonthInNum)
+    prevSavedTotal.value = await getPrevSavedTotal(props.currYear, props.currMonthInNum+1)
 }
 
 watch(
