@@ -48,7 +48,8 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watch, } from "vue"
+import { defineProps, defineEmits, ref, watch } from "vue"
+import { debounce } from "lodash"
 
 const props = defineProps({
     years: Array,
@@ -80,38 +81,45 @@ const months = [
 const monthEdit = ref(months[props.currMonthInNum])
 const yearEdit = ref(props.currYear)
 
+const debouncedEmitMonth = debounce((newMonth) => {
+    emit("update:curr-month-in-num", newMonth)
+}, 300)
+
+const debouncedEmitYear = debounce((newYear) => {
+    emit("update:curr-year", newYear)
+}, 300)
+
 const arrowClick = (isLeft) => {
     const m = monthEdit.value
     const y = yearEdit.value
-    if(isLeft) {
-        if(m === "January" && 
-        y != props.years[0]) {
+    if (isLeft) {
+        if (m === "January" && y != props.years[0]) {
             yearEdit.value = parseInt(y) - 1
             monthEdit.value = "December"
-            emit("update:curr-year", parseInt(yearEdit.value))
+            debouncedEmitYear(parseInt(yearEdit.value))
         } else if (m !== "January") {
-            monthEdit.value = months[months.indexOf(m)-1]
+            monthEdit.value = months[months.indexOf(m) - 1]
         }
     } else {
-        if(m === "December" && 
-        y != props.years.slice(-1)) {
+        if (m === "December" && y != props.years.slice(-1)) {
             yearEdit.value = parseInt(y) + 1
             monthEdit.value = "January"
-            emit("update:curr-year", parseInt(yearEdit.value))
+            debouncedEmitYear(parseInt(yearEdit.value))
         } else if (m !== "December") {
-            monthEdit.value = months[months.indexOf(m)+1]
+            monthEdit.value = months[months.indexOf(m) + 1]
         }
     }
-    emit("update:curr-month-in-num", months.indexOf(monthEdit.value))
+    debouncedEmitMonth(months.indexOf(monthEdit.value))
 }
 
 const setSelectedMonth = (event) => {
     monthEdit.value = event.target.value
-    emit("update:curr-month-in-num", months.indexOf(monthEdit.value))
+    debouncedEmitMonth(months.indexOf(monthEdit.value))
 }
+
 const setSelectedYear = (event) => {
     yearEdit.value = event.target.value
-    emit("update:curr-year", parseInt(yearEdit.value))
+    debouncedEmitYear(parseInt(yearEdit.value))
 }
 
 watch(
@@ -124,11 +132,11 @@ watch(
 
 watch(
     () => yearEdit.value,
-    (newYear) => emit("update:curr-year", parseInt(newYear))
+    (newYear) => debouncedEmitYear(parseInt(newYear))
 )
 watch(
     () => monthEdit.value,
-    (newMonth) => emit("update:curr-month-in-num", months.indexOf(newMonth))
+    (newMonth) => debouncedEmitMonth(months.indexOf(newMonth))
 )
 </script>
 

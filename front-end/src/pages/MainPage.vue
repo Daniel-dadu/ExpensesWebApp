@@ -2,30 +2,133 @@
 	<div id="main-nav-div">
 		<ul class="nav nav-pills nav-fill flex-column flex-sm-row" id="pills-tab" role="tablist">
 		<li class="nav-item" role="presentation">
-			<button class="nav-link active" id="pills-expenses-tab" data-bs-toggle="pill" data-bs-target="#pills-expenses" type="button" role="tab" aria-controls="pills-expenses" aria-selected="true">Expenses</button>
+			<button 
+				class="nav-link active" 
+				id="pills-expenses-tab" 
+				data-bs-toggle="pill" 
+				data-bs-target="#pills-expenses" 
+				type="button" 
+				role="tab" 
+				aria-controls="pills-expenses" 
+				aria-selected="true"
+				@click="isSummaryPage = false"
+			>Expenses</button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="pills-budget-tab" data-bs-toggle="pill" data-bs-target="#pills-budget" type="button" role="tab" aria-controls="pills-budget" aria-selected="false">Budgets</button>
+			<button
+				class="nav-link"
+				id="pills-budget-tab"
+				data-bs-toggle="pill"
+				data-bs-target="#pills-budget" 
+				type="button" 
+				role="tab" 
+				aria-controls="pills-budget" 
+				aria-selected="false"
+				@click="isSummaryPage = false"
+			>Budgets</button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="pills-savings-tab" data-bs-toggle="pill" data-bs-target="#pills-savings" type="button" role="tab" aria-controls="pills-savings" aria-selected="false">Savings</button>
+			<button 
+				class="nav-link" 
+				id="pills-savings-tab"
+				data-bs-toggle="pill" 
+				data-bs-target="#pills-savings" 
+				type="button" 
+				role="tab" 
+				aria-controls="pills-savings" 
+				aria-selected="false"
+				@click="isSummaryPage = false"
+			>Savings</button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="pills-budget-tab" data-bs-toggle="pill" data-bs-target="#pills-bills" type="button" role="tab" aria-controls="pills-budget" aria-selected="false">Bills</button>
+			<button 
+				class="nav-link" 
+				id="pills-budget-tab" 
+				data-bs-toggle="pill" 
+				data-bs-target="#pills-bills" 
+				type="button" 
+				role="tab" 
+				aria-controls="pills-budget" 
+				aria-selected="false"
+				@click="isSummaryPage = false"
+			>Bills</button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="pills-income-tab" data-bs-toggle="pill" data-bs-target="#pills-income" type="button" role="tab" aria-controls="pills-income" aria-selected="false">Incomes</button>
+			<button 
+				class="nav-link" 
+				id="pills-income-tab" 
+				data-bs-toggle="pill" 
+				data-bs-target="#pills-income" 
+				type="button" 
+				role="tab" 
+				aria-controls="pills-income" 
+				aria-selected="false"
+				@click="isSummaryPage = false"
+			>Incomes</button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="pills-summary-tab" data-bs-toggle="pill" data-bs-target="#pills-summary" type="button" role="tab" aria-controls="pills-summary" aria-selected="false" @click="goSummary">Summary</button>
+			<button 
+				class="nav-link" 
+				id="pills-summary-tab" 
+				data-bs-toggle="pill" 
+				data-bs-target="#pills-summary" 
+				type="button" 
+				role="tab" 
+				aria-controls="pills-summary" 
+				aria-selected="false" 
+				@click="goSummary"
+				>Summary</button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Profile</button>
+			<button 
+				class="nav-link" 
+				id="pills-profile-tab" 
+				data-bs-toggle="pill" 
+				data-bs-target="#pills-profile" 
+				type="button" 
+				role="tab" 
+				aria-controls="pills-profile" 
+				aria-selected="false"
+				@click="isSummaryPage = false"
+			>Profile</button>
 		</li>
 		
 		</ul>
 	</div>
-    <div class="tab-content" id="pills-tabContent">
+	<div v-if="!isSummaryPage || (isSummaryPage && selectByMonth)" class="month-selector-center">
+		<MonthSelector 
+			:years="years" 
+			:curr-month-in-num="month"
+			@update:curr-month-in-num="updateMonth"
+			:curr-year="year"
+			@update:curr-year="updateYear"
+		/>
+	</div>
+	<div v-else>
+        <p class="date-range-title">From:</p>
+        <div class="month-selector-center">
+            <MonthSelector
+                :years="years" 
+                :curr-month-in-num="fromMonth"
+                @update:curr-month-in-num="updateFromMonth"
+                :curr-year="fromYear"
+                @update:curr-year="updateFromYear"
+                :disable="true"
+            />
+        </div>
+        <p class="date-range-title">To:</p>
+        <div class="month-selector-center">
+            <MonthSelector
+                :years="years" 
+                :curr-month-in-num="toMonth"
+                @update:curr-month-in-num="updateToMonth"
+                :curr-year="toYear"
+                @update:curr-year="updateToYear"
+                :disable="true"
+            />
+        </div>
+    </div>
+	<div class="tab-content" id="pills-tabContent">
 		<div class="tab-pane fade show active pages-padding" id="pills-expenses" role="tabpanel" aria-labelledby="pills-expenses-tab" tabindex="0">
 			<ExpensesPage
 				:expenses="expensesEdit"
@@ -39,10 +142,7 @@
 				]"
 				@update:categories="updateCategories"
 				:curr-month-in-num="month"
-				@update:curr-month-in-num="updateMonth"
 				:curr-year="year"
-				@update:curr-year="updateYear"
-				:years="years"
 				:got-expenses-from-API="gotExpensesFromAPI"
 			/>
 		</div>
@@ -52,11 +152,6 @@
 				:categories="budgetsEdit"
 				@update:categories="updateCategories"
 				:import-prev="importPrev"
-				:curr-month-in-num="month"
-				@update:curr-month-in-num="updateMonth"
-				:curr-year="year"
-				@update:curr-year="updateYear"
-				:years="years"
 				:expenses="expensesEdit"
 				@update:expenses="updateExpenses"
 			/>
@@ -67,11 +162,6 @@
 				:categories="savingsEdit"
 				@update:categories="updateCategories"
 				:import-prev="importPrev"
-				:curr-month-in-num="month"
-				@update:curr-month-in-num="updateMonth"
-				:curr-year="year"
-				@update:curr-year="updateYear"
-				:years="years"
 				:expenses="expensesEdit"
 				@update:expenses="updateExpenses"
 			/>
@@ -82,11 +172,6 @@
 				:categories="billsEdit"
 				@update:categories="updateCategories"
 				:import-prev="importPrev"
-				:curr-month-in-num="month"
-				@update:curr-month-in-num="updateMonth"
-				:curr-year="year"
-				@update:curr-year="updateYear"
-				:years="years"
 				:expenses="expensesEdit"
 				@update:expenses="updateExpenses"
 			/>
@@ -96,10 +181,7 @@
 				:incomes="incomesEdit"
 				@update:incomes="updateIncomes"
 				:curr-month-in-num="month"
-				@update:curr-month-in-num="updateMonth"
 				:curr-year="year"
-				@update:curr-year="updateYear"
-				:years="years"
 			/>
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-summary" role="tabpanel" aria-labelledby="pills-summary-tab" tabindex="0">
@@ -117,6 +199,8 @@
 				:paid="calcPaid(expensesEdit)"
 				:goal-bills="calcTotal(billsEdit, 'threshold')"
 				:activate-summary="activateSummaryEdit"
+				:select-by-month="selectByMonth"
+                @update:select-by-month="updateSelectByMonth"
 			/>
 		</div>
 		<div class="tab-pane fade pages-padding" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
@@ -129,6 +213,8 @@
 import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
 import "@vuepic/vue-datepicker/dist/main.css"
+
+import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
 
 import ExpensesPage from "@/pages/ExpensesPage.vue"
 import CategoriesPage from "./CategoriesPage.vue"
@@ -170,6 +256,7 @@ const expensesEdit = ref([])
 // To indicate the Expenses Page that the expenses were loaded
 const gotExpensesFromAPI = ref(false)
 const setExpenses = async () => {
+	console.log("setting expenses")
 	expensesEdit.value = await getExpenses(year.value, month.value+1)
 	// To update total expenses amount
 	gotExpensesFromAPI.value = !gotExpensesFromAPI.value
@@ -347,6 +434,7 @@ const updateIncomes = async (option, newVal, idx, field) => {
 }
 
 const updateMonth = (newMonth) => {
+	console.log("updating month")
 	month.value = newMonth
 	setBudgets()
 	setSavings()
@@ -403,9 +491,28 @@ const calcSaved = (expenses, savings) => {
 }
 
 const activateSummaryEdit = ref(false)
+const isSummaryPage = ref(false)
 // When summary tab is selected
 const goSummary = () => {
+	isSummaryPage.value = true
 	activateSummaryEdit.value = !activateSummaryEdit.value
+}
+
+const fromMonth = ref(0)
+const toMonth = ref(11)
+
+const updateFromMonth = () => {}
+const updateToMonth = () => {}
+
+const fromYear = ref(2023)
+const toYear = ref(2023)
+
+const updateFromYear = () => {}
+const updateToYear = () => {}
+
+const selectByMonth = ref(false)
+const updateSelectByMonth = (newOption) => {
+	selectByMonth.value = newOption
 }
 </script>
 

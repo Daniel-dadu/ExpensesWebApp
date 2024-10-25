@@ -1,13 +1,4 @@
 <template>
-    <div class="month-selector-center">
-        <MonthSelector 
-            :years="props.years" 
-            :curr-month-in-num="props.currMonthInNum"
-            @update:curr-month-in-num="updateCurrMonth"
-            :curr-year="props.currYear"
-            @update:curr-year="updateCurrYear"
-        />
-    </div>
     <TotalTitle 
         :title="'Total income'"
         :amount="totalIncome"
@@ -22,7 +13,6 @@
 
 <script setup>
 import { defineProps, defineEmits, ref, watch, } from "vue"
-import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
 import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
 import TableIncomes from "@/components/Incomes/TableIncomes.vue"
 
@@ -30,10 +20,9 @@ const props = defineProps({
     incomes: Array,
     currMonthInNum: Number,
     currYear: Number,
-    years: Array,
 })
 
-const emit = defineEmits(["update:incomes", "update:curr-month-in-num", "update:curr-year", ])
+const emit = defineEmits(["update:incomes"])
 
 const totalIncome = ref(0)
 
@@ -42,9 +31,7 @@ const updateIncomes = (option, newVal, idx, field) => {
     if(field === "amount") {
         updateTotalIncome()
     }
-} 
-const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
-const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
+}
 
 const updateTotalIncome = () => {
     console.log("Updating total spent in Incomes Page")

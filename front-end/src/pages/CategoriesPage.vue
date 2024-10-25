@@ -1,13 +1,4 @@
 <template>
-    <div class="month-selector-center">
-        <MonthSelector 
-            :years="props.years" 
-            :curr-month-in-num="props.currMonthInNum"
-            @update:curr-month-in-num="updateCurrMonth"
-            :curr-year="props.currYear"
-            @update:curr-year="updateCurrYear"
-        />
-    </div>
     <TotalTitle 
         :title="title"
         :amount="
@@ -30,7 +21,6 @@
 
 <script setup>
 import { defineProps, defineEmits, ref, watch, } from "vue"
-import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
 import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
 import TableCategories from "@/components/Categories/TableCategories.vue"
 
@@ -38,17 +28,12 @@ const props = defineProps({
     categType: String,
     categories: Array,
     importPrev: Function,
-    currMonthInNum: Number,
-    currYear: Number,
-    years: Array,
     expenses: Array,
 })
 
-const emit = defineEmits(["update:categories", "update:curr-month-in-num", "update:curr-year", "update:expenses"])
+const emit = defineEmits(["update:categories", "update:expenses"])
 
 const updateCategories = (option, newVal, idx, field) => emit("update:categories", props.categType, option, newVal, idx, field)
-const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
-const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
 const updateExpenses = (option, newVal, idx, field) => emit("update:expenses", option, newVal, idx, field)
 
 const title = props.categType === "budget" ? "Total left" 

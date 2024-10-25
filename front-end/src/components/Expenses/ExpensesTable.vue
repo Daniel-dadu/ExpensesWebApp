@@ -107,7 +107,6 @@ import { numTwoDecimals } from "../../functions/formatNumbers"
 const props = defineProps({
     expenses: Array,
     categories: Array, // Every element is {name: String, limit: Number}
-    // To only allow the user to select dates on the month from MonthSelector:
     currMonthInNum: Number, 
     currYear: Number,
 })

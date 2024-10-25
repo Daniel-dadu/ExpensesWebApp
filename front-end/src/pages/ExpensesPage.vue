@@ -1,13 +1,4 @@
 <template>
-    <div class="month-selector-center">
-        <MonthSelector 
-            :years="props.years" 
-            :curr-month-in-num="props.currMonthInNum"
-            @update:curr-month-in-num="updateCurrMonth"
-            :curr-year="props.currYear"
-            @update:curr-year="updateCurrYear"
-        />
-    </div>
     <TotalTitle 
         :title="'Total spent'"
         :amount="totalSpent"
@@ -24,7 +15,6 @@
 
 <script setup>
 import { ref, defineProps, defineEmits, watch, } from "vue"
-import MonthSelector from "@/components/ReusableComponents/MonthSelector.vue"
 import TotalTitle from "@/components/ReusableComponents/TotalTitle.vue"
 import ExpensesTable from "../components/Expenses/ExpensesTable.vue"
 
@@ -33,13 +23,16 @@ const props = defineProps({
     categories: Array,
     currMonthInNum: Number,
     currYear: Number,
-    years: Array,
     gotExpensesFromAPI: Boolean,
 })
 
 const emit = defineEmits([
     "update:expenses",
     "update:categories", 
+    "update:categories", 
+    "update:curr-month-in-num", 
+    "update:curr-year", 
+    "update:categories",
     "update:curr-month-in-num", 
     "update:curr-year", 
 ])
@@ -53,8 +46,6 @@ const updateExpenses = (option, newVal, idx, field) => {
     }
 }
 const updateCategories = (categType, option, newVal, idx, field) => emit("update:categories", categType, option, newVal, idx, field)
-const updateCurrMonth = (newMonth) => emit("update:curr-month-in-num", newMonth)
-const updateCurrYear = (newYear) => emit("update:curr-year", newYear)
 
 const updateTotalSpent = () => {
     console.log("Updating total spent in Expenses Page")
