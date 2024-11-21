@@ -24,8 +24,8 @@
 						v-model="expense.date" 
                         @update:model-value="onDateSubmit(index)"
 						:enable-time-picker="false" 
-                        :min-date="new Date(2023, props.currMonthInNum, 1)"
-                        :max-date="new Date(2023, props.currMonthInNum+1, 0)"
+                        :min-date="new Date(props.currYear, props.currMonthInNum, 1)"
+                        :max-date="new Date(props.currYear, props.currMonthInNum+1, 0)"
 						class="dp__theme_dark" 
 						:dark="true"
                     >
