@@ -14,16 +14,21 @@
                 <div class="modal-body">
                         <p>Date:</p>
                         <div class="modal-editable-elem">
-                            {{ initialData.date.toGMTString().substring(0, 16) }}
-                            <!-- See issue: Make Datepicker from ExpensesModal update the sorting correctly #12 -->
-                            
-                            <!-- <Datepicker 
-                                v-model="dateEdit" 
+                            <Datepicker 
+                                v-model="initialDate" 
+                                @update:model-value="props.onDateSubmit(props.index, initialDate)"
                                 :enable-time-picker="false" 
+                                :min-date="props.minDate"
+                                :max-date="props.maxDate"
                                 class="dp__theme_dark" 
                                 :dark="true"
-                            /> -->
-    
+                            >
+                                <template #trigger>
+                                    <button type="button" class="btn btn-dark">
+                                        {{initialDate.toDateString()}}
+                                    </button>
+                                </template>
+                            </Datepicker>
                         </div>
 
                         <p>Category:</p>
@@ -86,8 +91,8 @@
 </template>
 
 <script setup>
-import { defineProps, } from "vue"
-// import Datepicker from "@vuepic/vue-datepicker"
+import { defineProps, ref } from "vue"
+import Datepicker from "@vuepic/vue-datepicker"
 import EditableText from "../ReusableComponents/EditableText.vue"
 import DropdownSelector from "../ReusableComponents/DropdownSelector.vue"
 import { numTwoDecimals } from "../../functions/formatNumbers"
@@ -99,13 +104,17 @@ const props = defineProps({
     },
     initialData: Object,
     updateEditableText: Function,
+    onDateSubmit: Function,
     categoriesData: Array,
     updateCategories: Function,
     updateCategorySelected: Function,
     removeExpense: Function,
+    minDate: Date,
+    maxDate: Date,
 })
-</script>
 
+const initialDate = ref(props.initialData.date)
+</script>
 
 <style>
 .modal-body p {

@@ -77,10 +77,13 @@
 						:index="index"
 						:initial-data="expense"
 						:update-editable-text="updateEditableText"
+                        :on-date-submit="onDateSubmit"
 						:categories-data="categoriesArrayEdit"
 						:update-categories="updateCategories"
 						:update-category-selected="updateCategorySelected"
 						:remove-expense="removeExpense"
+                        :min-date="new Date(props.currYear, props.currMonthInNum, 1)"
+                        :max-date="new Date(props.currYear, props.currMonthInNum+1, 0)"
                     />
                     <button 
 						type="button" 
@@ -194,12 +197,11 @@ const addExpense = () => {
 }
 
 // When date is changed manually
-const onDateSubmit = (idx) => {
-    emit("update:expenses", "update", props.expenses[idx].date, idx, "date")
+const onDateSubmit = (idx, newDate = false) => {
+    emit("update:expenses", "update", newDate ? newDate : props.expenses[idx].date, idx, "date")
     emit("update:expenses", "sort")
 }
 </script>
-
 
 <style>
 #expenses-table tr td:first-child {
