@@ -510,7 +510,7 @@ const toYear = ref(2023)
 const updateFromYear = () => {}
 const updateToYear = () => {}
 
-const selectByMonth = ref(false)
+const selectByMonth = ref(true)
 const updateSelectByMonth = (newOption) => {
 	selectByMonth.value = newOption
 }
